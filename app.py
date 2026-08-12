@@ -734,4 +734,4 @@ with n2:
 
 with n3:
     if st.button("Profile", key="nav_profile", use_container_width=True):
-        st.info("Profile & preferences are part of the next Velora module.")
+        st.info("Profile & preferences are part of the next Velora module.").
