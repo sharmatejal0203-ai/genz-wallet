@@ -1,90 +1,79 @@
 import streamlit as st
+from datetime import datetime
 
+# =========================
+# PAGE
+# =========================
 st.set_page_config(
     page_title="GENZ WALLET",
     page_icon="⚡",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
 # =========================
-# DEMO DATA
+# STATE
 # =========================
+defaults = {
+    "balance": 2840,
+    "saved": 740,
+    "spent": 1260,
+    "limit": 2000,
+    "page": "Home",
+    "transactions": [
+        {"category": "Food", "amount": 120, "date": "Today"},
+        {"category": "Transport", "amount": 80, "date": "Today"},
+        {"category": "Shopping", "amount": 300, "date": "Yesterday"},
+        {"category": "Education", "amount": 500, "date": "Aug 8"},
+    ],
+    "payment_done": False,
+}
 
-if "balance" not in st.session_state:
-    st.session_state.balance = 2840
-
-if "saved" not in st.session_state:
-    st.session_state.saved = 740
-
-if "spent" not in st.session_state:
-    st.session_state.spent = 1260
-
-if "limit" not in st.session_state:
-    st.session_state.limit = 2000
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 # =========================
-# GEN-Z EDITORIAL THEME
+# CSS — BLACK + BURGUNDY
 # =========================
-
 st.markdown("""
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-}
 
 .stApp {
     background: #080808;
     color: #F5F0E8;
 }
 
-/* Remove Streamlit top padding */
 .block-container {
+    max-width: 1200px;
     padding-top: 2rem;
     padding-bottom: 3rem;
-    max-width: 1250px;
 }
 
-/* Hide default menu */
-#MainMenu {
-    visibility: hidden;
-}
-
-footer {
-    visibility: hidden;
-}
-
-/* HEADINGS */
-
-h1, h2, h3 {
+h1,h2,h3 {
     font-family: 'Anton', sans-serif !important;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* HERO */
-
 .hero {
-    border: 1px dotted #777;
     background: #0D0D0D;
-    padding: 30px;
+    border: 1px dotted #666;
+    padding: 28px;
     margin-bottom: 22px;
 }
 
 .hero-small {
-    font-size: 12px;
+    font-size: 11px;
+    color: #888;
     letter-spacing: 3px;
-    color: #999;
-    font-weight: 700;
 }
 
 .hero-title {
     font-family: 'Anton', sans-serif;
-    font-size: clamp(50px, 8vw, 95px);
-    line-height: 0.88;
+    font-size: clamp(48px, 8vw, 88px);
+    line-height: .88;
     margin-top: 15px;
 }
 
@@ -92,481 +81,582 @@ h1, h2, h3 {
     color: #8E1F30;
 }
 
-/* BALANCE */
-
 .balance {
     background: #761A2B;
     padding: 30px;
-    min-height: 210px;
-    position: relative;
-    overflow: hidden;
-}
-
-.balance::after {
-    content: "PAY";
-    position: absolute;
-    right: -20px;
-    bottom: -35px;
-    font-family: 'Anton';
-    font-size: 130px;
-    color: rgba(255,255,255,0.06);
+    min-height: 190px;
 }
 
 .balance-label {
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 3px;
-    text-transform: uppercase;
 }
 
 .balance-number {
-    font-size: 50px;
+    font-size: 48px;
     font-weight: 800;
-    margin-top: 20px;
+    margin-top: 15px;
 }
-
-/* CARDS */
 
 .card {
-    background: #111111;
+    background: #111;
     border: 1px dotted #555;
     padding: 22px;
-    min-height: 145px;
+    min-height: 140px;
 }
 
-.card-label {
-    color: #999;
+.label {
+    color: #888;
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
-.card-number {
+.big {
     font-size: 30px;
     font-weight: 800;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
-/* SECTION */
-
-.section-title {
-    font-family: 'Anton', sans-serif;
-    font-size: 32px;
-    text-transform: uppercase;
-    margin-top: 35px;
-    margin-bottom: 15px;
+.money {
+    background: #151515;
+    border-left: 5px solid #8E1F30;
+    padding: 20px;
+    margin-top: 20px;
 }
 
-/* BUTTONS */
+.tx {
+    background: #111;
+    border-bottom: 1px dotted #555;
+    padding: 16px;
+}
+
+.txamount {
+    float: right;
+    font-weight: 800;
+}
 
 .stButton > button {
     width: 100%;
-    min-height: 50px;
+    min-height: 48px;
     background: #8E1F30;
-    color: #FFFFFF;
+    color: white;
     border: 1px solid #A52A3C;
     border-radius: 2px;
     font-weight: 800;
-    letter-spacing: 1px;
-    transition: 0.2s;
 }
 
 .stButton > button:hover {
     background: #A52A3C;
-    transform: translateY(-2px);
 }
 
-/* QUICK ACTION */
+.section {
+    font-family: 'Anton';
+    font-size: 30px;
+    margin: 32px 0 15px 0;
+}
 
-.quick {
-    background: #111;
-    border: 1px dotted #555;
-    padding: 18px;
+.qr {
+    background: #F5F0E8;
+    color: #080808;
+    padding: 35px;
     text-align: center;
-    min-height: 95px;
+    font-size: 60px;
+    font-weight: 900;
 }
 
-/* MONEY MOMENT */
-
-.money-moment {
-    margin-top: 25px;
-    padding: 22px;
+.success {
     background: #151515;
-    border-left: 5px solid #8E1F30;
-}
-
-.money-title {
-    font-weight: 800;
-    letter-spacing: 2px;
-    font-size: 13px;
-}
-
-/* TRANSACTION */
-
-.transaction {
-    border-bottom: 1px dotted #444;
-    padding: 16px 0;
-}
-
-.transaction-name {
-    font-weight: 700;
-}
-
-.transaction-date {
-    color: #777;
-    font-size: 12px;
-}
-
-/* MOBILE */
-
-@media (max-width: 700px) {
-
-    .hero-title {
-        font-size: 58px;
-    }
-
-    .balance-number {
-        font-size: 40px;
-    }
-
-    .block-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-
+    border: 1px solid #8E1F30;
+    padding: 30px;
+    text-align: center;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-
 # =========================
-# HEADER
+# SIDEBAR
 # =========================
+st.sidebar.markdown("# GENZ ⚡")
 
-st.markdown("""
-<div class="hero">
-    <div class="hero-small">GEN-Z MONEY SPACE / 01</div>
+pages = [
+    "Home",
+    "Pay",
+    "Track",
+    "Saving Jar",
+    "Monthly Limit",
+    "History",
+]
 
-    <div class="hero-title">
-        YOUR MONEY.<br>
-        <span class="red">YOUR RULES.</span>
-    </div>
-
-    <p style="color:#999;">
-        Pay. Track. Save. Understand.
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
-
-# =========================
-# BALANCE + LIMIT
-# =========================
-
-col1, col2 = st.columns([1.5, 1])
-
-with col1:
-
-    st.markdown(f"""
-    <div class="balance">
-
-        <div class="balance-label">
-            Available Balance
-        </div>
-
-        <div class="balance-number">
-            ₹{st.session_state.balance:,}
-        </div>
-
-        <div style="margin-top:15px;color:#E7C8CD;">
-            Demo wallet • No real money
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
-with col2:
-
-    remaining = max(
-        st.session_state.limit - st.session_state.spent,
-        0
-    )
-
-    st.markdown(f"""
-    <div class="card">
-
-        <div class="card-label">
-            Monthly Limit
-        </div>
-
-        <div class="card-number">
-            ₹{st.session_state.spent:,}
-        </div>
-
-        <div style="color:#777;margin-top:5px;">
-            of ₹{st.session_state.limit:,}
-        </div>
-
-        <div style="
-            margin-top:20px;
-            height:6px;
-            background:#333;
-        ">
-
-            <div style="
-                width:{min(st.session_state.spent / st.session_state.limit * 100,100)}%;
-                height:6px;
-                background:#8E1F30;
-            "></div>
-
-        </div>
-
-        <div style="
-            color:#999;
-            font-size:12px;
-            margin-top:10px;
-        ">
-            ₹{remaining:,} remaining
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# =========================
-# QUICK ACTIONS
-# =========================
-
-st.markdown(
-    '<div class="section-title">Quick Move</div>',
-    unsafe_allow_html=True
+st.session_state.page = st.sidebar.radio(
+    "MENU",
+    pages,
+    index=pages.index(st.session_state.page)
 )
 
-q1, q2, q3, q4 = st.columns(4)
-
-with q1:
-    st.markdown(
-        '<div class="quick">⚡<br><b>PAY</b></div>',
-        unsafe_allow_html=True
-    )
-
-with q2:
-    st.markdown(
-        '<div class="quick">📊<br><b>TRACK</b></div>',
-        unsafe_allow_html=True
-    )
-
-with q3:
-    st.markdown(
-        '<div class="quick">🫙<br><b>SAVE</b></div>',
-        unsafe_allow_html=True
-    )
-
-with q4:
-    st.markdown(
-        '<div class="quick">💡<br><b>BILLS</b></div>',
-        unsafe_allow_html=True
-    )
-
+st.sidebar.markdown("---")
+st.sidebar.caption("HACKATHON DEMO")
+st.sidebar.caption("SIMULATED MONEY ONLY")
 
 # =========================
-# MONEY SNAPSHOT
+# HOME
 # =========================
+if st.session_state.page == "Home":
 
-st.markdown(
-    '<div class="section-title">Money Snapshot</div>',
-    unsafe_allow_html=True
-)
-
-c1, c2, c3 = st.columns(3)
-
-with c1:
-    st.markdown(f"""
-    <div class="card">
-        <div class="card-label">Spent This Month</div>
-        <div class="card-number">
-            ₹{st.session_state.spent:,}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with c2:
-    st.markdown(f"""
-    <div class="card">
-        <div class="card-label">Saving Jar</div>
-        <div class="card-number">
-            ₹{st.session_state.saved:,}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with c3:
     st.markdown("""
-    <div class="card">
-        <div class="card-label">Money Health</div>
-        <div class="card-number">
-            82 / 100
+    <div class="hero">
+        <div class="hero-small">GEN-Z MONEY SPACE / 01</div>
+
+        <div class="hero-title">
+            YOUR MONEY.<br>
+            <span class="red">YOUR RULES.</span>
         </div>
+
+        <p style="color:#888;">
+            Pay • Track • Save • Understand
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
+    a, b = st.columns([1.4, 1])
 
-# =========================
-# PAY SECTION
-# =========================
+    with a:
+        st.markdown(f"""
+        <div class="balance">
+            <div class="balance-label">AVAILABLE BALANCE</div>
+            <div class="balance-number">
+                ₹{st.session_state.balance:,}
+            </div>
+            <div style="color:#E5C5CB;">
+                Demo wallet
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-st.markdown(
-    '<div class="section-title">Fast Pay</div>',
-    unsafe_allow_html=True
-)
-
-pay1, pay2 = st.columns([1, 1])
-
-with pay1:
-
-    recipient = st.text_input(
-        "UPI ID / Recipient",
-        placeholder="friend@demo"
-    )
-
-with pay2:
-
-    amount = st.number_input(
-        "Amount ₹",
-        min_value=1,
-        value=50
-    )
-
-
-if st.button("⚡ CONFIRM PAYMENT"):
-
-    if amount <= st.session_state.balance:
-
-        st.session_state.balance -= amount
-        st.session_state.spent += amount
-
-        st.success(
-            f"✓ Demo payment of ₹{amount} successful"
+    with b:
+        remaining = max(
+            st.session_state.limit - st.session_state.spent, 0
         )
 
-        st.markdown("""
-        <div class="money-moment">
-
-            <div class="money-title">
-                💡 MONEY MOMENT
+        st.markdown(f"""
+        <div class="card">
+            <div class="label">MONTHLY LIMIT</div>
+            <div class="big">
+                ₹{st.session_state.spent:,}
             </div>
+            <div style="color:#777;">
+                of ₹{st.session_state.limit:,}
+            </div>
+            <br>
+            <div style="color:#999;">
+                ₹{remaining:,} remaining
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="section">Money Snapshot</div>',
+        unsafe_allow_html=True
+    )
+
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+        st.markdown(f"""
+        <div class="card">
+            <div class="label">SPENT</div>
+            <div class="big">₹{st.session_state.spent:,}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c2:
+        st.markdown(f"""
+        <div class="card">
+            <div class="label">SAVED</div>
+            <div class="big">₹{st.session_state.saved:,}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c3:
+        st.markdown("""
+        <div class="card">
+            <div class="label">MONEY HEALTH</div>
+            <div class="big">82 / 100</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="money">
+        <b>💡 MONEY MOMENT</b>
+        <p>
+        Knowing where your money goes is the first step
+        to making better money decisions.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# =========================
+# PAY
+# =========================
+elif st.session_state.page == "Pay":
+
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-small">FAST PAYMENT / DEMO</div>
+        <div class="hero-title">
+            SCAN.<br>
+            <span class="red">PAY.</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.warning(
+        "DEMO ONLY — No real UPI or bank transaction is performed."
+    )
+
+    left, right = st.columns([1, 1])
+
+    with left:
+        st.markdown("""
+        <div class="qr">
+            ▦<br>
+            <span style="font-size:18px;">SCAN QR</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with right:
+
+        recipient = st.text_input(
+            "UPI ID / Recipient",
+            placeholder="someone@demo"
+        )
+
+        amount = st.number_input(
+            "Amount ₹",
+            min_value=1,
+            value=50
+        )
+
+        category = st.selectbox(
+            "Category",
+            [
+                "Food",
+                "Shopping",
+                "Groceries",
+                "Transport",
+                "Education",
+                "Electricity",
+                "Water",
+                "Recharge",
+                "Other"
+            ]
+        )
+
+        if st.button("🔐 PAY WITH BIOMETRIC"):
+
+            if amount > st.session_state.balance:
+
+                st.error("Insufficient demo balance.")
+
+            else:
+
+                st.session_state.balance -= amount
+                st.session_state.spent += amount
+
+                st.session_state.transactions.insert(
+                    0,
+                    {
+                        "category": category,
+                        "amount": amount,
+                        "date": datetime.now().strftime("%d %b %Y")
+                    }
+                )
+
+                st.session_state.payment_done = True
+
+                st.success("✓ PAYMENT SUCCESSFUL")
+
+    if st.session_state.payment_done:
+
+        st.markdown("""
+        <div class="success">
+
+            <div style="font-size:45px;">✓</div>
+
+            <h2>PAYMENT DONE</h2>
 
             <p>
-                Your payment was automatically added
-                to your expense tracker.
-            </p>
-
-            <p style="color:#999;">
-                Small spends become big spends when repeated.
-                Knowing where your money goes is the first step.
+            Your payment was automatically added
+            to your expense tracker.
             </p>
 
         </div>
         """, unsafe_allow_html=True)
 
-    else:
+        st.markdown("""
+        <div class="money">
 
-        st.error("Not enough demo balance.")
+            <b>💡 MONEY MOMENT</b>
+
+            <p>
+            Every payment tells a story about where
+            your money is going. Keep tracking it.
+            </p>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button("MAKE ANOTHER PAYMENT"):
+            st.session_state.payment_done = False
+            st.rerun()
+
+
+# =========================
+# TRACK
+# =========================
+elif st.session_state.page == "Track":
+
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-small">EXPENSE TRACKER / 02</div>
+        <div class="hero-title">
+            WHERE DID<br>
+            <span class="red">IT GO?</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.metric(
+        "TOTAL SPENT THIS MONTH",
+        f"₹{st.session_state.spent:,}"
+    )
+
+    st.markdown(
+        '<div class="section">Categories</div>',
+        unsafe_allow_html=True
+    )
+
+    categories = {
+        "Food": 320,
+        "Transport": 250,
+        "Shopping": 300,
+        "Education": 190,
+        "Bills": 120,
+        "Other": 80
+    }
+
+    for name, value in categories.items():
+
+        st.write(f"**{name}** — ₹{value}")
+
+        percentage = min(
+            value / max(st.session_state.spent, 1),
+            1.0
+        )
+
+        st.progress(percentage)
+
+    st.markdown(
+        '<div class="section">Recent Spending</div>',
+        unsafe_allow_html=True
+    )
+
+    for tx in st.session_state.transactions[:6]:
+
+        st.markdown(f"""
+        <div class="tx">
+
+            <span class="tx">
+                <b>{tx["category"]}</b>
+                <br>
+                <small style="color:#777;">
+                    {tx["date"]}
+                </small>
+            </span>
+
+            <span class="txamount">
+                ₹{tx["amount"]}
+            </span>
+
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # =========================
 # SAVING JAR
 # =========================
+elif st.session_state.page == "Saving Jar":
 
-st.markdown(
-    '<div class="section-title">Saving Jar</div>',
-    unsafe_allow_html=True
-)
-
-s1, s2 = st.columns([1, 1])
-
-with s1:
-
-    st.markdown(f"""
-    <div class="card">
-
-        <div class="card-label">
-            Saved So Far
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-small">VOLUNTARY SAVING</div>
+        <div class="hero-title">
+            SAVE IT.<br>
+            <span class="red">YOUR WAY.</span>
         </div>
-
-        <div class="card-number">
-            ₹{st.session_state.saved:,}
-        </div>
-
-        <p style="color:#777;">
-            Save ₹1 or ₹1,000. Your choice.
-        </p>
-
     </div>
     """, unsafe_allow_html=True)
 
+    st.metric(
+        "SAVING JAR",
+        f"₹{st.session_state.saved:,}"
+    )
 
-with s2:
+    st.write(
+        "No forced saving. ₹1 or ₹1,000 — you decide."
+    )
 
-    save_amount = st.number_input(
-        "Add to Jar ₹",
+    amount = st.number_input(
+        "Amount to save ₹",
         min_value=1,
         value=10
     )
 
-    if st.button("🫙 SAVE MONEY"):
+    if st.button("🫙 ADD TO SAVING JAR"):
 
-        if save_amount <= st.session_state.balance:
+        if amount <= st.session_state.balance:
 
-            st.session_state.balance -= save_amount
-            st.session_state.saved += save_amount
+            st.session_state.balance -= amount
+            st.session_state.saved += amount
 
             st.success(
-                f"₹{save_amount} added to your Saving Jar!"
+                f"₹{amount} added to your Saving Jar."
             )
 
-        else:
+            st.rerun()
 
+        else:
             st.error("Not enough demo balance.")
 
+    st.markdown("---")
+
+    withdraw = st.number_input(
+        "Withdraw ₹",
+        min_value=1,
+        value=10
+    )
+
+    if st.button("↩ WITHDRAW"):
+
+        if withdraw <= st.session_state.saved:
+
+            st.session_state.saved -= withdraw
+            st.session_state.balance += withdraw
+
+            st.success(
+                f"₹{withdraw} withdrawn from your jar."
+            )
+
+            st.rerun()
+
+        else:
+            st.error("Not enough money in the jar.")
+
 
 # =========================
-# MONEY MOMENT
+# MONTHLY LIMIT
 # =========================
+elif st.session_state.page == "Monthly Limit":
 
-st.markdown("""
-<div class="money-moment">
-
-    <div class="money-title">
-        ⚡ TODAY'S MONEY MOMENT
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-title">
+            KNOW YOUR<br>
+            <span class="red">LIMIT.</span>
+        </div>
     </div>
+    """, unsafe_allow_html=True)
 
-    <p>
-        Saving doesn't have to mean saving everything.
-        Even ₹10 is a start.
-    </p>
+    new_limit = st.number_input(
+        "Monthly Limit ₹",
+        min_value=100,
+        value=st.session_state.limit
+    )
 
-</div>
-""", unsafe_allow_html=True)
+    if st.button("SAVE MONTHLY LIMIT"):
+
+        st.session_state.limit = new_limit
+
+        st.success("Monthly limit updated.")
+
+        st.rerun()
+
+    remaining = st.session_state.limit - st.session_state.spent
+
+    st.metric(
+        "REMAINING",
+        f"₹{max(remaining, 0):,}"
+    )
+
+    progress = min(
+        st.session_state.spent /
+        max(st.session_state.limit, 1),
+        1.0
+    )
+
+    st.progress(progress)
+
+    if remaining <= 0:
+        st.error("⚠️ MONTHLY LIMIT REACHED")
+
+    elif remaining < st.session_state.limit * 0.2:
+        st.warning("You're close to your monthly limit.")
+
+
+# =========================
+# HISTORY
+# =========================
+elif st.session_state.page == "History":
+
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-title">
+            YOUR<br>
+            <span class="red">HISTORY.</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.caption(
+        "Transactions remain visible in this demo."
+    )
+
+    for tx in st.session_state.transactions:
+
+        st.markdown(f"""
+        <div class="tx">
+
+            <b>{tx["category"]}</b>
+
+            <span class="txamount">
+                ₹{tx["amount"]}
+            </span>
+
+            <br>
+
+            <small style="color:#777;">
+                {tx["date"]}
+            </small>
+
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # =========================
 # FOOTER
 # =========================
-
 st.markdown("---")
 
 st.markdown("""
 <div style="
 text-align:center;
 color:#555;
-font-size:11px;
+font-size:10px;
 letter-spacing:2px;
 ">
-
 GENZ WALLET • HACKATHON PROTOTYPE<br>
 SIMULATED TRANSACTIONS ONLY
-
 </div>
 """, unsafe_allow_html=True)
