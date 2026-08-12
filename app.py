@@ -6,9 +6,9 @@ st.set_page_config(
     layout="centered"
 )
 
-# =====================================================
+# =========================
 # DATA
-# =====================================================
+# =========================
 
 if "balance" not in st.session_state:
     st.session_state.balance = 5000
@@ -18,6 +18,12 @@ if "spent" not in st.session_state:
 
 if "goal_saved" not in st.session_state:
     st.session_state.goal_saved = 3400
+
+if "goal_name" not in st.session_state:
+    st.session_state.goal_name = "New Headphones"
+
+if "goal_target" not in st.session_state:
+    st.session_state.goal_target = 5000
 
 if "transactions" not in st.session_state:
     st.session_state.transactions = [
@@ -29,79 +35,75 @@ if "transactions" not in st.session_state:
     ]
 
 
-# =====================================================
-# PREMIUM DESIGN
-# =====================================================
+# =========================
+# STYLE
+# =========================
 
 st.markdown("""
 <style>
 
 .stApp {
-    background: #07080C;
+    background: #08090D;
 }
 
 .block-container {
     max-width: 520px;
-    padding: 25px 18px 80px;
+    padding: 25px 18px 70px;
 }
 
-#MainMenu,
-header,
+#MainMenu {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
+
 footer {
     visibility: hidden;
 }
 
 .brand {
-    font-size: 31px;
+    color: white;
+    font-size: 32px;
     font-weight: 900;
-    color: #FFFFFF;
     letter-spacing: -1px;
 }
 
 .tagline {
-    color: #777B86;
+    color: #858994;
     font-size: 12px;
-    margin-top: -5px;
     margin-bottom: 25px;
 }
 
 .hero {
-    background:
-        radial-gradient(
-            circle at top right,
-            #A52B52 0%,
-            transparent 42%
-        ),
-        linear-gradient(
-            135deg,
-            #210A14,
-            #631833,
-            #8F2447
-        );
-
-    border-radius: 28px;
+    background: linear-gradient(
+        135deg,
+        #280B18,
+        #721D3E,
+        #A62C52
+    );
+    border-radius: 26px;
     padding: 25px;
-    min-height: 180px;
-    box-shadow: 0 18px 50px rgba(130,20,60,.25);
+    margin: 15px 0 25px;
 }
 
 .hero-label {
-    color: #D9C3CC;
+    color: #DCC5CD;
     font-size: 10px;
     letter-spacing: 2px;
 }
 
 .hero-money {
     color: white;
-    font-size: 43px;
+    font-size: 42px;
     font-weight: 900;
-    margin-top: 5px;
+    margin: 5px 0;
 }
 
 .hero-note {
-    color: #D7BBC5;
+    color: #D8BBC5;
     font-size: 10px;
-    margin-top: 8px;
 }
 
 .section {
@@ -113,24 +115,22 @@ footer {
 }
 
 .app-card {
-    background: #12141A;
-    border: 1px solid #252832;
-    border-radius: 21px;
+    background: #13151A;
+    border: 1px solid #292C35;
+    border-radius: 20px;
     padding: 18px;
+    margin: 8px 0;
 }
 
-.app-card:hover {
-    border-color: #7D2949;
+.big {
+    color: white;
+    font-size: 25px;
+    font-weight: 800;
 }
 
 .small {
     color: #858994;
     font-size: 11px;
-}
-
-.white {
-    color: white;
-    font-weight: 800;
 }
 
 .score {
@@ -142,46 +142,42 @@ footer {
 .score-good {
     color: #A7E8C2;
     font-size: 11px;
+    margin-bottom: 5px;
 }
 
 .goal-title {
     color: white;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 800;
 }
 
 .goal-money {
     color: #858994;
     font-size: 11px;
+    margin-top: 4px;
 }
 
 .virtual-card {
-    background:
-        radial-gradient(
-            circle at 85% 15%,
-            #777B87,
-            transparent 25%
-        ),
-        linear-gradient(
-            135deg,
-            #17191F,
-            #3A3D47
-        );
-
-    border-radius: 25px;
-    padding: 23px;
-    border: 1px solid #484B55;
-    min-height: 160px;
+    background: linear-gradient(
+        135deg,
+        #17191F,
+        #3D4049
+    );
+    border: 1px solid #4A4D57;
+    border-radius: 24px;
+    padding: 24px;
+    min-height: 155px;
 }
 
 .card-top {
-    color: #B0B2B9;
+    color: #B2B4BB;
     font-size: 10px;
     letter-spacing: 2px;
 }
 
 .card-chip {
-    font-size: 24px;
+    color: #D5D6DA;
+    font-size: 25px;
     margin-top: 22px;
 }
 
@@ -189,11 +185,11 @@ footer {
     color: white;
     font-size: 17px;
     letter-spacing: 3px;
-    margin-top: 18px;
+    margin-top: 15px;
 }
 
 .card-bottom {
-    color: #A3A5AC;
+    color: #A5A7AE;
     font-size: 9px;
     margin-top: 20px;
 }
@@ -202,8 +198,8 @@ footer {
     background: #15171D !important;
     color: white !important;
     border: 1px solid #292C35 !important;
-    border-radius: 15px !important;
-    min-height: 46px !important;
+    border-radius: 14px !important;
+    min-height: 45px !important;
     font-weight: 700 !important;
 }
 
@@ -212,10 +208,9 @@ footer {
 }
 
 [data-testid="stMetric"] {
-    background: #12141A;
-    border: 1px solid #252832;
+    background: #13151A;
+    border: 1px solid #292C35;
     border-radius: 18px;
-    padding: 13px;
 }
 
 [data-testid="stMetricLabel"] {
@@ -226,17 +221,13 @@ footer {
     color: white !important;
 }
 
-.stProgress > div > div > div > div {
-    background-color: #A52B52;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
 
-# =====================================================
+# =========================
 # HEADER
-# =====================================================
+# =========================
 
 st.markdown(
     '<div class="brand">VELORA</div>',
@@ -250,14 +241,12 @@ st.markdown(
 
 st.caption("GOOD EVENING")
 
-st.markdown(
-    "### Welcome back 👋"
-)
+st.markdown("### Welcome back 👋")
 
 
-# =====================================================
+# =========================
 # BALANCE
-# =====================================================
+# =========================
 
 st.markdown(
     f"""
@@ -281,41 +270,41 @@ st.markdown(
 )
 
 
-# =====================================================
+# =========================
 # QUICK ACTIONS
-# =====================================================
+# =========================
 
 st.markdown(
     '<div class="section">QUICK ACTIONS</div>',
     unsafe_allow_html=True
 )
 
-a, b, c = st.columns(3)
+col1, col2, col3 = st.columns(3)
 
-with a:
-    add = st.button(
+with col1:
+    add_button = st.button(
         "＋ Add",
         use_container_width=True
     )
 
-with b:
-    send = st.button(
+with col2:
+    send_button = st.button(
         "↗ Send",
         use_container_width=True
     )
 
-with c:
-    card = st.button(
+with col3:
+    card_button = st.button(
         "▣ Card",
         use_container_width=True
     )
 
 
-# =====================================================
+# =========================
 # ADD MONEY
-# =====================================================
+# =========================
 
-if add:
+if add_button:
 
     st.markdown(
         '<div class="section">ADD MONEY</div>',
@@ -339,11 +328,14 @@ if add:
         use_container_width=True
     ):
 
+        if source.strip() == "":
+            source = "Added Money"
+
         st.session_state.balance += amount
 
         st.session_state.transactions.insert(
             0,
-            (source if source else "Added Money", amount)
+            (source, amount)
         )
 
         st.success(
@@ -351,11 +343,11 @@ if add:
         )
 
 
-# =====================================================
+# =========================
 # SEND MONEY
-# =====================================================
+# =========================
 
-if send:
+if send_button:
 
     st.markdown(
         '<div class="section">SEND MONEY</div>',
@@ -379,7 +371,7 @@ if send:
         use_container_width=True
     ):
 
-        if person == "":
+        if person.strip() == "":
             st.error("Enter recipient name.")
 
         elif amount > st.session_state.balance:
@@ -400,11 +392,11 @@ if send:
             )
 
 
-# =====================================================
-# CARD
-# =====================================================
+# =========================
+# VELORA CARD
+# =========================
 
-if card:
+if card_button:
 
     st.markdown(
         '<div class="section">VELORA CARD</div>',
@@ -436,10 +428,12 @@ if card:
         unsafe_allow_html=True
     )
 
+    st.caption("Demo card · No real payments")
 
-# =====================================================
+
+# =========================
 # MONEY OVERVIEW
-# =====================================================
+# =========================
 
 st.markdown(
     '<div class="section">MONEY OVERVIEW</div>',
@@ -451,38 +445,38 @@ remaining = max(
     0
 )
 
-x, y = st.columns(2)
+col1, col2 = st.columns(2)
 
-with x:
+with col1:
+
     st.metric(
         "Spent",
         f"₹{st.session_state.spent:,.0f}"
     )
 
-with y:
+with col2:
+
     st.metric(
         "Remaining",
         f"₹{remaining:,.0f}"
     )
 
 
-# =====================================================
-# MONEY SCORE
-# =====================================================
+# =========================
+# VELORA SCORE
+# =========================
 
 st.markdown(
     '<div class="section">VELORA SCORE</div>',
     unsafe_allow_html=True
 )
 
-score = 84
-
 st.markdown(
-    f"""
+    """
     <div class="app-card">
 
         <div class="score">
-            {score}
+            84
         </div>
 
         <div class="score-good">
@@ -499,9 +493,9 @@ st.markdown(
 )
 
 
-# =====================================================
-# GRAPH
-# =====================================================
+# =========================
+# SPENDING GRAPH
+# =========================
 
 st.markdown(
     '<div class="section">SPENDING TREND</div>',
@@ -521,21 +515,21 @@ st.line_chart(
 )
 
 
-# =====================================================
+# =========================
 # SAVINGS GOAL
-# =====================================================
+# =========================
 
 st.markdown(
     '<div class="section">SAVINGS GOAL</div>',
     unsafe_allow_html=True
 )
 
-target = 5000
 saved = st.session_state.goal_saved
+target = st.session_state.goal_target
 
 progress = min(
     saved / target,
-    1
+    1.0
 )
 
 st.markdown(
@@ -562,9 +556,9 @@ st.caption(
 )
 
 
-# =====================================================
+# =========================
 # RECENT ACTIVITY
-# =====================================================
+# =========================
 
 st.markdown(
     '<div class="section">RECENT ACTIVITY</div>',
@@ -579,7 +573,7 @@ for name, amount in st.session_state.transactions[:5]:
             f"""
             <div class="app-card">
 
-                <div class="white">
+                <div class="big">
                     🟢 {name}
                 </div>
 
@@ -587,7 +581,11 @@ for name, amount in st.session_state.transactions[:5]:
                     Money added
                 </div>
 
-                <div style="color:#A7E8C2;font-weight:800;">
+                <div style="
+                    color:#A7E8C2;
+                    font-weight:800;
+                    margin-top:5px;
+                ">
                     +₹{amount:,.0f}
                 </div>
 
@@ -602,7 +600,7 @@ for name, amount in st.session_state.transactions[:5]:
             f"""
             <div class="app-card">
 
-                <div class="white">
+                <div class="big">
                     ⚪ {name}
                 </div>
 
@@ -610,7 +608,11 @@ for name, amount in st.session_state.transactions[:5]:
                     Payment
                 </div>
 
-                <div style="color:white;font-weight:800;">
+                <div style="
+                    color:white;
+                    font-weight:800;
+                    margin-top:5px;
+                ">
                     −₹{abs(amount):,.0f}
                 </div>
 
@@ -620,9 +622,9 @@ for name, amount in st.session_state.transactions[:5]:
         )
 
 
-# =====================================================
+# =========================
 # INSIGHT
-# =====================================================
+# =========================
 
 st.markdown(
     '<div class="section">✦ VELORA INSIGHT</div>',
@@ -641,6 +643,10 @@ else:
         "You're currently spending within your planned limit."
     )
 
+
+# =========================
+# FOOTER
+# =========================
 
 st.divider()
 
