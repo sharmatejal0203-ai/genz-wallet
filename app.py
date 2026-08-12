@@ -1,12 +1,144 @@
 import streamlit as st
 
+# =====================================================
+# VELORA — PREMIUM SMART MONEY PROTOTYPE
+# =====================================================
+
 st.set_page_config(
     page_title="VELORA",
     page_icon="💳",
     layout="centered"
 )
 
-# ---------------- DATA ----------------
+# =====================================================
+# PREMIUM THEME
+# =====================================================
+
+st.markdown("""
+<style>
+
+.stApp {
+    background-color: #08090D;
+}
+
+.block-container {
+    max-width: 520px;
+    padding: 25px 18px 70px;
+}
+
+#MainMenu {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+/* HEADINGS */
+
+h1 {
+    color: #FFFFFF !important;
+    font-weight: 900 !important;
+    letter-spacing: -1px;
+}
+
+h2, h3 {
+    color: #FFFFFF !important;
+}
+
+p {
+    color: #A6A8B0 !important;
+}
+
+/* METRICS */
+
+[data-testid="stMetric"] {
+    background-color: #14161D;
+    border: 1px solid #292C36;
+    border-radius: 18px;
+    padding: 15px;
+}
+
+[data-testid="stMetricValue"] {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #9295A0 !important;
+}
+
+/* BUTTONS */
+
+.stButton > button {
+    background-color: #15171E !important;
+    color: #FFFFFF !important;
+    border: 1px solid #30333D !important;
+    border-radius: 14px !important;
+    min-height: 46px !important;
+    font-weight: 700 !important;
+}
+
+.stButton > button:hover {
+    border-color: #A52B52 !important;
+    color: #FFFFFF !important;
+}
+
+/* INPUTS */
+
+.stTextInput input,
+.stNumberInput input {
+    background-color: #14161D !important;
+    color: #FFFFFF !important;
+    border: 1px solid #30333D !important;
+    border-radius: 12px !important;
+}
+
+/* SELECT BOX */
+
+[data-baseweb="select"] > div {
+    background-color: #14161D !important;
+    border-color: #30333D !important;
+    color: white !important;
+}
+
+/* EXPANDER */
+
+[data-testid="stExpander"] {
+    background-color: #12141A;
+    border: 1px solid #292C36;
+    border-radius: 16px;
+}
+
+/* PROGRESS */
+
+.stProgress > div > div > div > div {
+    background-color: #A52B52;
+}
+
+/* DIVIDER */
+
+hr {
+    border-color: #292C36 !important;
+}
+
+/* CAPTION */
+
+[data-testid="stCaptionContainer"] {
+    color: #777B86 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# =====================================================
+# SESSION DATA
+# =====================================================
 
 if "balance" not in st.session_state:
     st.session_state.balance = 5000
@@ -33,28 +165,38 @@ if "goal_target" not in st.session_state:
     st.session_state.goal_target = 5000
 
 
-# ---------------- HEADER ----------------
+# =====================================================
+# HEADER
+# =====================================================
 
 st.title("VELORA")
+
 st.caption("Smart money, made simple.")
 
 st.write("GOOD EVENING")
+
 st.subheader("Welcome back 👋")
 
 
-# ---------------- BALANCE ----------------
+# =====================================================
+# BALANCE
+# =====================================================
 
 st.subheader("Available balance")
 
 st.metric(
     "VELORA WALLET",
-    "₹{:,.0f}".format(st.session_state.balance)
+    "₹{:,.0f}".format(
+        st.session_state.balance
+    )
 )
 
 st.caption("Demo wallet · No real money")
 
 
-# ---------------- QUICK ACTIONS ----------------
+# =====================================================
+# QUICK ACTIONS
+# =====================================================
 
 st.subheader("Quick actions")
 
@@ -79,7 +221,9 @@ with col3:
     )
 
 
-# ---------------- ADD MONEY ----------------
+# =====================================================
+# ADD MONEY
+# =====================================================
 
 if add_money:
 
@@ -113,11 +257,15 @@ if add_money:
         )
 
         st.success(
-            "₹{:,.0f} added successfully.".format(amount)
+            "₹{:,.0f} added successfully.".format(
+                amount
+            )
         )
 
 
-# ---------------- SEND MONEY ----------------
+# =====================================================
+# SEND MONEY
+# =====================================================
 
 if send_money:
 
@@ -161,11 +309,16 @@ if send_money:
         else:
 
             st.session_state.balance -= amount
+
             st.session_state.spent += amount
 
             st.session_state.transactions.insert(
                 0,
-                ("Sent to " + person, category, -amount)
+                (
+                    "Sent to " + person,
+                    category,
+                    -amount
+                )
             )
 
             st.success(
@@ -176,7 +329,9 @@ if send_money:
             )
 
 
-# ---------------- REQUEST MONEY ----------------
+# =====================================================
+# REQUEST MONEY
+# =====================================================
 
 if request_money:
 
@@ -208,6 +363,7 @@ if request_money:
             st.error("Enter a name.")
 
         else:
+
             st.success(
                 "₹{:,.0f} request created for {}.".format(
                     amount,
@@ -216,7 +372,9 @@ if request_money:
             )
 
 
-# ---------------- OVERVIEW ----------------
+# =====================================================
+# MONEY OVERVIEW
+# =====================================================
 
 st.divider()
 
@@ -230,6 +388,7 @@ remaining = max(
 col1, col2 = st.columns(2)
 
 with col1:
+
     st.metric(
         "Spent this month",
         "₹{:,.0f}".format(
@@ -238,6 +397,7 @@ with col1:
     )
 
 with col2:
+
     st.metric(
         "Budget remaining",
         "₹{:,.0f}".format(
@@ -246,7 +406,9 @@ with col2:
     )
 
 
-# ---------------- SCORE ----------------
+# =====================================================
+# VELORA SCORE
+# =====================================================
 
 st.subheader("VELORA Score")
 
@@ -261,7 +423,9 @@ st.caption(
 )
 
 
-# ---------------- GRAPH ----------------
+# =====================================================
+# SPENDING TREND
+# =====================================================
 
 st.subheader("Spending trend")
 
@@ -275,10 +439,14 @@ chart_data = {
     "Sunday": 110
 }
 
-st.line_chart(chart_data)
+st.line_chart(
+    chart_data
+)
 
 
-# ---------------- GOAL ----------------
+# =====================================================
+# SAVINGS GOAL
+# =====================================================
 
 st.subheader("Savings goal")
 
@@ -309,7 +477,9 @@ st.write(
 )
 
 
-# ---------------- GOAL EDIT ----------------
+# =====================================================
+# EDIT GOAL
+# =====================================================
 
 with st.expander("Edit savings goal"):
 
@@ -319,7 +489,7 @@ with st.expander("Edit savings goal"):
     )
 
     new_target = st.number_input(
-        "Target",
+        "Target amount",
         min_value=1,
         value=st.session_state.goal_target,
         step=100
@@ -338,13 +508,17 @@ with st.expander("Edit savings goal"):
     ):
 
         st.session_state.goal_name = new_name
+
         st.session_state.goal_target = new_target
+
         st.session_state.goal_saved = new_saved
 
-        st.success("Goal updated.")
+        st.success("Goal updated!")
 
 
-# ---------------- ACTIVITY ----------------
+# =====================================================
+# RECENT ACTIVITY
+# =====================================================
 
 st.subheader("Recent activity")
 
@@ -373,7 +547,9 @@ for name, category, amount in st.session_state.transactions[:6]:
         st.caption(category)
 
 
-# ---------------- INSIGHT ----------------
+# =====================================================
+# VELORA INSIGHT
+# =====================================================
 
 st.subheader("✦ Velora insight")
 
@@ -390,7 +566,9 @@ else:
     )
 
 
-# ---------------- DEMO CARD ----------------
+# =====================================================
+# VELORA CARD
+# =====================================================
 
 st.divider()
 
@@ -406,10 +584,12 @@ st.caption(
 )
 
 
-# ---------------- FOOTER ----------------
+# =====================================================
+# FOOTER
+# =====================================================
 
 st.divider()
 
 st.caption(
-    "VELORA · Smart Money Prototype"
+    "VELORA · Smart Money Prototype · Demo Mode"
 )
