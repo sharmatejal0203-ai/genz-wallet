@@ -1,258 +1,370 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="GENZ WALLET",
-    page_icon="💳",
+    page_title="VELORA",
+    page_icon="◈",
     layout="centered"
 )
 
+# =========================
+# PREMIUM THEME
+# =========================
+
 st.markdown("""
 <style>
+
 .stApp {
-    background: #09090b;
+    background: #08080b;
+    color: #f7f7f8;
 }
 
 .block-container {
-    max-width: 500px;
-    padding: 25px 18px 80px;
+    max-width: 520px;
+    padding: 24px 18px 70px;
 }
 
 #MainMenu, footer, header {
     visibility: hidden;
 }
 
-.title {
-    font-size: 28px;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 4px;
+/* Text */
+
+h1 {
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    letter-spacing: -1px;
 }
 
-.subtitle {
-    color: #888;
-    font-size: 13px;
-    margin-bottom: 25px;
+h2, h3 {
+    font-weight: 700 !important;
 }
 
-.balance {
-    background: #7f1834;
-    padding: 25px;
-    border-radius: 22px;
-    margin-bottom: 20px;
+p {
+    color: #9b9ba3;
+}
+
+/* Balance */
+
+.balance-box {
+    background: linear-gradient(135deg, #68162e, #a32149);
+    border-radius: 26px;
+    padding: 26px;
+    margin: 20px 0;
+    box-shadow: 0 18px 40px rgba(125, 20, 55, 0.22);
 }
 
 .balance-label {
-    color: #ddd;
-    font-size: 12px;
-    letter-spacing: 2px;
-}
-
-.amount {
-    color: white;
-    font-size: 40px;
-    font-weight: 800;
-    margin-top: 8px;
-}
-
-.demo {
-    color: #ddd;
-    font-size: 12px;
-}
-
-.card {
-    background: #151519;
-    border: 1px solid #25252b;
-    padding: 20px;
-    border-radius: 20px;
-    margin-top: 15px;
-}
-
-.label {
-    color: #888;
+    color: #d8c3cb;
     font-size: 11px;
     letter-spacing: 2px;
 }
 
-.big {
+.balance-number {
     color: white;
-    font-size: 25px;
-    font-weight: 700;
-    margin-top: 6px;
+    font-size: 42px;
+    font-weight: 800;
+    margin: 8px 0;
 }
 
-.small {
-    color: #888;
+.balance-note {
+    color: #decbd1;
     font-size: 12px;
 }
 
-.bar {
-    background: #29292e;
-    height: 8px;
-    border-radius: 20px;
-    margin-top: 15px;
+/* Cards */
+
+.card {
+    background: #141419;
+    border: 1px solid #24242b;
+    border-radius: 22px;
+    padding: 20px;
+    margin: 12px 0;
 }
 
-.fill {
-    background: #c52b50;
-    height: 8px;
-    width: 63%;
-    border-radius: 20px;
-}
+/* Section */
 
 .section {
-    color: white;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     margin-top: 28px;
     margin-bottom: 12px;
+    color: #eeeeef;
 }
 
-.tx {
-    background: #151519;
+/* Buttons */
+
+.stButton > button {
+    background: #15151a !important;
+    color: white !important;
+    border: 1px solid #292930 !important;
+    border-radius: 16px !important;
+    height: 48px !important;
+    font-weight: 600 !important;
+}
+
+.stButton > button:hover {
+    border-color: #a32149 !important;
+}
+
+/* Metric */
+
+[data-testid="stMetric"] {
+    background: #141419;
+    border: 1px solid #24242b;
     padding: 15px;
-    border-radius: 16px;
-    margin-bottom: 8px;
+    border-radius: 18px;
 }
 
-.tx-name {
+[data-testid="stMetricLabel"] {
+    color: #85858d;
+}
+
+[data-testid="stMetricValue"] {
     color: white;
-    font-weight: 600;
 }
 
-.tx-date {
-    color: #777;
-    font-size: 11px;
+/* Progress */
+
+.stProgress > div > div > div > div {
+    background: #a32149;
 }
 
-.tx-money {
-    color: white;
-    font-weight: 700;
-    float: right;
+/* Divider */
+
+hr {
+    border-color: #24242a;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
 
+# =========================
 # HEADER
+# =========================
+
+st.title("VELORA")
+st.caption("Smart money. Simply yours.")
+
+st.write("Good afternoon 👋")
+
+
+# =========================
+# BALANCE CARD
+# =========================
 
 st.markdown(
-    '<div class="title">GENZ WALLET</div>',
+    '<div class="balance-box">',
     unsafe_allow_html=True
 )
 
 st.markdown(
-    '<div class="subtitle">Your money. Your rules.</div>',
+    '<div class="balance-label">AVAILABLE BALANCE</div>',
     unsafe_allow_html=True
 )
 
+st.markdown(
+    '<div class="balance-number">₹2,840</div>',
+    unsafe_allow_html=True
+)
 
-# BALANCE
+st.markdown(
+    '<div class="balance-note">Your demo wallet is looking healthy.</div>',
+    unsafe_allow_html=True
+)
 
-st.markdown("""
-<div class="balance">
-    <div class="balance-label">AVAILABLE BALANCE</div>
-    <div class="amount">₹2,840</div>
-    <div class="demo">Demo wallet</div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 
+# =========================
 # QUICK ACTIONS
+# =========================
+
+st.markdown('<div class="section">QUICK ACTIONS</div>',
+            unsafe_allow_html=True)
+
+a, b, c = st.columns(3)
+
+with a:
+    st.button("＋ Add", use_container_width=True)
+
+with b:
+    st.button("↗ Send", use_container_width=True)
+
+with c:
+    st.button("◷ History", use_container_width=True)
+
+
+# =========================
+# SPENDING OVERVIEW
+# =========================
 
 st.markdown(
-    '<div class="section">QUICK ACTIONS</div>',
+    '<div class="section">SPENDING OVERVIEW</div>',
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns(3)
+st.markdown('<div class="card">', unsafe_allow_html=True)
 
-with col1:
-    st.button("＋ Add")
+left, right = st.columns(2)
 
-with col2:
-    st.button("↗ Send")
+with left:
+    st.metric(
+        "This month",
+        "₹1,260",
+        "-12%"
+    )
 
-with col3:
-    st.button("📊 Track")
+with right:
+    st.metric(
+        "Daily average",
+        "₹63",
+        "-₹8"
+    )
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 
+# =========================
+# PREMIUM SPENDING CHART
+# =========================
+
+st.markdown(
+    '<div class="section">WEEKLY SPENDING</div>',
+    unsafe_allow_html=True
+)
+
+chart_data = {
+    "Mon": 120,
+    "Tue": 80,
+    "Wed": 210,
+    "Thu": 140,
+    "Fri": 260,
+    "Sat": 180,
+    "Sun": 90
+}
+
+st.line_chart(
+    chart_data,
+    height=230
+)
+
+
+# =========================
 # MONTHLY LIMIT
+# =========================
 
 st.markdown(
     '<div class="section">MONTHLY LIMIT</div>',
     unsafe_allow_html=True
 )
 
-st.markdown("""
-<div class="card">
+st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    <div class="label">SPENT THIS MONTH</div>
+st.write("Monthly spending")
 
-    <div class="big">₹1,260</div>
+col1, col2 = st.columns(2)
 
-    <div class="small">₹740 remaining of ₹2,000</div>
+with col1:
+    st.markdown("### ₹1,260")
 
-    <div class="bar">
-        <div class="fill"></div>
-    </div>
+with col2:
+    st.caption("₹740 remaining")
 
-</div>
-""", unsafe_allow_html=True)
+st.progress(0.63)
+
+st.caption("63% of your ₹2,000 monthly limit used")
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 
+# =========================
 # RECENT ACTIVITY
+# =========================
 
 st.markdown(
     '<div class="section">RECENT ACTIVITY</div>',
     unsafe_allow_html=True
 )
 
-st.markdown("""
-<div class="tx">
-    <span class="tx-money">-₹180</span>
-    <div class="tx-name">🍔 Food</div>
-    <div class="tx-date">Today</div>
-</div>
+transactions = [
+    ("🍔", "Food", "Today", "-₹180"),
+    ("🎮", "Gaming", "Yesterday", "-₹299"),
+    ("📚", "Study", "Aug 10", "-₹450"),
+    ("💸", "Pocket Money", "Aug 08", "+₹1,000")
+]
 
-<div class="tx">
-    <span class="tx-money">-₹299</span>
-    <div class="tx-name">🎮 Gaming</div>
-    <div class="tx-date">Yesterday</div>
-</div>
+for icon, name, date, amount in transactions:
 
-<div class="tx">
-    <span class="tx-money">-₹450</span>
-    <div class="tx-name">📚 Study</div>
-    <div class="tx-date">Aug 10</div>
-</div>
+    left, right = st.columns([3, 1])
 
-<div class="tx">
-    <span class="tx-money" style="color:#6ee7a0;">+₹1,000</span>
-    <div class="tx-name">💸 Pocket Money</div>
-    <div class="tx-date">Aug 08</div>
-</div>
-""", unsafe_allow_html=True)
+    with left:
+        st.write(f"**{icon} {name}**")
+        st.caption(date)
+
+    with right:
+        st.write(f"**{amount}**")
+
+    st.divider()
 
 
-# SAVINGS
+# =========================
+# SAVINGS GOAL
+# =========================
 
 st.markdown(
     '<div class="section">SAVINGS GOAL</div>',
     unsafe_allow_html=True
 )
 
-st.markdown("""
-<div class="card">
+st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    <div class="tx-name">🎧 New Headphones</div>
+st.write("🎧 **New Headphones**")
 
-    <div class="small">
-        ₹3,400 saved of ₹5,000
-    </div>
+st.caption("₹3,400 saved of ₹5,000")
 
-    <div class="bar">
-        <div class="fill" style="width:68%;"></div>
-    </div>
+st.progress(0.68)
 
-</div>
-""", unsafe_allow_html=True)
+st.caption("68% complete • ₹1,600 to go")
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+# =========================
+# INSIGHT
+# =========================
+
+st.markdown(
+    '<div class="section">VELORA INSIGHT</div>',
+    unsafe_allow_html=True
+)
+
+st.info(
+    "✨ You spent less this week than last week. "
+    "Keep it up — you're on track with your monthly limit."
+)
+
+
+# =========================
+# NAVIGATION
+# =========================
+
+st.divider()
+
+n1, n2, n3, n4 = st.columns(4)
+
+with n1:
+    st.caption("⌂")
+    st.caption("Home")
+
+with n2:
+    st.caption("↕")
+    st.caption("Activity")
+
+with n3:
+    st.caption("◇")
+    st.caption("Goals")
+
+with n4:
+    st.caption("⚙")
+    st.caption("Profile")
