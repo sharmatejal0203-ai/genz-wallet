@@ -7,10 +7,10 @@ st.set_page_config(
 
 # ---------------- DATA ----------------
 
-if "balance" not in st.session_state:
+ "balance" not in st.session_state:
     st.session_state.balance = 5000
 
-if "transactions" not in st.session_state:
+"transactions" not in st.session_state:
     st.session_state.transactions = [
         ["Pocket Money", 2000],
         ["Food", -250],
