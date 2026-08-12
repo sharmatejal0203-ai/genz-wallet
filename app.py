@@ -6,9 +6,9 @@ st.set_page_config(
     layout="centered"
 )
 
-# =========================
-# PREMIUM THEME
-# =========================
+# =====================================================
+# THEME
+# =====================================================
 
 st.markdown("""
 <style>
@@ -17,8 +17,8 @@ st.markdown("""
 }
 
 .block-container {
-    max-width: 520px;
-    padding: 25px 18px 70px;
+    max-width: 540px;
+    padding: 25px 18px 80px;
 }
 
 h1, h2, h3 {
@@ -30,10 +30,10 @@ p, label {
 }
 
 [data-testid="stMetric"] {
-    background-color: #14161D;
+    background: #14161D;
     border: 1px solid #292C36;
     border-radius: 18px;
-    padding: 15px;
+    padding: 14px;
 }
 
 [data-testid="stMetricValue"] {
@@ -45,11 +45,11 @@ p, label {
 }
 
 .stButton > button {
-    background-color: #15171E !important;
+    background: #15171E !important;
     color: white !important;
     border: 1px solid #30333D !important;
     border-radius: 14px !important;
-    min-height: 46px !important;
+    min-height: 45px !important;
     font-weight: 700 !important;
 }
 
@@ -62,7 +62,7 @@ p, label {
 }
 
 [data-testid="stExpander"] {
-    background-color: #12141A;
+    background: #12141A;
     border: 1px solid #292C36;
     border-radius: 16px;
 }
@@ -74,343 +74,529 @@ hr {
 """, unsafe_allow_html=True)
 
 
-# =========================
-# STARTING DATA
-# =========================
+# =====================================================
+# SESSION STATE
+# =====================================================
 
-if "balance" not in st.session_state:
-    st.session_state.balance = 5000
-
-if "spent" not in st.session_state:
-    st.session_state.spent = 1260
-
-if "goal_name" not in st.session_state:
-    st.session_state.goal_name = "New Headphones"
-
-if "goal_saved" not in st.session_state:
-    st.session_state.goal_saved = 3400
-
-if "goal_target" not in st.session_state:
-    st.session_state.goal_target = 5000
-
-if "card_frozen" not in st.session_state:
-    st.session_state.card_frozen = False
-
-if "transactions" not in st.session_state:
-    st.session_state.transactions = [
-        ("Pocket Money", "Income", 2000),
-        ("Food", "Food", -250),
-        ("Study", "Education", -500),
-        ("Shopping", "Shopping", -350),
-        ("Gaming", "Entertainment", -180)
+defaults = {
+    "balance": 5000.0,
+    "spent": 1260.0,
+    "monthly_limit": 2000.0,
+    "goal_name": "New Headphones",
+    "goal_saved": 3400.0,
+    "goal_target": 5000.0,
+    "card_frozen": False,
+    "name": "Tejal",
+    "page": "Home",
+    "transactions": [
+        ["Pocket Money", "Income", 2000.0],
+        ["Food", "Food", -250.0],
+        ["Study", "Education", -500.0],
+        ["Shopping", "Shopping", -350.0],
+        ["Gaming", "Entertainment", -180.0]
     ]
+}
+
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 
-# =========================
+# =====================================================
+# FUNCTIONS
+# =====================================================
+
+def go(page):
+    st.session_state.page = page
+    st.rerun()
+
+
+def add_transaction(name, category, amount):
+    st.session_state.transactions.insert(
+        0,
+        [name, category, amount]
+    )
+
+
+def total_spending():
+    total = 0
+
+    for item in st.session_state.transactions:
+        if item[2] < 0:
+            total += abs(item[2])
+
+    return total
+
+
+def category_spending(category):
+    total = 0
+
+    for item in st.session_state.transactions:
+        if item[1] == category and item[2] < 0:
+            total += abs(item[2])
+
+    return total
+
+
+# =====================================================
 # HEADER
-# =========================
+# =====================================================
 
 st.title("VELORA")
 st.caption("Smart money, made simple.")
 
-st.caption("GOOD EVENING")
-st.subheader("Welcome back 👋")
+# =====================================================
+# NAVIGATION
+# =====================================================
+
+nav1, nav2, nav3, nav4 = st.columns(4)
+
+with nav1:
+    if st.button("⌂ Home", use_container_width=True):
+        go("Home")
+
+with nav2:
+    if st.button("▣ Card", use_container_width=True):
+        go("Card")
+
+with nav3:
+    if st.button("◇ Goals", use_container_width=True):
+        go("Goals")
+
+with nav4:
+    if st.button("◉ Profile", use_container_width=True):
+        go("Profile")
 
 
-# =========================
-# BALANCE
-# =========================
+# =====================================================
+# HOME
+# =====================================================
 
-st.subheader("Available balance")
+if st.session_state.page == "Home":
 
-st.metric(
-    "VELORA WALLET",
-    "₹{:,.0f}".format(st.session_state.balance)
-)
-
-st.caption("Demo wallet · No real money")
-
-
-# =========================
-# QUICK ACTIONS
-# =========================
-
-st.subheader("Quick actions")
-
-a, b, c = st.columns(3)
-
-with a:
-    add_button = st.button(
-        "＋ Add",
-        use_container_width=True
+    st.caption("GOOD EVENING")
+    st.subheader(
+        "Welcome back, " +
+        st.session_state.name +
+        " 👋"
     )
 
-with b:
-    send_button = st.button(
-        "↗ Send",
-        use_container_width=True
-    )
+    # Balance
+    st.subheader("Available balance")
 
-with c:
-    request_button = st.button(
-        "⇄ Request",
-        use_container_width=True
-    )
-
-
-# =========================
-# ADD MONEY
-# =========================
-
-if add_button:
-
-    st.subheader("Add money")
-
-    amount = st.number_input(
-        "Amount",
-        min_value=1,
-        value=500,
-        step=100
-    )
-
-    source = st.text_input(
-        "Source",
-        placeholder="Pocket money / Gift / Other"
-    )
-
-    if st.button(
-        "Confirm add",
-        use_container_width=True
-    ):
-
-        if source.strip() == "":
-            source = "Added Money"
-
-        st.session_state.balance += amount
-
-        st.session_state.transactions.insert(
-            0,
-            (source, "Income", amount)
+    st.metric(
+        "VELORA WALLET",
+        "₹{:,.0f}".format(
+            st.session_state.balance
         )
+    )
+
+    st.caption("Demo wallet · No real money")
+
+    # Quick actions
+    st.subheader("Quick actions")
+
+    a, b, c = st.columns(3)
+
+    with a:
+        add = st.button(
+            "＋ Add",
+            use_container_width=True
+        )
+
+    with b:
+        send = st.button(
+            "↗ Send",
+            use_container_width=True
+        )
+
+    with c:
+        request = st.button(
+            "⇄ Request",
+            use_container_width=True
+        )
+
+    # Add
+    if add:
+
+        st.write("### Add money")
+
+        amount = st.number_input(
+            "Amount",
+            min_value=1.0,
+            value=500.0,
+            step=100.0
+        )
+
+        source = st.text_input(
+            "Source",
+            placeholder="Pocket money / Gift / Other"
+        )
+
+        if st.button(
+            "Add to wallet",
+            use_container_width=True
+        ):
+
+            if source.strip() == "":
+                source = "Added Money"
+
+            st.session_state.balance += amount
+
+            add_transaction(
+                source,
+                "Income",
+                amount
+            )
+
+            st.success(
+                "₹{:,.0f} added.".format(amount)
+            )
+
+    # Send
+    if send:
+
+        st.write("### Send money")
+
+        person = st.text_input(
+            "Recipient",
+            placeholder="Friend's name"
+        )
+
+        amount = st.number_input(
+            "Amount to send",
+            min_value=1.0,
+            value=100.0,
+            step=50.0
+        )
+
+        category = st.selectbox(
+            "Category",
+            [
+                "Food",
+                "Education",
+                "Shopping",
+                "Entertainment",
+                "Travel",
+                "Other"
+            ]
+        )
+
+        if st.button(
+            "Send",
+            use_container_width=True
+        ):
+
+            if person.strip() == "":
+                st.error("Enter recipient.")
+
+            elif amount > st.session_state.balance:
+                st.error("Insufficient demo balance.")
+
+            else:
+
+                st.session_state.balance -= amount
+                st.session_state.spent += amount
+
+                add_transaction(
+                    "Sent to " + person,
+                    category,
+                    -amount
+                )
+
+                st.success(
+                    "₹{:,.0f} sent.".format(amount)
+                )
+
+    # Request
+    if request:
+
+        st.write("### Request money")
+
+        person = st.text_input(
+            "Request from",
+            placeholder="Friend's name"
+        )
+
+        amount = st.number_input(
+            "Request amount",
+            min_value=1.0,
+            value=200.0,
+            step=50.0
+        )
+
+        reason = st.text_input(
+            "Reason",
+            placeholder="Lunch / Movie / Trip"
+        )
+
+        if st.button(
+            "Create request",
+            use_container_width=True
+        ):
+
+            if person.strip() == "":
+                st.error("Enter a name.")
+            else:
+                st.success(
+                    "₹{:,.0f} request created.".format(
+                        amount
+                    )
+                )
+
+    # Overview
+    st.divider()
+
+    st.subheader("Money overview")
+
+    spent = total_spending()
+
+    remaining = max(
+        st.session_state.monthly_limit - spent,
+        0
+    )
+
+    x, y = st.columns(2)
+
+    with x:
+        st.metric(
+            "Spent",
+            "₹{:,.0f}".format(spent)
+        )
+
+    with y:
+        st.metric(
+            "Remaining",
+            "₹{:,.0f}".format(remaining)
+        )
+
+    # Score
+    st.subheader("VELORA Score")
+
+    score = 84
+
+    if spent > st.session_state.monthly_limit:
+        score = 65
+    elif spent > st.session_state.monthly_limit * 0.8:
+        score = 74
+
+    st.metric(
+        "Money health",
+        "{}/100".format(score),
+        "Good habits"
+    )
+
+    # Graph
+    st.subheader("Spending trend")
+
+    chart = {
+        "Mon": 120,
+        "Tue": 180,
+        "Wed": 90,
+        "Thu": 240,
+        "Fri": 160,
+        "Sat": 280,
+        "Sun": 110
+    }
+
+    st.line_chart(chart)
+
+    # Categories
+    st.subheader("Spending categories")
+
+    categories = [
+        "Food",
+        "Education",
+        "Shopping",
+        "Entertainment",
+        "Travel"
+    ]
+
+    for category in categories:
+
+        value = category_spending(category)
+
+        if value > 0:
+
+            st.write(
+                "{} — ₹{:,.0f}".format(
+                    category,
+                    value
+                )
+            )
+
+            percentage = min(
+                value / max(spent, 1),
+                1
+            )
+
+            st.progress(percentage)
+
+    # Goal preview
+    st.subheader("Savings goal")
+
+    st.write(
+        "🎧 " + st.session_state.goal_name
+    )
+
+    progress = (
+        st.session_state.goal_saved /
+        max(st.session_state.goal_target, 1)
+    )
+
+    st.caption(
+        "₹{:,.0f} saved of ₹{:,.0f}".format(
+            st.session_state.goal_saved,
+            st.session_state.goal_target
+        )
+    )
+
+    st.progress(min(progress, 1.0))
+
+    st.write(
+        "{:.0f}% complete".format(
+            progress * 100
+        )
+    )
+
+    # Recent activity
+    st.subheader("Recent activity")
+
+    search = st.text_input(
+        "Search transactions",
+        placeholder="Search..."
+    )
+
+    found = False
+
+    for name, category, amount in st.session_state.transactions:
+
+        text = (
+            name + " " + category
+        ).lower()
+
+        if search.lower() not in text:
+            continue
+
+        found = True
+
+        if amount >= 0:
+
+            st.write(
+                "🟢 {}   +₹{:,.0f}".format(
+                    name,
+                    amount
+                )
+            )
+
+        else:
+
+            st.write(
+                "⚪ {}   −₹{:,.0f}".format(
+                    name,
+                    abs(amount)
+                )
+            )
+
+        st.caption(category)
+
+    if not found:
+        st.info("No transactions found.")
+
+    # Insight
+    st.subheader("✦ Velora Insight")
+
+    if spent >= st.session_state.monthly_limit:
+
+        st.warning(
+            "You've reached your monthly spending limit."
+        )
+
+    elif spent >= st.session_state.monthly_limit * 0.8:
+
+        st.warning(
+            "You're getting close to your monthly spending limit."
+        )
+
+    else:
 
         st.success(
-            "₹{:,.0f} added successfully.".format(amount)
+            "Your spending is currently within your planned limit."
         )
 
 
-# =========================
-# SEND MONEY
-# =========================
+# =====================================================
+# CARD
+# =====================================================
 
-if send_button:
+elif st.session_state.page == "Card":
 
-    st.subheader("Send money")
+    st.subheader("💳 Velora Card")
 
-    person = st.text_input(
-        "Recipient",
-        placeholder="Friend's name"
+    st.info(
+        "VELORA · DEMO CARD\n\n"
+        "••••  ••••  ••••  2840\n\n"
+        "VELORA MEMBER"
     )
 
-    amount = st.number_input(
-        "Send amount",
-        min_value=1,
-        value=100,
-        step=50
-    )
+    if st.session_state.card_frozen:
 
-    category = st.selectbox(
-        "Category",
-        [
-            "Food",
-            "Education",
-            "Shopping",
-            "Entertainment",
-            "Travel",
-            "Other"
-        ]
-    )
+        st.warning("🔒 Your card is frozen.")
 
-    if st.button(
-        "Confirm send",
-        use_container_width=True
-    ):
+        if st.button(
+            "Unfreeze card",
+            use_container_width=True
+        ):
 
-        if person.strip() == "":
-            st.error("Enter recipient name.")
+            st.session_state.card_frozen = False
+            st.rerun()
 
-        elif amount > st.session_state.balance:
-            st.error("Insufficient demo balance.")
+    else:
 
-        else:
+        st.success("🟢 Card is active.")
 
-            st.session_state.balance -= amount
-            st.session_state.spent += amount
+        if st.button(
+            "Freeze card",
+            use_container_width=True
+        ):
 
-            st.session_state.transactions.insert(
-                0,
-                ("Sent to " + person, category, -amount)
-            )
+            st.session_state.card_frozen = True
+            st.rerun()
 
-            st.success(
-                "₹{:,.0f} sent.".format(amount)
-            )
-
-
-# =========================
-# REQUEST MONEY
-# =========================
-
-if request_button:
-
-    st.subheader("Request money")
-
-    person = st.text_input(
-        "Request from",
-        placeholder="Friend's name"
-    )
-
-    amount = st.number_input(
-        "Amount",
-        min_value=1,
-        value=200,
-        step=50
-    )
-
-    reason = st.text_input(
-        "Reason",
-        placeholder="Lunch / Movie / Trip"
-    )
-
-    if st.button(
-        "Create request",
-        use_container_width=True
-    ):
-
-        if person.strip() == "":
-            st.error("Enter a name.")
-
-        else:
-            st.success(
-                "Request of ₹{:,.0f} created.".format(amount)
-            )
-
-
-# =========================
-# MONEY OVERVIEW
-# =========================
-
-st.divider()
-
-st.subheader("Money overview")
-
-remaining = max(
-    2000 - st.session_state.spent,
-    0
-)
-
-a, b = st.columns(2)
-
-with a:
-    st.metric(
-        "Spent",
-        "₹{:,.0f}".format(st.session_state.spent)
-    )
-
-with b:
-    st.metric(
-        "Remaining",
-        "₹{:,.0f}".format(remaining)
+    st.caption(
+        "Demo card · No real payments"
     )
 
 
-# =========================
-# VELORA SCORE
-# =========================
+# =====================================================
+# GOALS
+# =====================================================
 
-st.subheader("VELORA Score")
+elif st.session_state.page == "Goals":
 
-st.metric(
-    "Money health",
-    "84 / 100",
-    "Good habits"
-)
+    st.subheader("🎯 Savings Goals")
 
-st.caption(
-    "Based on your spending and saving activity."
-)
-
-
-# =========================
-# SPENDING TREND
-# =========================
-
-st.subheader("Spending trend")
-
-chart_data = {
-    "Monday": 120,
-    "Tuesday": 180,
-    "Wednesday": 90,
-    "Thursday": 240,
-    "Friday": 160,
-    "Saturday": 280,
-    "Sunday": 110
-}
-
-st.line_chart(chart_data)
-
-
-# =========================
-# SAVINGS GOAL
-# =========================
-
-st.subheader("Savings goal")
-
-st.write(
-    "🎧 " + st.session_state.goal_name
-)
-
-st.caption(
-    "₹{:,.0f} saved of ₹{:,.0f}".format(
-        st.session_state.goal_saved,
-        st.session_state.goal_target
+    st.write(
+        "Turn something you want into a plan."
     )
-)
 
-progress = (
-    st.session_state.goal_saved /
-    st.session_state.goal_target
-)
-
-st.progress(min(progress, 1.0))
-
-st.write(
-    "{:.0f}% complete".format(progress * 100)
-)
-
-
-# =========================
-# EDIT GOAL
-# =========================
-
-with st.expander("Edit savings goal"):
-
-    new_name = st.text_input(
+    name = st.text_input(
         "Goal name",
         value=st.session_state.goal_name
     )
 
-    new_target = st.number_input(
+    target = st.number_input(
         "Target amount",
-        min_value=1,
-        value=st.session_state.goal_target,
-        step=100
+        min_value=1.0,
+        value=float(st.session_state.goal_target),
+        step=100.0
     )
 
-    new_saved = st.number_input(
+    saved = st.number_input(
         "Already saved",
-        min_value=0,
-        value=st.session_state.goal_saved,
-        step=100
+        min_value=0.0,
+        value=float(st.session_state.goal_saved),
+        step=100.0
     )
 
     if st.button(
@@ -418,105 +604,78 @@ with st.expander("Edit savings goal"):
         use_container_width=True
     ):
 
-        st.session_state.goal_name = new_name
-        st.session_state.goal_target = new_target
-        st.session_state.goal_saved = new_saved
+        st.session_state.goal_name = name
+        st.session_state.goal_target = target
+        st.session_state.goal_saved = saved
 
-        st.success("Goal updated.")
+        st.success("Goal saved.")
 
-
-# =========================
-# RECENT ACTIVITY
-# =========================
-
-st.subheader("Recent activity")
-
-for name, category, amount in st.session_state.transactions[:6]:
-
-    if amount >= 0:
-
-        st.write(
-            "🟢 {}   +₹{:,.0f}".format(
-                name,
-                amount
-            )
-        )
-
-    else:
-
-        st.write(
-            "⚪ {}   −₹{:,.0f}".format(
-                name,
-                abs(amount)
-            )
-        )
-
-    st.caption(category)
-
-
-# =========================
-# VELORA INSIGHT
-# =========================
-
-st.subheader("✦ Velora insight")
-
-if st.session_state.spent >= 1600:
-
-    st.warning(
-        "You're getting close to your monthly spending limit."
+    progress = (
+        st.session_state.goal_saved /
+        max(st.session_state.goal_target, 1)
     )
 
-else:
+    st.write(
+        "🎯 " + st.session_state.goal_name
+    )
 
-    st.success(
-        "Your spending is currently within your planned limit."
+    st.progress(min(progress, 1.0))
+
+    st.write(
+        "₹{:,.0f} / ₹{:,.0f} · {:.0f}%".format(
+            st.session_state.goal_saved,
+            st.session_state.goal_target,
+            progress * 100
+        )
     )
 
 
-# =========================
-# VIRTUAL CARD
-# =========================
+# =====================================================
+# PROFILE
+# =====================================================
 
-st.divider()
+elif st.session_state.page == "Profile":
 
-st.subheader("💳 Velora Card")
+    st.subheader("◉ Profile")
 
-st.info(
-    "VELORA · DEMO CARD\n\n"
-    "••••  ••••  ••••  2840\n\n"
-    "VELORA MEMBER"
-)
+    name = st.text_input(
+        "Your name",
+        value=st.session_state.name
+    )
 
-if st.session_state.card_frozen:
-
-    st.warning("🔒 Card is frozen.")
+    limit = st.number_input(
+        "Monthly spending limit",
+        min_value=100.0,
+        value=float(st.session_state.monthly_limit),
+        step=100.0
+    )
 
     if st.button(
-        "Unfreeze card",
+        "Save profile",
         use_container_width=True
     ):
 
-        st.session_state.card_frozen = False
-        st.rerun()
+        st.session_state.name = name
+        st.session_state.monthly_limit = limit
 
-else:
+        st.success("Profile updated.")
 
-    st.success("🟢 Card is active.")
+    st.divider()
 
-    if st.button(
-        "Freeze card",
-        use_container_width=True
-    ):
+    st.write("### VELORA")
 
-        st.session_state.card_frozen = True
-        st.rerun()
+    st.caption(
+        "Smart money management prototype."
+    )
 
-st.caption("Demo card · No real payments")
+    st.caption(
+        "Demo mode · No real payments."
+    )
 
 
-# =========================
+# =====================================================
 # FOOTER
-# =========================
+# =====================================================
 
 st.divider()
 
