@@ -6,9 +6,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# =========================
-# DATA
-# =========================
+# ---------------- DATA ----------------
 
 if "balance" not in st.session_state:
     st.session_state.balance = 5000
@@ -16,300 +14,76 @@ if "balance" not in st.session_state:
 if "spent" not in st.session_state:
     st.session_state.spent = 1260
 
-if "goal_saved" not in st.session_state:
-    st.session_state.goal_saved = 3400
+if "transactions" not in st.session_state:
+    st.session_state.transactions = [
+        ("Pocket Money", "Income", 2000),
+        ("Food", "Food", -250),
+        ("Study", "Education", -500),
+        ("Shopping", "Shopping", -350),
+        ("Gaming", "Entertainment", -180)
+    ]
 
 if "goal_name" not in st.session_state:
     st.session_state.goal_name = "New Headphones"
 
+if "goal_saved" not in st.session_state:
+    st.session_state.goal_saved = 3400
+
 if "goal_target" not in st.session_state:
     st.session_state.goal_target = 5000
 
-if "transactions" not in st.session_state:
-    st.session_state.transactions = [
-        ("Pocket Money", 2000),
-        ("Food", -250),
-        ("Study", -500),
-        ("Shopping", -350),
-        ("Gaming", -180)
-    ]
+
+# ---------------- HEADER ----------------
+
+st.title("VELORA")
+st.caption("Smart money, made simple.")
+
+st.write("GOOD EVENING")
+st.subheader("Welcome back 👋")
 
 
-# =========================
-# STYLE
-# =========================
+# ---------------- BALANCE ----------------
 
-st.markdown("""
-<style>
+st.subheader("Available balance")
 
-.stApp {
-    background: #08090D;
-}
-
-.block-container {
-    max-width: 520px;
-    padding: 25px 18px 70px;
-}
-
-#MainMenu {
-    visibility: hidden;
-}
-
-header {
-    visibility: hidden;
-}
-
-footer {
-    visibility: hidden;
-}
-
-.brand {
-    color: white;
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: -1px;
-}
-
-.tagline {
-    color: #858994;
-    font-size: 12px;
-    margin-bottom: 25px;
-}
-
-.hero {
-    background: linear-gradient(
-        135deg,
-        #280B18,
-        #721D3E,
-        #A62C52
-    );
-    border-radius: 26px;
-    padding: 25px;
-    margin: 15px 0 25px;
-}
-
-.hero-label {
-    color: #DCC5CD;
-    font-size: 10px;
-    letter-spacing: 2px;
-}
-
-.hero-money {
-    color: white;
-    font-size: 42px;
-    font-weight: 900;
-    margin: 5px 0;
-}
-
-.hero-note {
-    color: #D8BBC5;
-    font-size: 10px;
-}
-
-.section {
-    color: white;
-    font-size: 14px;
-    font-weight: 800;
-    margin-top: 28px;
-    margin-bottom: 12px;
-}
-
-.app-card {
-    background: #13151A;
-    border: 1px solid #292C35;
-    border-radius: 20px;
-    padding: 18px;
-    margin: 8px 0;
-}
-
-.big {
-    color: white;
-    font-size: 25px;
-    font-weight: 800;
-}
-
-.small {
-    color: #858994;
-    font-size: 11px;
-}
-
-.score {
-    color: white;
-    font-size: 34px;
-    font-weight: 900;
-}
-
-.score-good {
-    color: #A7E8C2;
-    font-size: 11px;
-    margin-bottom: 5px;
-}
-
-.goal-title {
-    color: white;
-    font-size: 16px;
-    font-weight: 800;
-}
-
-.goal-money {
-    color: #858994;
-    font-size: 11px;
-    margin-top: 4px;
-}
-
-.virtual-card {
-    background: linear-gradient(
-        135deg,
-        #17191F,
-        #3D4049
-    );
-    border: 1px solid #4A4D57;
-    border-radius: 24px;
-    padding: 24px;
-    min-height: 155px;
-}
-
-.card-top {
-    color: #B2B4BB;
-    font-size: 10px;
-    letter-spacing: 2px;
-}
-
-.card-chip {
-    color: #D5D6DA;
-    font-size: 25px;
-    margin-top: 22px;
-}
-
-.card-number {
-    color: white;
-    font-size: 17px;
-    letter-spacing: 3px;
-    margin-top: 15px;
-}
-
-.card-bottom {
-    color: #A5A7AE;
-    font-size: 9px;
-    margin-top: 20px;
-}
-
-.stButton > button {
-    background: #15171D !important;
-    color: white !important;
-    border: 1px solid #292C35 !important;
-    border-radius: 14px !important;
-    min-height: 45px !important;
-    font-weight: 700 !important;
-}
-
-.stButton > button:hover {
-    border-color: #A52B52 !important;
-}
-
-[data-testid="stMetric"] {
-    background: #13151A;
-    border: 1px solid #292C35;
-    border-radius: 18px;
-}
-
-[data-testid="stMetricLabel"] {
-    color: #858994 !important;
-}
-
-[data-testid="stMetricValue"] {
-    color: white !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-
-# =========================
-# HEADER
-# =========================
-
-st.markdown(
-    '<div class="brand">VELORA</div>',
-    unsafe_allow_html=True
+st.metric(
+    "VELORA WALLET",
+    "₹{:,.0f}".format(st.session_state.balance)
 )
 
-st.markdown(
-    '<div class="tagline">Smart money, made simple.</div>',
-    unsafe_allow_html=True
-)
-
-st.caption("GOOD EVENING")
-
-st.markdown("### Welcome back 👋")
+st.caption("Demo wallet · No real money")
 
 
-# =========================
-# BALANCE
-# =========================
+# ---------------- QUICK ACTIONS ----------------
 
-st.markdown(
-    f"""
-    <div class="hero">
-
-        <div class="hero-label">
-            AVAILABLE BALANCE
-        </div>
-
-        <div class="hero-money">
-            ₹{st.session_state.balance:,.0f}
-        </div>
-
-        <div class="hero-note">
-            DEMO WALLET · NO REAL MONEY
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# =========================
-# QUICK ACTIONS
-# =========================
-
-st.markdown(
-    '<div class="section">QUICK ACTIONS</div>',
-    unsafe_allow_html=True
-)
+st.subheader("Quick actions")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    add_button = st.button(
+    add_money = st.button(
         "＋ Add",
         use_container_width=True
     )
 
 with col2:
-    send_button = st.button(
+    send_money = st.button(
         "↗ Send",
         use_container_width=True
     )
 
 with col3:
-    card_button = st.button(
-        "▣ Card",
+    request_money = st.button(
+        "⇄ Request",
         use_container_width=True
     )
 
 
-# =========================
-# ADD MONEY
-# =========================
+# ---------------- ADD MONEY ----------------
 
-if add_button:
+if add_money:
 
-    st.markdown(
-        '<div class="section">ADD MONEY</div>',
-        unsafe_allow_html=True
-    )
+    st.subheader("Add money")
 
     amount = st.number_input(
         "Amount",
@@ -319,12 +93,12 @@ if add_button:
     )
 
     source = st.text_input(
-        "Source",
+        "Where is it from?",
         placeholder="Pocket money / Gift / Other"
     )
 
     if st.button(
-        "Add to wallet",
+        "Confirm add",
         use_container_width=True
     ):
 
@@ -335,27 +109,22 @@ if add_button:
 
         st.session_state.transactions.insert(
             0,
-            (source, amount)
+            (source, "Income", amount)
         )
 
         st.success(
-            f"₹{amount:,.0f} added!"
+            "₹{:,.0f} added successfully.".format(amount)
         )
 
 
-# =========================
-# SEND MONEY
-# =========================
+# ---------------- SEND MONEY ----------------
 
-if send_button:
+if send_money:
 
-    st.markdown(
-        '<div class="section">SEND MONEY</div>',
-        unsafe_allow_html=True
-    )
+    st.subheader("Send money")
 
     person = st.text_input(
-        "Recipient",
+        "Send to",
         placeholder="Friend's name"
     )
 
@@ -366,8 +135,20 @@ if send_button:
         step=50
     )
 
+    category = st.selectbox(
+        "Category",
+        [
+            "Food",
+            "Education",
+            "Shopping",
+            "Entertainment",
+            "Travel",
+            "Other"
+        ]
+    )
+
     if st.button(
-        "Send money",
+        "Confirm send",
         use_container_width=True
     ):
 
@@ -384,61 +165,62 @@ if send_button:
 
             st.session_state.transactions.insert(
                 0,
-                ("Sent to " + person, -amount)
+                ("Sent to " + person, category, -amount)
             )
 
             st.success(
-                f"₹{amount:,.0f} sent!"
+                "₹{:,.0f} sent to {}.".format(
+                    amount,
+                    person
+                )
             )
 
 
-# =========================
-# VELORA CARD
-# =========================
+# ---------------- REQUEST MONEY ----------------
 
-if card_button:
+if request_money:
 
-    st.markdown(
-        '<div class="section">VELORA CARD</div>',
-        unsafe_allow_html=True
+    st.subheader("Request money")
+
+    person = st.text_input(
+        "Request from",
+        placeholder="Friend's name"
     )
 
-    st.markdown(
-        """
-        <div class="virtual-card">
-
-            <div class="card-top">
-                VELORA · DEMO
-            </div>
-
-            <div class="card-chip">
-                ▰
-            </div>
-
-            <div class="card-number">
-                ••••  ••••  ••••  2840
-            </div>
-
-            <div class="card-bottom">
-                VELORA MEMBER
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    amount = st.number_input(
+        "Request amount",
+        min_value=1,
+        value=200,
+        step=50
     )
 
-    st.caption("Demo card · No real payments")
+    reason = st.text_input(
+        "Reason",
+        placeholder="Lunch / Trip / Movie"
+    )
+
+    if st.button(
+        "Create request",
+        use_container_width=True
+    ):
+
+        if person.strip() == "":
+            st.error("Enter a name.")
+
+        else:
+            st.success(
+                "₹{:,.0f} request created for {}.".format(
+                    amount,
+                    person
+                )
+            )
 
 
-# =========================
-# MONEY OVERVIEW
-# =========================
+# ---------------- OVERVIEW ----------------
 
-st.markdown(
-    '<div class="section">MONEY OVERVIEW</div>',
-    unsafe_allow_html=True
-)
+st.divider()
+
+st.subheader("Money overview")
 
 remaining = max(
     2000 - st.session_state.spent,
@@ -448,190 +230,154 @@ remaining = max(
 col1, col2 = st.columns(2)
 
 with col1:
-
     st.metric(
-        "Spent",
-        f"₹{st.session_state.spent:,.0f}"
+        "Spent this month",
+        "₹{:,.0f}".format(
+            st.session_state.spent
+        )
     )
 
 with col2:
-
     st.metric(
-        "Remaining",
-        f"₹{remaining:,.0f}"
+        "Budget remaining",
+        "₹{:,.0f}".format(
+            remaining
+        )
     )
 
 
-# =========================
-# VELORA SCORE
-# =========================
+# ---------------- SCORE ----------------
 
-st.markdown(
-    '<div class="section">VELORA SCORE</div>',
-    unsafe_allow_html=True
+st.subheader("VELORA Score")
+
+st.metric(
+    "Money health",
+    "84 / 100",
+    "Good habits"
 )
-
-st.markdown(
-    """
-    <div class="app-card">
-
-        <div class="score">
-            84
-        </div>
-
-        <div class="score-good">
-            ● GOOD MONEY HABITS
-        </div>
-
-        <div class="small">
-            Based on your spending and saving activity.
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# =========================
-# SPENDING GRAPH
-# =========================
-
-st.markdown(
-    '<div class="section">SPENDING TREND</div>',
-    unsafe_allow_html=True
-)
-
-st.line_chart(
-    {
-        "Mon": 120,
-        "Tue": 180,
-        "Wed": 90,
-        "Thu": 240,
-        "Fri": 160,
-        "Sat": 280,
-        "Sun": 110
-    }
-)
-
-
-# =========================
-# SAVINGS GOAL
-# =========================
-
-st.markdown(
-    '<div class="section">SAVINGS GOAL</div>',
-    unsafe_allow_html=True
-)
-
-saved = st.session_state.goal_saved
-target = st.session_state.goal_target
-
-progress = min(
-    saved / target,
-    1.0
-)
-
-st.markdown(
-    f"""
-    <div class="app-card">
-
-        <div class="goal-title">
-            🎧 {st.session_state.goal_name}
-        </div>
-
-        <div class="goal-money">
-            ₹{saved:,.0f} saved of ₹{target:,.0f}
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.progress(progress)
 
 st.caption(
-    f"{progress * 100:.0f}% complete"
+    "Based on your spending and saving activity."
 )
 
 
-# =========================
-# RECENT ACTIVITY
-# =========================
+# ---------------- GRAPH ----------------
 
-st.markdown(
-    '<div class="section">RECENT ACTIVITY</div>',
-    unsafe_allow_html=True
+st.subheader("Spending trend")
+
+chart_data = {
+    "Monday": 120,
+    "Tuesday": 180,
+    "Wednesday": 90,
+    "Thursday": 240,
+    "Friday": 160,
+    "Saturday": 280,
+    "Sunday": 110
+}
+
+st.line_chart(chart_data)
+
+
+# ---------------- GOAL ----------------
+
+st.subheader("Savings goal")
+
+st.write(
+    "🎧 " + st.session_state.goal_name
 )
 
-for name, amount in st.session_state.transactions[:5]:
+st.caption(
+    "₹{:,.0f} saved of ₹{:,.0f}".format(
+        st.session_state.goal_saved,
+        st.session_state.goal_target
+    )
+)
+
+goal_progress = (
+    st.session_state.goal_saved /
+    st.session_state.goal_target
+)
+
+st.progress(
+    min(goal_progress, 1.0)
+)
+
+st.write(
+    "{:.0f}% complete".format(
+        goal_progress * 100
+    )
+)
+
+
+# ---------------- GOAL EDIT ----------------
+
+with st.expander("Edit savings goal"):
+
+    new_name = st.text_input(
+        "Goal name",
+        value=st.session_state.goal_name
+    )
+
+    new_target = st.number_input(
+        "Target",
+        min_value=1,
+        value=st.session_state.goal_target,
+        step=100
+    )
+
+    new_saved = st.number_input(
+        "Already saved",
+        min_value=0,
+        value=st.session_state.goal_saved,
+        step=100
+    )
+
+    if st.button(
+        "Save goal",
+        use_container_width=True
+    ):
+
+        st.session_state.goal_name = new_name
+        st.session_state.goal_target = new_target
+        st.session_state.goal_saved = new_saved
+
+        st.success("Goal updated.")
+
+
+# ---------------- ACTIVITY ----------------
+
+st.subheader("Recent activity")
+
+for name, category, amount in st.session_state.transactions[:6]:
 
     if amount >= 0:
 
-        st.markdown(
-            f"""
-            <div class="app-card">
-
-                <div class="big">
-                    🟢 {name}
-                </div>
-
-                <div class="small">
-                    Money added
-                </div>
-
-                <div style="
-                    color:#A7E8C2;
-                    font-weight:800;
-                    margin-top:5px;
-                ">
-                    +₹{amount:,.0f}
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
+        st.write(
+            "🟢 **{}**  +₹{:,.0f}".format(
+                name,
+                amount
+            )
         )
+
+        st.caption(category)
 
     else:
 
-        st.markdown(
-            f"""
-            <div class="app-card">
-
-                <div class="big">
-                    ⚪ {name}
-                </div>
-
-                <div class="small">
-                    Payment
-                </div>
-
-                <div style="
-                    color:white;
-                    font-weight:800;
-                    margin-top:5px;
-                ">
-                    −₹{abs(amount):,.0f}
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
+        st.write(
+            "⚪ **{}**  −₹{:,.0f}".format(
+                name,
+                abs(amount)
+            )
         )
 
+        st.caption(category)
 
-# =========================
-# INSIGHT
-# =========================
 
-st.markdown(
-    '<div class="section">✦ VELORA INSIGHT</div>',
-    unsafe_allow_html=True
-)
+# ---------------- INSIGHT ----------------
 
-if st.session_state.spent > 1600:
+st.subheader("✦ Velora insight")
+
+if st.session_state.spent >= 1600:
 
     st.warning(
         "You're getting close to your monthly spending limit."
@@ -640,16 +386,30 @@ if st.session_state.spent > 1600:
 else:
 
     st.success(
-        "You're currently spending within your planned limit."
+        "Your spending is currently within your planned limit."
     )
 
 
-# =========================
-# FOOTER
-# =========================
+# ---------------- DEMO CARD ----------------
+
+st.divider()
+
+st.subheader("💳 Velora Card")
+
+st.info(
+    "••••  ••••  ••••  2840\n\n"
+    "VELORA MEMBER · DEMO CARD"
+)
+
+st.caption(
+    "Prototype only · No real payments"
+)
+
+
+# ---------------- FOOTER ----------------
 
 st.divider()
 
 st.caption(
-    "VELORA · Smart Money Prototype · Demo Mode"
+    "VELORA · Smart Money Prototype"
 )
