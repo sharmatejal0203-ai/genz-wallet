@@ -1,47 +1,43 @@
 import streamlit as st
 
 # =========================================================
-# VELORA — PREMIUM FINANCE PROTOTYPE
+# VELORA — PREMIUM SMART MONEY PROTOTYPE
 # =========================================================
 
 st.set_page_config(
     page_title="VELORA",
     page_icon="V",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="centered"
 )
 
 # =========================================================
-# DEFAULT DATA
+# SESSION STATE
 # =========================================================
 
-def default_data():
-    return {
-        "balance": 5000.0,
-        "user_name": "Alex",
-        "monthly_limit": 2000.0,
-        "goal_name": "New Headphones",
-        "goal_target": 5000.0,
-        "goal_saved": 3400.0,
-        "onboarded": True,
-        "card_frozen": False,
-        "transactions": [
-            ["Pocket Money", "Income", 2000],
-            ["Food", "Food", -250],
-            ["Study", "Education", -500],
-            ["Shopping", "Shopping", -350],
-            ["Gaming", "Entertainment", -180],
-        ]
-    }
+defaults = {
+    "balance": 5000.0,
+    "page": "Home",
+    "user_name": "Alex",
+    "monthly_limit": 2000.0,
 
+    "goal_name": "New Headphones",
+    "goal_target": 5000.0,
+    "goal_saved": 3400.0,
 
-if "data" not in st.session_state:
-    st.session_state.data = default_data()
+    "card_frozen": False,
 
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+    "transactions": [
+        ["Pocket Money", "Income", 2000],
+        ["Food", "Food", -250],
+        ["Study", "Education", -500],
+        ["Shopping", "Shopping", -350],
+        ["Gaming", "Entertainment", -180],
+    ]
+}
 
-d = st.session_state.data
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 
 # =========================================================
@@ -52,207 +48,294 @@ st.markdown("""
 <style>
 
 .stApp {
-    background: #08090c;
-    color: #f5f5f7;
+    background:#08090c;
+    color:#f5f5f7;
 }
 
 .block-container {
-    max-width: 520px;
-    padding: 24px 18px 90px;
+    max-width:520px;
+    padding:24px 18px 100px;
 }
 
-header, footer, #MainMenu {
-    visibility: hidden;
+#MainMenu,
+header,
+footer {
+    visibility:hidden;
 }
 
 /* BRAND */
 
 .brand {
-    font-family: Arial, sans-serif;
-    font-size: 29px;
-    font-weight: 800;
-    letter-spacing: -1.5px;
-    color: #ffffff;
+    color:#ffffff;
+    font-size:30px;
+    font-weight:850;
+    letter-spacing:-1.7px;
 }
 
 .tagline {
-    color: #747780;
-    font-size: 12px;
-    margin-top: 2px;
-    margin-bottom: 24px;
+    color:#777b84;
+    font-size:12px;
+    margin-bottom:22px;
 }
 
 /* HERO */
 
-.hero {
-    padding: 28px;
-    border-radius: 28px;
-    background: linear-gradient(
-        135deg,
-        #32101d 0%,
-        #701b38 55%,
-        #a72b50 100%
-    );
-    box-shadow: 0 20px 55px rgba(120,20,55,.20);
-    margin: 15px 0 20px;
+.balance {
+    background:
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(255,255,255,.12),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #2b0c18,
+            #671631,
+            #a52a50
+        );
+
+    border-radius:28px;
+    padding:27px;
+    margin:18px 0;
+
+    box-shadow:
+        0 25px 60px rgba(110,20,55,.25);
 }
 
-.hero-label {
-    color: #d7bec7;
-    font-size: 10px;
-    letter-spacing: 2px;
+.balance-label {
+    color:#d9c4cc;
+    font-size:10px;
+    letter-spacing:2px;
 }
 
-.hero-number {
-    color: white;
-    font-size: 44px;
-    font-weight: 800;
-    letter-spacing: -2px;
-    margin: 5px 0;
+.balance-value {
+    color:#ffffff;
+    font-size:43px;
+    font-weight:850;
+    letter-spacing:-2px;
+    margin:5px 0;
 }
 
-.hero-small {
-    color: #ddcbd2;
-    font-size: 11px;
+.balance-small {
+    color:#dccbd1;
+    font-size:11px;
+}
+
+/* SECTION */
+
+.section {
+    color:#ffffff;
+    font-size:13px;
+    font-weight:750;
+    margin-top:27px;
+    margin-bottom:11px;
 }
 
 /* CARDS */
 
 .card {
-    background: #121419;
-    border: 1px solid #242831;
-    border-radius: 21px;
-    padding: 19px;
-    margin: 12px 0;
-}
-
-.section {
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 27px;
-    margin-bottom: 10px;
-}
-
-/* HEALTH SCORE */
-
-.score {
-    text-align: center;
-    padding: 20px;
-}
-
-.score-number {
-    font-size: 42px;
-    font-weight: 800;
-    color: #ffffff;
-}
-
-.score-label {
-    color: #858891;
-    font-size: 11px;
+    background:#13151a;
+    border:1px solid #252831;
+    border-radius:20px;
+    padding:18px;
+    margin:11px 0;
 }
 
 /* BUTTONS */
 
 .stButton > button {
-    background: #15171c !important;
-    color: #ffffff !important;
-    border: 1px solid #292d36 !important;
-    border-radius: 14px !important;
-    min-height: 44px !important;
-    font-weight: 600 !important;
+    background:#15171c !important;
+    color:#ffffff !important;
+    border:1px solid #292d36 !important;
+    border-radius:14px !important;
+    min-height:45px !important;
+    font-weight:650 !important;
 }
 
 .stButton > button:hover {
-    border-color: #a72b50 !important;
+    border-color:#a72b50 !important;
+    color:#ffffff !important;
 }
 
 /* METRICS */
 
 [data-testid="stMetric"] {
-    background: #121419;
-    border: 1px solid #242831;
-    border-radius: 18px;
-    padding: 14px;
+    background:#13151a;
+    border:1px solid #252831;
+    border-radius:18px;
+    padding:14px;
 }
 
 [data-testid="stMetricValue"] {
-    color: #ffffff !important;
+    color:#ffffff !important;
 }
 
 /* INPUTS */
 
-input {
-    background: #121419 !important;
-    color: white !important;
+input,
+textarea {
+    background:#13151a !important;
+    color:#ffffff !important;
+}
+
+[data-baseweb="select"] > div {
+    background:#13151a !important;
 }
 
 /* PROGRESS */
 
 .stProgress > div > div > div > div {
-    background: #a72b50;
-}
-
-/* NOTIFICATION */
-
-.notice {
-    background: #15171c;
-    border: 1px solid #292d36;
-    border-radius: 17px;
-    padding: 15px;
-    margin: 9px 0;
-}
-
-.notice-title {
-    color: white;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.notice-text {
-    color: #858891;
-    font-size: 11px;
-    margin-top: 3px;
+    background:#a72b50;
 }
 
 /* VIRTUAL CARD */
 
 .virtual-card {
-    background: linear-gradient(
-        135deg,
-        #181a20,
-        #343740
-    );
-    border: 1px solid #41444e;
-    border-radius: 24px;
-    padding: 24px;
-    margin: 15px 0;
+    background:
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(255,255,255,.12),
+            transparent 25%
+        ),
+        linear-gradient(
+            135deg,
+            #17191f,
+            #363943
+        );
+
+    border:1px solid #41444e;
+    border-radius:25px;
+    padding:24px;
+    margin:15px 0;
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,.28);
 }
 
-.card-brand {
-    color: #ffffff;
-    font-weight: 700;
-    letter-spacing: 1px;
+.card-top {
+    color:#a5a8b0;
+    font-size:10px;
+    letter-spacing:2px;
 }
 
 .card-chip {
-    font-size: 25px;
-    margin: 25px 0 18px;
+    font-size:25px;
+    margin:25px 0 17px;
 }
 
 .card-number {
-    font-size: 17px;
-    letter-spacing: 3px;
+    color:#ffffff;
+    font-size:17px;
+    letter-spacing:3px;
 }
 
-.card-footer {
-    color: #8e9199;
-    font-size: 9px;
-    margin-top: 23px;
+.card-bottom {
+    color:#9b9ea7;
+    font-size:9px;
+    margin-top:23px;
 }
+
+/* INSIGHT */
+
+.insight {
+    background:
+        linear-gradient(
+            135deg,
+            #17131a,
+            #21151c
+        );
+
+    border:1px solid #30262c;
+    border-radius:20px;
+    padding:19px;
+}
+
+.insight-icon {
+    font-size:20px;
+}
+
+.insight-title {
+    color:#ffffff;
+    font-size:14px;
+    font-weight:750;
+    margin-top:7px;
+}
+
+.insight-text {
+    color:#898c95;
+    font-size:11px;
+    line-height:1.5;
+    margin-top:6px;
+}
+
+/* TRANSACTIONS */
+
+.tx {
+    background:#13151a;
+    border:1px solid #252831;
+    border-radius:18px;
+    padding:15px;
+    margin:9px 0;
+}
+
+.tx-name {
+    color:#ffffff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.tx-category {
+    color:#777b84;
+    font-size:10px;
+    margin-top:4px;
+}
+
+.tx-positive {
+    color:#63d697;
+    font-weight:750;
+    text-align:right;
+}
+
+.tx-negative {
+    color:#ffffff;
+    font-weight:750;
+    text-align:right;
+}
+
+/* SCORE */
+
+.score-card {
+    background:#13151a;
+    border:1px solid #252831;
+    border-radius:22px;
+    padding:20px;
+    text-align:center;
+}
+
+.score-number {
+    color:#ffffff;
+    font-size:42px;
+    font-weight:850;
+}
+
+.score-label {
+    color:#777b84;
+    font-size:10px;
+    letter-spacing:2px;
+}
+
+/* NAV */
+
+.nav-label {
+    color:#777b84;
+    font-size:9px;
+    text-align:center;
+}
+
+/* DIVIDER */
 
 hr {
-    border-color: #242831;
+    border-color:#252831;
 }
 
 </style>
@@ -268,121 +351,74 @@ def go(page):
     st.rerun()
 
 
-def spending():
+def spending_total():
+
     total = 0
 
-    for tx in d["transactions"]:
-        if tx[2] < 0:
-            total += abs(tx[2])
+    for transaction in st.session_state.transactions:
+
+        if transaction[2] < 0:
+            total += abs(transaction[2])
 
     return total
 
 
-def category_spending(category):
+def category_total(category):
+
     total = 0
 
-    for tx in d["transactions"]:
-        if tx[1] == category and tx[2] < 0:
-            total += abs(tx[2])
+    for transaction in st.session_state.transactions:
+
+        if (
+            transaction[1] == category
+            and transaction[2] < 0
+        ):
+            total += abs(transaction[2])
 
     return total
 
 
 def add_transaction(name, category, amount):
-    d["transactions"].insert(
+
+    st.session_state.transactions.insert(
         0,
         [name, category, amount]
     )
 
 
-def health_score():
-    spent = spending()
+def velora_score():
 
-    budget_score = max(
-        0,
-        40 - int((spent / max(d["monthly_limit"], 1)) * 40)
+    spent = spending_total()
+
+    limit = max(
+        st.session_state.monthly_limit,
+        1
     )
 
-    saving_score = int(
-        min(
-            (d["goal_saved"] / max(d["goal_target"], 1)) * 40,
-            40
+    goal_ratio = (
+        st.session_state.goal_saved /
+        max(st.session_state.goal_target, 1)
+    )
+
+    spending_part = max(
+        0,
+        65 - (spent / limit * 65)
+    )
+
+    saving_part = min(
+        goal_ratio * 35,
+        35
+    )
+
+    return int(
+        max(
+            0,
+            min(
+                100,
+                spending_part + saving_part
+            )
         )
     )
-
-    consistency = 20
-
-    score = budget_score + saving_score + consistency
-
-    return min(100, max(0, score))
-
-
-# =========================================================
-# ONBOARDING
-# =========================================================
-
-if not d["onboarded"]:
-
-    st.markdown(
-        '<div style="margin-top:80px;"></div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="brand">VELORA</div>',
-        unsafe_allow_html=True
-    )
-
-    st.caption("A smarter way to manage your money.")
-
-    st.markdown("## Let's set up your wallet.")
-
-    name = st.text_input(
-        "Your name",
-        placeholder="Enter your name"
-    )
-
-    budget = st.number_input(
-        "Monthly spending limit",
-        min_value=100,
-        value=2000,
-        step=100
-    )
-
-    goal = st.text_input(
-        "First savings goal",
-        placeholder="Something you're saving for"
-    )
-
-    target = st.number_input(
-        "Goal target",
-        min_value=100,
-        value=5000,
-        step=100
-    )
-
-    if st.button(
-        "Create my Velora",
-        use_container_width=True
-    ):
-
-        if name.strip() == "":
-            st.error("Enter your name.")
-
-        else:
-
-            d["user_name"] = name
-            d["monthly_limit"] = budget
-            d["goal_name"] = goal if goal else "My Goal"
-            d["goal_target"] = target
-            d["goal_saved"] = 0
-            d["onboarded"] = True
-
-            st.session_state.page = "Home"
-
-            st.rerun()
-
-    st.stop()
 
 
 # =========================================================
@@ -411,120 +447,221 @@ if st.session_state.page == "Home":
     st.caption("GOOD AFTERNOON")
 
     st.markdown(
-        f"## Welcome back, {d['user_name']}."
+        f"## Welcome back, {st.session_state.user_name}."
     )
 
-    # Balance
+    # -----------------------------------------------------
+    # BALANCE
+    # -----------------------------------------------------
 
     st.markdown(
-        '<div class="hero">'
-        '<div class="hero-label">AVAILABLE BALANCE</div>'
-        f'<div class="hero-number">₹{d["balance"]:,.0f}</div>'
-        '<div class="hero-small">'
-        'DEMO WALLET · No real money'
-        '</div>'
+        '<div class="balance">',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="balance-label">'
+        'AVAILABLE BALANCE'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f'<div class="balance-value">'
+        f'₹{st.session_state.balance:,.0f}'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="balance-small">'
+        'VELORA DEMO WALLET · No real money'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
         '</div>',
         unsafe_allow_html=True
     )
 
 
-    # Actions
+    # -----------------------------------------------------
+    # QUICK ACTIONS
+    # -----------------------------------------------------
 
     st.markdown(
         '<div class="section">QUICK ACTIONS</div>',
         unsafe_allow_html=True
     )
 
-    a, b, c, e = st.columns(4)
+    a, b, c, d = st.columns(4)
 
     with a:
-        if st.button("＋", use_container_width=True):
+
+        if st.button(
+            "＋",
+            use_container_width=True
+        ):
             go("Add")
+
         st.caption("Add")
 
     with b:
-        if st.button("↗", use_container_width=True):
+
+        if st.button(
+            "↗",
+            use_container_width=True
+        ):
             go("Send")
+
         st.caption("Send")
 
     with c:
-        if st.button("⇄", use_container_width=True):
+
+        if st.button(
+            "⇄",
+            use_container_width=True
+        ):
             go("Request")
+
         st.caption("Request")
 
-    with e:
-        if st.button("◉", use_container_width=True):
-            go("Insights")
-        st.caption("Insights")
+    with d:
+
+        if st.button(
+            "⌁",
+            use_container_width=True
+        ):
+            go("Activity")
+
+        st.caption("Activity")
 
 
-    # Health
+    # -----------------------------------------------------
+    # MONEY OVERVIEW
+    # -----------------------------------------------------
 
-    score = health_score()
-
-    if score >= 80:
-        health_text = "Excellent"
-    elif score >= 60:
-        health_text = "Healthy"
-    elif score >= 40:
-        health_text = "Watch"
-    else:
-        health_text = "Needs attention"
-
-    st.markdown(
-        '<div class="section">MONEY HEALTH</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="card score">'
-        f'<div class="score-number">{score}</div>'
-        '<div class="score-label">VELORA SCORE</div>'
-        f'<div style="margin-top:8px;color:#c9cbd0;">'
-        f'{health_text}'
-        '</div>'
-        '</div>',
-        unsafe_allow_html=True
-    )
-
-
-    # Overview
-
-    spent = spending()
+    spent = spending_total()
 
     remaining = max(
         0,
-        d["monthly_limit"] - spent
+        st.session_state.monthly_limit - spent
     )
 
     st.markdown(
-        '<div class="section">THIS MONTH</div>',
+        '<div class="section">MONEY OVERVIEW</div>',
         unsafe_allow_html=True
     )
 
-    m1, m2 = st.columns(2)
+    c1, c2 = st.columns(2)
 
-    with m1:
+    with c1:
+
         st.metric(
             "Spent",
             f"₹{spent:,.0f}"
         )
 
-    with m2:
+    with c2:
+
         st.metric(
-            "Budget left",
+            "Remaining",
             f"₹{remaining:,.0f}"
         )
 
 
-    # Trend
+    # -----------------------------------------------------
+    # VELORA SCORE
+    # -----------------------------------------------------
+
+    score = velora_score()
+
+    st.markdown(
+        '<div class="section">VELORA SCORE</div>',
+        unsafe_allow_html=True
+    )
+
+    left, right = st.columns([1, 2])
+
+    with left:
+
+        st.markdown(
+            f"""
+            <div class="score-card">
+                <div class="score-number">
+                    {score}
+                </div>
+
+                <div class="score-label">
+                    MONEY SCORE
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    with right:
+
+        if score >= 80:
+
+            score_title = "Excellent habits"
+            score_text = (
+                "Your spending and savings are "
+                "looking well balanced."
+            )
+
+        elif score >= 60:
+
+            score_title = "You're doing well"
+            score_text = (
+                "A little more saving can improve "
+                "your financial score."
+            )
+
+        else:
+
+            score_title = "Needs attention"
+            score_text = (
+                "Try keeping your spending closer "
+                "to your monthly plan."
+            )
+
+        st.markdown(
+            f"""
+            <div class="card">
+                <div style="
+                    color:white;
+                    font-size:14px;
+                    font-weight:750;
+                ">
+                    {score_title}
+                </div>
+
+                <div style="
+                    color:#858891;
+                    font-size:11px;
+                    line-height:1.5;
+                    margin-top:7px;
+                ">
+                    {score_text}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+
+    # -----------------------------------------------------
+    # SPENDING TREND
+    # -----------------------------------------------------
 
     st.markdown(
         '<div class="section">SPENDING TREND</div>',
         unsafe_allow_html=True
     )
 
-    chart = {
+    weekly = {
         "Mon": 120,
         "Tue": 180,
         "Wed": 90,
@@ -534,112 +671,18 @@ if st.session_state.page == "Home":
         "Sun": 110
     }
 
-    st.line_chart(
-        chart,
+    st.bar_chart(
+        weekly,
         height=210
     )
 
 
-    # Goal
+    # -----------------------------------------------------
+    # WHERE MONEY GOES
+    # -----------------------------------------------------
 
     st.markdown(
-        '<div class="section">YOUR GOAL</div>',
-        unsafe_allow_html=True
-    )
-
-    progress = min(
-        d["goal_saved"] /
-        max(d["goal_target"], 1),
-        1
-    )
-
-    st.markdown(
-        '<div class="card">',
-        unsafe_allow_html=True
-    )
-
-    st.write(f"**{d['goal_name']}**")
-
-    st.caption(
-        f"₹{d['goal_saved']:,.0f} saved "
-        f"of ₹{d['goal_target']:,.0f}"
-    )
-
-    st.progress(progress)
-
-    st.caption(
-        f"{progress * 100:.0f}% complete"
-    )
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-    # Smart insight
-
-    if spent > d["monthly_limit"] * 0.8:
-
-        st.warning(
-            "VELORA INSIGHT · You're approaching your monthly limit."
-        )
-
-    elif d["goal_saved"] >= d["goal_target"] * 0.75:
-
-        st.success(
-            "VELORA INSIGHT · Your goal is almost there."
-        )
-
-    else:
-
-        st.info(
-            "VELORA INSIGHT · Your spending is currently on track."
-        )
-
-
-# =========================================================
-# INSIGHTS
-# =========================================================
-
-elif st.session_state.page == "Insights":
-
-    st.header("Insights")
-
-    st.caption(
-        "Understand your money without the noise."
-    )
-
-    spent = spending()
-
-    # Main metric
-
-    st.markdown(
-        '<div class="card">',
-        unsafe_allow_html=True
-    )
-
-    st.caption("TOTAL SPENDING")
-
-    st.markdown(
-        f"### ₹{spent:,.0f}"
-    )
-
-    budget_percent = min(
-        spent / max(d["monthly_limit"], 1),
-        1
-    )
-
-    st.progress(budget_percent)
-
-    st.caption(
-        f"{budget_percent * 100:.0f}% of your monthly budget used"
-    )
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-    # Categories
-
-    st.markdown(
-        '<div class="section">CATEGORY BREAKDOWN</div>',
+        '<div class="section">WHERE YOUR MONEY GOES</div>',
         unsafe_allow_html=True
     )
 
@@ -653,33 +696,44 @@ elif st.session_state.page == "Insights":
 
     for category in categories:
 
-        amount = category_spending(category)
+        value = category_total(category)
 
-        if amount > 0:
+        if value > 0:
 
-            c1, c2 = st.columns([3, 1])
+            left, right = st.columns([3, 1])
 
-            with c1:
+            with left:
+
                 st.write(category)
 
-            with c2:
-                st.write(f"₹{amount:,.0f}")
+            with right:
+
+                st.write(
+                    f"₹{value:,.0f}"
+                )
+
+            percentage = min(
+                value / max(spent, 1),
+                1
+            )
 
             st.progress(
-                min(amount / max(spent, 1), 1)
+                percentage
             )
 
 
-    # Savings
+    # -----------------------------------------------------
+    # SAVINGS GOAL
+    # -----------------------------------------------------
 
     st.markdown(
-        '<div class="section">SAVINGS PROGRESS</div>',
+        '<div class="section">SAVINGS GOAL</div>',
         unsafe_allow_html=True
     )
 
-    savings_percent = min(
-        d["goal_saved"] /
-        max(d["goal_target"], 1),
+    goal_progress = min(
+        st.session_state.goal_saved /
+        max(st.session_state.goal_target, 1),
         1
     )
 
@@ -689,133 +743,89 @@ elif st.session_state.page == "Insights":
     )
 
     st.write(
-        f"**{d['goal_name']}**"
+        f"**{st.session_state.goal_name}**"
     )
-
-    st.progress(savings_percent)
 
     st.caption(
-        f"{savings_percent * 100:.0f}% of your goal completed"
+        f"₹{st.session_state.goal_saved:,.0f} "
+        f"saved of "
+        f"₹{st.session_state.goal_target:,.0f}"
     )
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-    # AI-style insights
-
-    st.markdown(
-        '<div class="section">VELORA INSIGHTS</div>',
-        unsafe_allow_html=True
+    st.progress(
+        goal_progress
     )
-
-    if category_spending("Food") > 300:
-
-        st.markdown(
-            '<div class="notice">'
-            '<div class="notice-title">'
-            'Food is your biggest category'
-            '</div>'
-            '<div class="notice-text">'
-            'Consider setting a weekly food budget.'
-            '</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    if savings_percent >= 0.7:
-
-        st.markdown(
-            '<div class="notice">'
-            '<div class="notice-title">'
-            'You are close to your goal'
-            '</div>'
-            '<div class="notice-text">'
-            'Keep your current saving pace.'
-            '</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    if spent < d["monthly_limit"] * 0.5:
-
-        st.markdown(
-            '<div class="notice">'
-            '<div class="notice-title">'
-            'Strong budget control'
-            '</div>'
-            '<div class="notice-text">'
-            'You have used less than half of your monthly budget.'
-            '</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    if st.button(
-        "← Back to Home",
-        use_container_width=True
-    ):
-        go("Home")
-
-
-# =========================================================
-# NOTIFICATIONS
-# =========================================================
-
-elif st.session_state.page == "Notifications":
-
-    st.header("Notifications")
 
     st.caption(
-        "Important updates from Velora."
+        f"{goal_progress * 100:.0f}% complete"
     )
 
-    spent = spending()
-
-    if spent >= d["monthly_limit"] * 0.8:
-
-        st.markdown(
-            '<div class="notice">'
-            '<div class="notice-title">'
-            'Budget alert'
-            '</div>'
-            '<div class="notice-text">'
-            'You have used more than 80% of your monthly budget.'
-            '</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    if d["goal_saved"] >= d["goal_target"] * 0.75:
-
-        st.markdown(
-            '<div class="notice">'
-            '<div class="notice-title">'
-            'Goal milestone'
-            '</div>'
-            '<div class="notice-text">'
-            'You have crossed 75% of your savings goal.'
-            '</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
     st.markdown(
-        '<div class="notice">'
-        '<div class="notice-title">'
-        'Velora is ready'
-        '</div>'
-        '<div class="notice-text">'
-        'Your demo wallet is up to date.'
-        '</div>'
         '</div>',
         unsafe_allow_html=True
     )
 
-    if st.button(
-        "← Back",
-        use_container_width=True
-    ):
-        go("Home")
+
+    # -----------------------------------------------------
+    # SMART INSIGHT
+    # -----------------------------------------------------
+
+    shopping = category_total("Shopping")
+    food = category_total("Food")
+    education = category_total("Education")
+
+    if shopping >= food and shopping >= education:
+
+        insight_title = "Shopping is your biggest category."
+
+        insight_text = (
+            "Keep an eye on non-essential purchases "
+            "to protect your savings goal."
+        )
+
+    elif food >= education:
+
+        insight_title = "Food is taking the lead."
+
+        insight_text = (
+            "Small purchases can add up. "
+            "Tracking them can help you stay on plan."
+        )
+
+    else:
+
+        insight_title = "Your spending looks balanced."
+
+        insight_text = (
+            "You're currently keeping your spending "
+            "within your planned categories."
+        )
+
+    st.markdown(
+        '<div class="section">SMART INSIGHT</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"""
+        <div class="insight">
+
+            <div class="insight-icon">
+                ✦
+            </div>
+
+            <div class="insight-title">
+                {insight_title}
+            </div>
+
+            <div class="insight-text">
+                {insight_text}
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 # =========================================================
@@ -826,6 +836,10 @@ elif st.session_state.page == "Add":
 
     st.header("Add money")
 
+    st.caption(
+        "Add a simulated transaction to your wallet."
+    )
+
     amount = st.number_input(
         "Amount",
         min_value=1,
@@ -835,7 +849,7 @@ elif st.session_state.page == "Add":
 
     source = st.text_input(
         "Source",
-        placeholder="Pocket money / Gift"
+        placeholder="Pocket money / Gift / Other"
     )
 
     if st.button(
@@ -844,11 +858,14 @@ elif st.session_state.page == "Add":
     ):
 
         if source.strip() == "":
-            st.error("Enter a source.")
+
+            st.error(
+                "Enter a source."
+            )
 
         else:
 
-            d["balance"] += amount
+            st.session_state.balance += amount
 
             add_transaction(
                 source,
@@ -857,7 +874,7 @@ elif st.session_state.page == "Add":
             )
 
             st.success(
-                f"₹{amount:,.0f} added successfully."
+                f"₹{amount:,.0f} added."
             )
 
             go("Home")
@@ -870,12 +887,16 @@ elif st.session_state.page == "Add":
 
 
 # =========================================================
-# SEND
+# SEND MONEY
 # =========================================================
 
 elif st.session_state.page == "Send":
 
     st.header("Send money")
+
+    st.caption(
+        "Simulate a secure transfer."
+    )
 
     recipient = st.text_input(
         "Recipient",
@@ -907,14 +928,26 @@ elif st.session_state.page == "Send":
     ):
 
         if recipient.strip() == "":
-            st.error("Enter recipient.")
 
-        elif amount > d["balance"]:
-            st.error("Insufficient demo balance.")
+            st.error(
+                "Enter recipient."
+            )
+
+        elif amount > st.session_state.balance:
+
+            st.error(
+                "Insufficient demo balance."
+            )
+
+        elif st.session_state.card_frozen:
+
+            st.error(
+                "Card is frozen."
+            )
 
         else:
 
-            d["balance"] -= amount
+            st.session_state.balance -= amount
 
             add_transaction(
                 f"Sent to {recipient}",
@@ -943,6 +976,10 @@ elif st.session_state.page == "Request":
 
     st.header("Request money")
 
+    st.caption(
+        "Create a simulated payment request."
+    )
+
     person = st.text_input(
         "Request from",
         placeholder="Friend's name"
@@ -966,11 +1003,15 @@ elif st.session_state.page == "Request":
     ):
 
         if person.strip() == "":
-            st.error("Enter a name.")
+
+            st.error(
+                "Enter a name."
+            )
 
         else:
+
             st.success(
-                f"₹{amount:,.0f} request created for {person}."
+                f"₹{amount:,.0f} request created."
             )
 
     if st.button(
@@ -981,66 +1022,66 @@ elif st.session_state.page == "Request":
 
 
 # =========================================================
-# CARD
+# ACTIVITY
 # =========================================================
 
-elif st.session_state.page == "Card":
+elif st.session_state.page == "Activity":
 
-    st.header("Velora Card")
+    st.header("Activity")
 
     st.caption(
-        "Your virtual demo card."
+        "Your complete demo wallet history."
     )
 
-    status = "FROZEN" if d["card_frozen"] else "ACTIVE"
-
-    st.markdown(
-        '<div class="virtual-card">'
-        '<div class="card-brand">VELORA</div>'
-        '<div class="card-chip">▰</div>'
-        '<div class="card-number">'
-        '••••  ••••  ••••  2840'
-        '</div>'
-        f'<div class="card-footer">'
-        f'{status} · DEMO CARD'
-        '</div>'
-        '</div>',
-        unsafe_allow_html=True
+    search = st.text_input(
+        "Search transactions",
+        placeholder="Food, shopping, study..."
     )
 
-    if d["card_frozen"]:
+    found = False
 
-        st.warning("Your demo card is frozen.")
+    for name, category, amount in st.session_state.transactions:
 
-        if st.button(
-            "Unfreeze card",
-            use_container_width=True
-        ):
+        searchable = (
+            f"{name} {category}"
+        ).lower()
 
-            d["card_frozen"] = False
-            st.rerun()
+        if search.lower() not in searchable:
 
-    else:
+            continue
 
-        st.success("Your demo card is active.")
+        found = True
 
-        if st.button(
-            "Freeze card",
-            use_container_width=True
-        ):
+        st.markdown(
+            '<div class="tx">',
+            unsafe_allow_html=True
+        )
 
-            d["card_frozen"] = True
-            st.rerun()
+        left, right = st.columns([3, 1])
 
-    if st.button(
-        "← Back",
-        use_container_width=True
-    ):
-        go("Home")
+        with left:
 
+            st.markdown(
+                f'<div class="tx-name">'
+                f'{name}'
+                f'</div>',
+                unsafe_allow_html=True
+            )
 
-# =========================================================
-# GOALS
-# =========================================================
+            st.markdown(
+                f'<div class="tx-category">'
+                f'{category}'
+                f'</div>',
+                unsafe_allow_html=True
+            )
 
-elif st
+        with right:
+
+            if amount >= 0:
+
+                st.markdown(
+                    f'<div class="tx-positive">'
+                    f'+₹{amount:,.0f}'
+                    f'</div>',
+                    unsafe_allow_html=True
+      
