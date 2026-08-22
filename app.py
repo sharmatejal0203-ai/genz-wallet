@@ -689,3 +689,28 @@ if st.session_state.page == "Home":
     )
 
     s1, s2 = st.columns(2)
+with s1:
+    st.metric(
+        "Spent this month",
+        "₹{:,.0f}".format(spent)
+    )
+
+with s2:
+    st.metric(
+        "Budget remaining",
+        "₹{:,.0f}".format(remaining)
+    )
+
+s3, s4 = st.columns(2)
+
+with s3:
+    st.metric(
+        "Savings",
+        "₹{:,.0f}".format(st.session_state.goal_saved)
+    )
+
+with s4:
+    st.metric(
+        "VELORA Score",
+        "84 / 100"
+    )
