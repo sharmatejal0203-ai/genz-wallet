@@ -582,4 +582,362 @@ if st.session_state.page == "Home":
         )
 
     st.caption(
-        "{} · {:.0
+        "{} · {:.0f}% of monthly budget used".format(
+            status,
+            min(ratio * 100, 100)
+        )
+    )
+
+    st.progress(
+        min(ratio, 1)
+    )
+
+    # -----------------------------------------------------
+    # INTELLIGENCE
+    # -----------------------------------------------------
+
+    if ratio < 0.6:
+
+        intel_title = "Your money is under control."
+
+        intel_text = (
+            "Your current spending is comfortably below "
+            "your monthly limit. You have room for planned "
+            "purchases without putting your budget at risk."
+        )
+
+    elif ratio < 0.85:
+
+        intel_title = "You're approaching your limit."
+
+        intel_text = (
+            "Your spending pace is increasing. Consider "
+            "reviewing upcoming purchases before reaching "
+            "your monthly budget."
+        )
+
+    else:
+
+        intel_title = "Your budget needs attention."
+
+        intel_text = (
+            "Your spending is close to or above your planned "
+            "limit. VELORA recommends slowing discretionary "
+            "spending until the next budget cycle."
+        )
+
+    st.markdown(
+        '<div class="intelligence">'
+        '<div class="intel-label">VELORA INTELLIGENCE</div>'
+        '<div class="intel-title">{}</div>'
+        '<div class="intel-text">{}</div>'
+        '</div>'.format(
+            intel_title,
+            intel_text
+        ),
+        unsafe_allow_html=True
+    )
+
+    # -----------------------------------------------------
+    # SPENDING TREND
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section-title">Spending trend</div>',
+        unsafe_allow_html=True
+    )
+
+    chart = pd.DataFrame(
+        {
+            "Spending": [
+                120,
+                180,
+                90,
+                240,
+                160,
+                280,
+                110
+            ]
+        },
+        index=[
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ]
+    )
+
+    st.line_chart(chart)
+
+    # -----------------------------------------------------
+    # SAVINGS GOAL
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section-title">Savings goal</div>',
+        unsafe_allow_html=True
+    )
+
+    progress = (
+        st.session_state.goal_saved /
+        max(st.session_state.goal_target, 1)
+    )
+
+    st.markdown(
+        '<div class="goal">'
+        '<div class="goal-name">🎯 {}</div>'
+        '<div class="goal-meta">Current progress</div>'
+        '<div class="goal-money">₹{:,.0f} / ₹{:,.0f}</div>'
+        '</div>'.format(
+            st.session_state.goal_name,
+            st.session_state.goal_saved,
+            st.session_state.goal_target
+        ),
+        unsafe_allow_html=True
+    )
+
+    st.progress(
+        min(progress, 1)
+    )
+
+    st.caption(
+        "{:.0f}% complete · ₹{:,.0f} remaining".format(
+            progress * 100,
+            max(
+                st.session_state.goal_target -
+                st.session_state.goal_saved,
+                0
+            )
+        )
+    )
+
+    # -----------------------------------------------------
+    # RECENT ACTIVITY
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section-title">Recent activity</div>',
+        unsafe_allow_html=True
+    )
+
+    recent = st.session_state.transactions[:4]
+
+    for name, category, amount in recent:
+
+        if amount >= 0:
+
+            value = (
+                '<span class="tx-positive">+₹{:,.0f}</span>'
+                .format(amount)
+            )
+
+        else:
+
+            value = (
+                '<span class="tx-negative">−₹{:,.0f}</span>'
+                .format(abs(amount))
+            )
+
+        st.markdown(
+            '<div class="transaction">'
+            '<span class="tx-name">{}</span>'
+            '<span style="float:right;">{}</span>'
+            '<div class="tx-category">{}</div>'
+            '</div>'.format(
+                name,
+                value,
+                category
+            ),
+            unsafe_allow_html=True
+        )
+
+    if len(st.session_state.transactions) > 4:
+
+        if st.button(
+            "View all activity",
+            use_container_width=True
+        ):
+            go("Activity")
+
+
+# =========================================================
+# PAY
+# =========================================================
+
+elif st.session_state.page == "Pay":
+
+    st.subheader("Payments")
+
+    st.caption(
+        "Simulated payment · No real UPI or bank connection"
+    )
+
+    recipient = st.text_input(
+        "Recipient",
+        placeholder="Friend or contact"
+    )
+
+    amount = st.number_input(
+        "Amount",
+        min_value=1.0,
+        value=100.0,
+        step=50.0
+    )
+
+    category = st.selectbox(
+        "Category",
+        [
+            "Food",
+            "Education",
+            "Shopping",
+            "Entertainment",
+            "Travel",
+            "Other"
+        ]
+    )
+
+    if st.button(
+        "Send payment",
+        use_container_width=True
+    ):
+
+        if not recipient.strip():
+
+            st.error("Enter recipient.")
+
+        elif amount > st.session_state.balance:
+
+            st.error("Insufficient demo balance.")
+
+        else:
+
+            st.session_state.balance -= amount
+
+            add_transaction(
+                "Sent to " + recipient.strip(),
+                category,
+                -amount
+            )
+
+            st.session_state.notifications.insert(
+                0,
+                "₹{:,.0f} sent to {}.".format(
+                    amount,
+                    recipient.strip()
+                )
+            )
+
+            st.success(
+                "Payment simulated successfully."
+            )
+
+    st.divider()
+
+    st.subheader("VELORA Card")
+
+    st.markdown(
+        '<div class="virtual-card">'
+        '<b style="letter-spacing:3px;">VELORA</b>'
+        '<div style="margin-top:28px;color:#999DA8;font-size:10px;">'
+        'DEMO VIRTUAL CARD'
+        '</div>'
+        '<div style="margin-top:12px;font-size:17px;letter-spacing:3px;">'
+        '•••• •••• •••• 2840'
+        '</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.card_frozen:
+
+        st.error("CARD FROZEN")
+
+        if st.button(
+            "Unfreeze card",
+            use_container_width=True
+        ):
+
+            st.session_state.card_frozen = False
+            st.rerun()
+
+    else:
+
+        st.success("CARD ACTIVE")
+
+        if st.button(
+            "Freeze card",
+            use_container_width=True
+        ):
+
+            st.session_state.card_frozen = True
+            st.rerun()
+
+
+# =========================================================
+# ACTIVITY
+# =========================================================
+
+elif st.session_state.page == "Activity":
+
+    st.subheader("Activity")
+
+    search = st.text_input(
+        "Search transactions",
+        placeholder="Food, shopping, recipient..."
+    )
+
+    found = False
+
+    for name, category, amount in st.session_state.transactions:
+
+        if search.lower() not in (
+            name + " " + category
+        ).lower():
+            continue
+
+        found = True
+
+        if amount >= 0:
+            sign = "+"
+        else:
+            sign = "−"
+
+        st.markdown(
+            '<div class="transaction">'
+            '<span class="tx-name">{}</span>'
+            '<span style="float:right;font-weight:750;">'
+            '{}₹{:,.0f}'
+            '</span>'
+            '<div class="tx-category">{}</div>'
+            '</div>'.format(
+                name,
+                sign,
+                abs(amount),
+                category
+            ),
+            unsafe_allow_html=True
+        )
+
+    if not found:
+        st.info("No matching transactions.")
+
+
+# =========================================================
+# INSIGHT
+# =========================================================
+
+elif st.session_state.page == "Insight":
+
+    st.subheader("VELORA Intelligence")
+
+    spent = total_spending()
+
+    ratio = (
+        spent /
+        max(st.session_state.monthly_limit, 1)
+    )
+
+    categories = {}
