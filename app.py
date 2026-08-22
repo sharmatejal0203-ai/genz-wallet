@@ -359,4 +359,734 @@ for key, value in defaults.items():
 
 def go(page):
 
-    st.session_state.page =
+    st.session_state.page = page
+    st.rerun()
+
+
+def add_transaction(name, category, amount):
+
+    st.session_state.transactions.insert(
+        0,
+        [name, category, float(amount)]
+    )
+
+
+def spending_total():
+
+    return sum(
+        abs(x[2])
+        for x in st.session_state.transactions
+        if x[2] < 0
+    )
+
+
+def income_total():
+
+    return sum(
+        x[2]
+        for x in st.session_state.transactions
+        if x[2] > 0
+    )
+
+
+def category_total(category):
+
+    return sum(
+        abs(x[2])
+        for x in st.session_state.transactions
+        if x[1] == category and x[2] < 0
+    )
+
+
+def biggest_category():
+
+    data = {}
+
+    for x in st.session_state.transactions:
+
+        if x[2] < 0:
+
+            data[x[1]] = data.get(x[1], 0) + abs(x[2])
+
+    if not data:
+        return "None", 0
+
+    cat = max(data, key=data.get)
+
+    return cat, data[cat]
+
+
+def get_score():
+
+    spent = spending_total()
+
+    limit = max(
+        st.session_state.monthly_limit,
+        1
+    )
+
+    ratio = spent / limit
+
+    if ratio <= .50:
+        score = 94
+
+    elif ratio <= .70:
+        score = 88
+
+    elif ratio <= .85:
+        score = 80
+
+    elif ratio <= 1:
+        score = 70
+
+    else:
+        score = 58
+
+    if st.session_state.jar >= 1000:
+        score += 3
+
+    return min(score, 100)
+
+
+def reset_demo():
+
+    st.session_state.balance = 5000.0
+    st.session_state.monthly_limit = 2000.0
+    st.session_state.name = "Tejal"
+
+    st.session_state.card_frozen = False
+
+    st.session_state.jar = 850.0
+
+    st.session_state.notifications = []
+
+    st.session_state.show_add = False
+    st.session_state.show_request = False
+    st.session_state.show_jar = False
+
+    st.session_state.goals = [
+        {
+            "name": "New Headphones",
+            "target": 5000.0,
+            "saved": 3400.0
+        }
+    ]
+
+    st.session_state.transactions = [
+        ["Pocket Money", "Income", 2000.0],
+        ["Food", "Food", -250.0],
+        ["Study", "Education", -500.0],
+        ["Shopping", "Shopping", -350.0],
+        ["Gaming", "Entertainment", -180.0]
+    ]
+
+
+# =========================================================
+# HEADER
+# =========================================================
+
+st.markdown(
+    '<div class="brand">VELORA</div>'
+    '<div class="tagline">INTELLIGENT MONEY MANAGEMENT</div>',
+    unsafe_allow_html=True
+)
+
+st.write("")
+
+
+# =========================================================
+# NAVIGATION
+# =========================================================
+
+n1, n2, n3, n4, n5 = st.columns(5)
+
+
+with n1:
+
+    if st.button(
+        "HOME",
+        use_container_width=True
+    ):
+        go("Home")
+
+
+with n2:
+
+    if st.button(
+        "PAY",
+        use_container_width=True
+    ):
+        go("Pay")
+
+
+with n3:
+
+    if st.button(
+        "ACTIVITY",
+        use_container_width=True
+    ):
+        go("Activity")
+
+
+with n4:
+
+    if st.button(
+        "INSIGHT",
+        use_container_width=True
+    ):
+        go("Insight")
+
+
+with n5:
+
+    if st.button(
+        "PROFILE",
+        use_container_width=True
+    ):
+        go("Profile")
+
+
+# =========================================================
+# HOME
+# =========================================================
+
+if st.session_state.page == "Home":
+
+    st.caption("GOOD EVENING")
+
+    st.subheader(
+        st.session_state.name + " 👋"
+    )
+
+    # BALANCE
+
+    st.markdown(
+        '<div class="card">'
+        '<div class="balance-label">AVAILABLE BALANCE</div>'
+        '<div class="balance">₹{:,.0f}</div>'
+        '<div class="muted">'
+        'Demo wallet · No real money connected'
+        '</div>'
+        '</div>'.format(
+            st.session_state.balance
+        ),
+        unsafe_allow_html=True
+    )
+
+    # QUICK ACTIONS
+
+    a, b, c = st.columns(3)
+
+
+    with a:
+
+        if st.button(
+            "＋ ADD",
+            use_container_width=True
+        ):
+
+            st.session_state.show_add = True
+
+
+    with b:
+
+        if st.button(
+            "↗ SEND",
+            use_container_width=True
+        ):
+
+            go("Pay")
+
+
+    with c:
+
+        if st.button(
+            "⇄ REQUEST",
+            use_container_width=True
+        ):
+
+            st.session_state.show_request = True
+
+
+    # ADD MONEY
+
+    if st.session_state.show_add:
+
+        st.markdown("### Add money")
+
+        amount = st.number_input(
+            "Amount",
+            min_value=1.0,
+            value=500.0,
+            step=100.0,
+            key="add_amount"
+        )
+
+        source = st.text_input(
+            "Source",
+            value="Pocket Money",
+            key="add_source"
+        )
+
+        x1, x2 = st.columns(2)
+
+
+        with x1:
+
+            if st.button(
+                "Confirm",
+                use_container_width=True,
+                key="add_confirm"
+            ):
+
+                st.session_state.balance += amount
+
+                add_transaction(
+                    source.strip() or "Income",
+                    "Income",
+                    amount
+                )
+
+                st.session_state.notifications.insert(
+                    0,
+                    "₹{:,.0f} added successfully.".format(
+                        amount
+                    )
+                )
+
+                st.session_state.show_add = False
+
+                st.rerun()
+
+
+        with x2:
+
+            if st.button(
+                "Cancel",
+                use_container_width=True,
+                key="add_cancel"
+            ):
+
+                st.session_state.show_add = False
+
+                st.rerun()
+
+
+    # REQUEST MONEY
+
+    if st.session_state.show_request:
+
+        st.markdown("### Request money")
+
+        person = st.text_input(
+            "From",
+            placeholder="Friend's name",
+            key="request_person"
+        )
+
+        amount = st.number_input(
+            "Amount",
+            min_value=1.0,
+            value=200.0,
+            step=50.0,
+            key="request_amount"
+        )
+
+        x1, x2 = st.columns(2)
+
+
+        with x1:
+
+            if st.button(
+                "Create request",
+                use_container_width=True,
+                key="request_confirm"
+            ):
+
+                if not person.strip():
+
+                    st.error("Enter a name.")
+
+                else:
+
+                    st.session_state.notifications.insert(
+                        0,
+                        "Request of ₹{:,.0f} created.".format(
+                            amount
+                        )
+                    )
+
+                    st.session_state.show_request = False
+
+                    st.rerun()
+
+
+        with x2:
+
+            if st.button(
+                "Cancel",
+                use_container_width=True,
+                key="request_cancel"
+            ):
+
+                st.session_state.show_request = False
+
+                st.rerun()
+
+
+    # FINANCIAL SNAPSHOT
+
+    st.markdown(
+        '<div class="section">Financial snapshot</div>',
+        unsafe_allow_html=True
+    )
+
+    spent = spending_total()
+
+    remaining = max(
+        st.session_state.monthly_limit - spent,
+        0
+    )
+
+    ratio = spent / max(
+        st.session_state.monthly_limit,
+        1
+    )
+
+
+    c1, c2 = st.columns(2)
+
+
+    with c1:
+
+        st.metric(
+            "Spent this month",
+            "₹{:,.0f}".format(spent)
+        )
+
+
+    with c2:
+
+        st.metric(
+            "Budget remaining",
+            "₹{:,.0f}".format(remaining)
+        )
+
+
+    c3, c4 = st.columns(2)
+
+
+    with c3:
+
+        st.metric(
+            "Savings Jar",
+            "₹{:,.0f}".format(
+                st.session_state.jar
+            )
+        )
+
+
+    with c4:
+
+        st.metric(
+            "VELORA Score",
+            "{}/100".format(
+                get_score()
+            )
+        )
+
+
+    # SMART ALERT
+
+    if ratio < .60:
+
+        st.success(
+            "You're on track. Your spending is comfortably below your limit."
+        )
+
+    elif ratio < .85:
+
+        st.warning(
+            "You're approaching your monthly limit. Keep an eye on discretionary spending."
+        )
+
+    else:
+
+        st.error(
+            "Budget risk detected. Your spending is close to your monthly limit."
+        )
+
+
+    # INTELLIGENCE
+
+    biggest, biggest_value = biggest_category()
+
+
+    if biggest != "None":
+
+        st.markdown(
+            '<div class="insight">'
+            '<div class="insight-label">'
+            'VELORA INTELLIGENCE'
+            '</div>'
+            '<div class="insight-title">'
+            '{} is your biggest category'
+            '</div>'
+            '<div class="insight-text">'
+            '₹{:,.0f} has been spent here. '
+            'VELORA is monitoring your spending behavior.'
+            '</div>'
+            '</div>'.format(
+                biggest,
+                biggest_value
+            ),
+            unsafe_allow_html=True
+        )
+
+
+    # SPENDING TREND
+
+    st.markdown(
+        '<div class="section">Spending trend</div>',
+        unsafe_allow_html=True
+    )
+
+    chart = pd.DataFrame(
+        {
+            "Spending": [
+                120,
+                180,
+                90,
+                240,
+                160,
+                280,
+                110
+            ]
+        },
+        index=[
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ]
+    )
+
+    st.line_chart(chart)
+
+
+    # SAVINGS JAR
+
+    st.markdown(
+        '<div class="section">Savings Jar</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="jar">'
+        '<div class="jar-title">Future Fund</div>'
+        '<div class="jar-money">₹{:,.0f}</div>'
+        '<div class="muted">'
+        'Money you intentionally set aside'
+        '</div>'
+        '</div>'.format(
+            st.session_state.jar
+        ),
+        unsafe_allow_html=True
+    )
+
+
+    if st.button(
+        "Manage Savings Jar",
+        use_container_width=True
+    ):
+
+        st.session_state.show_jar = True
+
+
+    if st.session_state.show_jar:
+
+        jar_action = st.selectbox(
+            "Action",
+            [
+                "Add to Jar",
+                "Withdraw from Jar"
+            ],
+            key="jar_action"
+        )
+
+        jar_amount = st.number_input(
+            "Amount",
+            min_value=1.0,
+            value=100.0,
+            step=50.0,
+            key="jar_amount"
+        )
+
+
+        if st.button(
+            "Confirm Jar Action",
+            use_container_width=True,
+            key="confirm_jar"
+        ):
+
+            if jar_action == "Add to Jar":
+
+                if jar_amount > st.session_state.balance:
+
+                    st.error(
+                        "Insufficient demo balance."
+                    )
+
+                else:
+
+                    st.session_state.balance -= jar_amount
+
+                    st.session_state.jar += jar_amount
+
+                    add_transaction(
+                        "Savings Jar",
+                        "Savings",
+                        -jar_amount
+                    )
+
+                    st.session_state.notifications.insert(
+                        0,
+                        "₹{:,.0f} moved to Savings Jar.".format(
+                            jar_amount
+                        )
+                    )
+
+                    st.session_state.show_jar = False
+
+                    st.rerun()
+
+
+            else:
+
+                if jar_amount > st.session_state.jar:
+
+                    st.error(
+                        "Not enough money in the jar."
+                    )
+
+                else:
+
+                    st.session_state.jar -= jar_amount
+
+                    st.session_state.balance += jar_amount
+
+                    add_transaction(
+                        "Savings Jar withdrawal",
+                        "Savings",
+                        jar_amount
+                    )
+
+                    st.session_state.show_jar = False
+
+                    st.rerun()
+
+
+    # GOALS
+
+    st.markdown(
+        '<div class="section">Your goals</div>',
+        unsafe_allow_html=True
+    )
+
+
+    for goal in st.session_state.goals:
+
+        progress = min(
+            goal["saved"] /
+            max(goal["target"], 1),
+            1
+        )
+
+        st.markdown(
+            '<div class="goal">'
+            '<div class="goal-title">{}</div>'
+            '<div class="goal-money">'
+            '₹{:,.0f} / ₹{:,.0f}'
+            '</div>'
+            '</div>'.format(
+                goal["name"],
+                goal["saved"],
+                goal["target"]
+            ),
+            unsafe_allow_html=True
+        )
+
+        st.progress(progress)
+
+
+# =========================================================
+# PAY
+# =========================================================
+
+elif st.session_state.page == "Pay":
+
+    st.subheader("Payments")
+
+    st.caption(
+        "Simulated payment · No real UPI or bank connection"
+    )
+
+
+    recipient = st.text_input(
+        "Recipient",
+        placeholder="Friend or contact",
+        key="pay_recipient"
+    )
+
+
+    amount = st.number_input(
+        "Amount",
+        min_value=1.0,
+        value=100.0,
+        step=50.0,
+        key="pay_amount"
+    )
+
+
+    category = st.selectbox(
+        "Category",
+        [
+            "Food",
+            "Education",
+            "Shopping",
+            "Entertainment",
+            "Travel",
+            "Other"
+        ],
+        key="pay_category"
+    )
+
+
+    if st.button(
+        "Send payment",
+        use_container_width=True,
+        key="send_payment"
+    ):
+
+        if not recipient.strip():
+
+            st.error(
+                "Enter recipient."
+            )
+
+        elif amount > st.session_state.balance:
+
+            st.error(
+                "Insufficient demo balance."
+            )
+
+        elif st.session_state.card_frozen:
+
+            st.error(
+                "Your demo card is frozen."
+            )
+
+    
