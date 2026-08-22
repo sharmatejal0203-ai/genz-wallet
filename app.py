@@ -41,7 +41,7 @@ h1, h2, h3, h4, p, label {
 
 .stButton > button {
     background: #151821 !important;
-    color: #FFFFFF !important;
+    color: white !important;
     border: 1px solid #303542 !important;
     border-radius: 14px !important;
     min-height: 44px !important;
@@ -61,7 +61,7 @@ h1, h2, h3, h4, p, label {
 }
 
 [data-testid="stMetricValue"] {
-    color: #FFFFFF !important;
+    color: white !important;
     font-weight: 850 !important;
 }
 
@@ -72,20 +72,15 @@ h1, h2, h3, h4, p, label {
 .stTextInput input,
 .stNumberInput input {
     background: #11141A !important;
-    color: #FFFFFF !important;
+    color: white !important;
 }
 
 .stSelectbox div[data-baseweb="select"] {
     background: #11141A !important;
 }
 
-.stTextArea textarea {
-    background: #11141A !important;
-    color: #FFFFFF !important;
-}
-
 .stProgress > div > div > div > div {
-    background: #9B7BFF;
+    background: #9B7BFF !important;
 }
 
 hr {
@@ -120,10 +115,9 @@ hr {
 }
 
 .balance {
-    color: #FFFFFF;
+    color: white;
     font-size: 44px;
     font-weight: 900;
-    letter-spacing: -2px;
     margin: 4px 0;
 }
 
@@ -133,7 +127,7 @@ hr {
 }
 
 .section {
-    color: #FFFFFF;
+    color: white;
     font-size: 18px;
     font-weight: 850;
     margin-top: 26px;
@@ -156,7 +150,7 @@ hr {
 }
 
 .insight-title {
-    color: #FFFFFF;
+    color: white;
     font-size: 18px;
     font-weight: 850;
     margin-top: 7px;
@@ -186,19 +180,16 @@ hr {
 .tx-cat {
     color: #777D89;
     font-size: 10px;
-    margin-top: 3px;
 }
 
 .tx-income {
     color: #6EE7A0;
     font-weight: 800;
-    margin-top: 5px;
 }
 
 .tx-expense {
     color: #FF7D91;
     font-weight: 800;
-    margin-top: 5px;
 }
 
 .goal {
@@ -217,7 +208,6 @@ hr {
 .goal-money {
     font-size: 21px;
     font-weight: 850;
-    margin-top: 5px;
 }
 
 .virtual-card {
@@ -256,7 +246,6 @@ hr {
     border-radius: 22px;
     padding: 20px;
     text-align: center;
-    margin: 15px 0;
 }
 
 .score-number {
@@ -275,14 +264,6 @@ hr {
     border: 1px solid #303542;
     border-radius: 15px;
     padding: 13px;
-    margin: 8px 0;
-}
-
-.small-card {
-    background: #11141A;
-    border: 1px solid #292E38;
-    border-radius: 18px;
-    padding: 17px;
     margin: 8px 0;
 }
 
@@ -408,7 +389,6 @@ def financial_score():
 
 
 def ai_insight():
-
     spent = spending_total()
 
     limit = max(
@@ -442,15 +422,20 @@ def ai_insight():
             .format(st.session_state.jar)
         )
 
+    if biggest != "None":
+        return (
+            "Spending Pattern Detected",
+            "{} is currently your biggest category at ₹{:,.0f}."
+            .format(biggest, value)
+        )
+
     return (
-        "Spending Pattern Detected",
-        "{} is currently your biggest category at ₹{:,.0f}."
-        .format(biggest, value)
+        "You're Doing Well",
+        "VELORA is monitoring your spending behaviour."
     )
 
 
 def reset_demo():
-
     st.session_state.balance = 5000.0
     st.session_state.monthly_limit = 2000.0
     st.session_state.name = "Tejal"
@@ -552,10 +537,6 @@ if st.session_state.page == "Home":
         if st.button("🎯 GOALS", use_container_width=True):
             go("Goals")
 
-    # -----------------------------------------------------
-    # FINANCIAL SNAPSHOT
-    # -----------------------------------------------------
-
     st.markdown(
         '<div class="section">Financial snapshot</div>',
         unsafe_allow_html=True
@@ -618,27 +599,24 @@ if st.session_state.page == "Home":
             "Budget risk detected."
         )
 
-    # -----------------------------------------------------
-    # INTELLIGENCE
-    # -----------------------------------------------------
-
     biggest, value = biggest_category()
 
-    st.markdown(
-        '<div class="insight">'
-        '<div class="insight-label">VELORA INTELLIGENCE</div>'
-        '<div class="insight-title">'
-        '{} is your biggest category'
-        '</div>'
-        '<div class="insight-text">'
-        '₹{:,.0f} spent in this category.'
-        '</div>'
-        '</div>'.format(
-            biggest,
-            value
-        ),
-        unsafe_allow_html=True
-    )
+    if biggest != "None":
+        st.markdown(
+            '<div class="insight">'
+            '<div class="insight-label">VELORA INTELLIGENCE</div>'
+            '<div class="insight-title">'
+            '{} is your biggest category'
+            '</div>'
+            '<div class="insight-text">'
+            '₹{:,.0f} spent in this category.'
+            '</div>'
+            '</div>'.format(
+                biggest,
+                value
+            ),
+            unsafe_allow_html=True
+        )
 
     title, text = ai_insight()
 
@@ -653,10 +631,6 @@ if st.session_state.page == "Home":
         ),
         unsafe_allow_html=True
     )
-
-    # -----------------------------------------------------
-    # SPENDING TREND
-    # -----------------------------------------------------
 
     st.markdown(
         '<div class="section">Spending trend</div>',
@@ -688,10 +662,6 @@ if st.session_state.page == "Home":
 
     st.line_chart(chart)
 
-    # -----------------------------------------------------
-    # SAVINGS JAR
-    # -----------------------------------------------------
-
     st.markdown(
         '<div class="section">Savings Jar</div>',
         unsafe_allow_html=True
@@ -710,12 +680,6 @@ if st.session_state.page == "Home":
         unsafe_allow_html=True
     )
 
-    if st.button(
-        "Manage Savings Jar",
-        use_container_width=True
-    ):
-        go("Jar")
-
 
 # =========================================================
 # ADD MONEY
@@ -725,9 +689,7 @@ elif st.session_state.page == "Add":
 
     st.subheader("Add Money")
 
-    st.caption(
-        "Simulated wallet top-up — no real money."
-    )
+    st.caption("Demo transaction only.")
 
     amount = st.number_input(
         "Amount",
@@ -762,10 +724,6 @@ elif st.session_state.page == "Add":
             .format(amount)
         )
 
-        st.success(
-            "Money added to demo wallet."
-        )
-
         st.session_state.page = "Home"
         st.rerun()
 
@@ -784,27 +742,18 @@ elif st.session_state.page == "Pay":
 
     st.subheader("Send Money")
 
-    st.caption(
-        "Simulated payment — no real UPI."
-    )
-
-    if st.session_state.card_frozen:
-        st.error(
-            "🔒 VELORA card is frozen."
-        )
+    st.caption("Simulated payment — no real UPI.")
 
     recipient = st.text_input(
         "Recipient",
-        placeholder="Friend or contact",
-        key="recipient"
+        placeholder="Friend or contact"
     )
 
     amount = st.number_input(
         "Amount",
         min_value=1.0,
         value=100.0,
-        step=50.0,
-        key="payment_amount"
+        step=50.0
     )
 
     category = st.selectbox(
@@ -817,8 +766,7 @@ elif st.session_state.page == "Pay":
             "Travel",
             "Bills",
             "Other"
-        ],
-        key="payment_category"
+        ]
     )
 
     if st.button(
@@ -826,23 +774,14 @@ elif st.session_state.page == "Pay":
         use_container_width=True
     ):
 
-        if not recipient.strip():
+        if st.session_state.card_frozen:
+            st.error("Card is frozen.")
 
-            st.error(
-                "Enter recipient."
-            )
+        elif not recipient.strip():
+            st.error("Enter recipient.")
 
         elif amount > st.session_state.balance:
-
-            st.error(
-                "Insufficient demo balance."
-            )
-
-        elif st.session_state.card_frozen:
-
-            st.error(
-                "Card is frozen."
-            )
+            st.error("Insufficient demo balance.")
 
         else:
 
@@ -872,6 +811,12 @@ elif st.session_state.page == "Pay":
         unsafe_allow_html=True
     )
 
+    card_status = (
+        "FROZEN"
+        if st.session_state.card_frozen
+        else "ACTIVE"
+    )
+
     st.markdown(
         '<div class="virtual-card">'
         '<div class="card-brand">VELORA</div>'
@@ -879,9 +824,11 @@ elif st.session_state.page == "Pay":
         '••••  ••••  ••••  2840'
         '</div>'
         '<div class="card-small">'
-        'DEMO VIRTUAL CARD · 09/30'
+        'DEMO VIRTUAL CARD · 09/30 · {}'
         '</div>'
-        '</div>',
+        '</div>'.format(
+            card_status
+        ),
         unsafe_allow_html=True
     )
 
@@ -891,7 +838,6 @@ elif st.session_state.page == "Pay":
             "UNFREEZE CARD",
             use_container_width=True
         ):
-
             st.session_state.card_frozen = False
             st.rerun()
 
@@ -901,59 +847,67 @@ elif st.session_state.page == "Pay":
             "FREEZE CARD",
             use_container_width=True
         ):
-
             st.session_state.card_frozen = True
             st.rerun()
 
-
-# =========================================================
-# SAVINGS JAR
-# =========================================================
-
-elif st.session_state.page == "Jar":
-
-    st.subheader("Savings Jar")
-
-    st.caption(
-        "Move demo money into or out of your savings jar."
-    )
-
-    st.markdown(
-        '<div class="hero">'
-        '<div class="balance-label">CURRENT SAVINGS</div>'
-        '<div class="balance">₹{:,.0f}</div>'
-        '<div class="muted">'
-        'Money intentionally set aside'
-        '</div>'
-        '</div>'.format(
-            st.session_state.jar
-        ),
-        unsafe_allow_html=True
-    )
-
-    action = st.selectbox(
-        "Choose action",
-        [
-            "Add to Jar",
-            "Withdraw from Jar"
-        ],
-        key="jar_action"
-    )
-
-    amount = st.number_input(
-        "Amount",
-        min_value=1.0,
-        value=100.0,
-        step=50.0,
-        key="jar_amount"
-    )
-
     if st.button(
-        "Confirm",
+        "← Back Home",
         use_container_width=True
     ):
+        go("Home")
 
-        if action == "Add to Jar":
+
+# =========================================================
+# GOALS
+# =========================================================
+
+elif st.session_state.page == "Goals":
+
+    st.subheader("Savings Goals")
+
+    st.caption(
+        "Create goals and track your progress."
+    )
+
+    for i, goal in enumerate(
+        st.session_state.goals
+    ):
+
+        progress = min(
+            goal["saved"] /
+            max(goal["target"], 1),
+            1
+        )
+
+        st.markdown(
+            '<div class="goal">'
+            '<div class="goal-title">{}</div>'
+            '<div class="goal-money">'
+            '₹{:,.0f} / ₹{:,.0f}'
+            '</div>'
+            '</div>'.format(
+                goal["name"],
+                goal["saved"],
+                goal["target"]
+            ),
+            unsafe_allow_html=True
+        )
+
+        st.progress(progress)
+
+        amount = st.number_input(
+            "Add amount",
+            min_value=1.0,
+            value=100.0,
+            step=50.0,
+            key="goal_amount_{}".format(i)
+        )
+
+        if st.button(
+            "Add to Goal",
+            use_container_width=True,
+            key="goal_button_{}".format(i)
+        ):
 
             if amount > st.session_state.balance:
 
@@ -961,22 +915,60 @@ elif st.session_state.page == "Jar":
                     "Insufficient demo balance."
                 )
 
+            elif goal["saved"] >= goal["target"]:
+
+                st.info(
+                    "This goal is already complete."
+                )
+
             else:
 
-                st.session_state.balance -= amount
-                st.session_state.jar += amount
+                amount_to_add = min(
+                    amount,
+                    goal["target"] - goal["saved"]
+                )
+
+                st.session_state.balance -= amount_to_add
+
+                goal["saved"] += amount_to_add
 
                 add_transaction(
-                    "Savings Jar",
+                    goal["name"],
                     "Savings",
-                    -amount
+                    -amount_to_add
                 )
 
                 st.session_state.notifications.insert(
                     0,
-                    "₹{:,.0f} moved to Savings Jar."
-                    .format(amount)
+                    "₹{:,.0f} added to {}."
+                    .format(
+                        amount_to_add,
+                        goal["name"]
+                    )
                 )
 
-                st.success(
-                 
+                st.rerun()
+
+    st.divider()
+
+    st.markdown(
+        '<div class="section">Create New Goal</div>',
+        unsafe_allow_html=True
+    )
+
+    goal_name = st.text_input(
+        "Goal name",
+        placeholder="Example: New Laptop",
+        key="new_goal_name"
+    )
+
+    goal_target = st.number_input(
+        "Target amount",
+        min_value=100.0,
+        value=5000.0,
+        step=500.0,
+        key="new_goal_target"
+    )
+
+    if st.button(
+        
