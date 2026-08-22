@@ -977,4 +977,83 @@ elif st.session_state.page == "Insight":
         unsafe_allow_html=True
     )
 
-    for 
+        for goal in st.session_state.goals:
+
+        progress = min(
+            goal["saved"] / max(goal["target"], 1),
+            1
+        )
+
+        st.markdown(
+            '<div class="goal">'
+            '<div class="goal-title">{}</div>'
+            '<div class="goal-money">₹{:,.0f} / ₹{:,.0f}</div>'
+            '<div class="muted">{:.0f}% complete</div>'
+            '</div>'.format(
+                goal["name"],
+                goal["saved"],
+                goal["target"],
+                progress * 100
+            ),
+            unsafe_allow_html=True
+        )
+
+        st.progress(progress)
+
+        remaining_goal = max(
+            goal["target"] - goal["saved"],
+            0
+        )
+
+        if remaining_goal > 0:
+            st.caption(
+                "₹{:,.0f} remaining to reach this goal.".format(
+                    remaining_goal
+                )
+            )
+        else:
+            st.success(
+                "🎉 Goal completed!"
+            )
+
+    # =====================================================
+    # NOTIFICATIONS
+    # =====================================================
+
+    st.markdown(
+        '<div class="section">Notifications</div>',
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.notifications:
+
+        for notification in st.session_state.notifications[:5]:
+            st.info(notification)
+
+    else:
+        st.caption("No new notifications.")
+
+    # =====================================================
+    # QUICK RESET
+    # =====================================================
+
+    st.divider()
+
+    if st.button(
+        "Reset demo data",
+        use_container_width=True
+    ):
+        reset_demo()
+        st.success("Demo data reset.")
+        st.rerun()
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.divider()
+
+st.caption(
+    "VELORA · Intelligent money management · Demo Mode"
+)
