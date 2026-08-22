@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS
+# PREMIUM CSS
 # =========================================================
 
 st.markdown("""
@@ -75,8 +75,12 @@ h1, h2, h3, h4, p, label {
     color: white !important;
 }
 
+.stSelectbox div[data-baseweb="select"] {
+    background: #11141A !important;
+}
+
 .stProgress > div > div > div > div {
-    background: #9B7BFF;
+    background: #9B7BFF !important;
 }
 
 hr {
@@ -230,49 +234,169 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
+
 # =========================================================
 # SESSION STATE
 # =========================================================
 
-if "balance" not in st.session_state:
-    st.session_state.balance = 5000.0
-
-if "monthly_limit" not in st.session_state:
-    st.session_state.monthly_limit = 2000.0
-
-if "name" not in st.session_state:
-    st.session_state.name = "Tejal"
-
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
-
-if "card_frozen" not in st.session_state:
-    st.session_state.card_frozen = False
-
-if "jar" not in st.session_state:
-    st.session_state.jar = 850.0
-
-if "notifications" not in st.session_state:
-    st.session_state.notifications = []
-
-if "show_add" not in st.session_state:
-    st.session_state.show_add = False
-
-if "show_request" not in st.session_state:
-    st.session_state.show_request = False
-
-if "show_jar" not in st.session_state:
-    st.session_state.show_jar = False
-
-if "goals" not in st.session_state:
-    st.session_state.goals = [
+defaults = {
+    "balance": 5000.0,
+    "monthly_limit": 2000.0,
+    "name": "Tejal",
+    "page": "Home",
+    "card_frozen": False,
+    "jar": 850.0,
+    "notifications": [],
+    "show_add": False,
+    "show_request": False,
+    "show_jar": False,
+    "goals": [
         {
             "name": "New Headphones",
             "target": 5000.0,
             "saved": 3400.0
         }
+    ],
+    "transactions": [
+        ["Pocket Money", "Income", 2000.0],
+        ["Food", "Food", -250.0],
+        ["Study", "Education", -500.0],
+        ["Shopping", "Shopping", -350.0],
+        ["Gaming", "Entertainment", -180.0]
     ]
+}
 
-if "transactions" not in st.session_state:
-    st.session_state.transactions = [
-        ["Pocket Money", "Income
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
+
+
+# =========================================================
+# FUNCTIONS
+# =========================================================
+
+def go(page):
+    st.session_state.page = page
+    st.rerun()
+
+
+def add_transaction(name, category, amount):
+    st.session_state.transactions.insert(
+        0,
+        [name, category, float(amount)]
+    )
+
+
+def spending_total():
+    return sum(
+        abs(item[2])
+        for item in st.session_state.transactions
+        if item[2] < 0
+    )
+
+
+def income_total():
+    return sum(
+        item[2]
+        for item in st.session_state.transactions
+        if item[2] > 0
+    )
+
+
+def biggest_category():
+    data = {}
+
+    for item in st.session_state.transactions:
+        if item[2] < 0:
+            category = item[1]
+            data[category] = data.get(
+                category,
+                0
+            ) + abs(item[2])
+
+    if not data:
+        return "None", 0
+
+    category = max(
+        data,
+        key=data.get
+    )
+
+    return category, data[category]
+
+
+def get_score():
+
+    spent = spending_total()
+
+    limit = max(
+        float(st.session_state.monthly_limit),
+        1
+    )
+
+    ratio = spent / limit
+
+    if ratio <= 0.50:
+        score = 94
+
+    elif ratio <= 0.70:
+        score = 88
+
+    elif ratio <= 0.85:
+        score = 80
+
+    elif ratio <= 1:
+        score = 70
+
+    else:
+        score = 58
+
+    if st.session_state.jar >= 1000:
+        score += 3
+
+    return min(score, 100)
+
+
+def get_insight():
+
+    spent = spending_total()
+
+    limit = max(
+        float(st.session_state.monthly_limit),
+        1
+    )
+
+    ratio = spent / limit
+
+    biggest, value = biggest_category()
+
+    if ratio >= 1:
+
+        return (
+            "Budget Alert",
+            "You've crossed your monthly spending limit. "
+            "Try prioritising essential expenses."
+        )
+
+    if ratio >= 0.80:
+
+        return (
+            "Watch Your Spending",
+            "{} is your biggest category at ₹{:,.0f}."
+            .format(biggest, value)
+        )
+
+    if st.session_state.jar >= 1000:
+
+        return (
+            "Great Saving Behaviour",
+            "Your Savings Jar has ₹{:,.0f}. "
+            "You're building a consistent saving habit."
+            .format(st.session_state.jar)
+        )
+
+    if biggest != "None":
+
+        return (
+            "Spending Pattern Detected",
+            "{} is currently your biggest spending
