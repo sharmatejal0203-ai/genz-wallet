@@ -945,4 +945,4 @@ elif st.session_state.page == "Goals":
         st.progress(progress)
 
         amount = st.number_input(
-         
+        
