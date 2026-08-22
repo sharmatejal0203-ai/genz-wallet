@@ -2,70 +2,63 @@ import streamlit as st
 import pandas as pd
 
 # =========================================================
-# VELORA — SMART MONEY MANAGEMENT
-# Premium fintech prototype
-# No real payments / no real bank connection
+# VELORA — PREMIUM FINTECH DEMO
 # =========================================================
 
 st.set_page_config(
     page_title="VELORA",
     page_icon="V",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="centered"
 )
 
 # =========================================================
-# PREMIUM UI
+# STYLE
 # =========================================================
 
 st.markdown("""
 <style>
 .stApp {
-    background:
-        radial-gradient(circle at 50% -10%, #20243A 0%, #0B0C10 38%, #08090C 100%);
+    background: #08090D;
     color: #F5F5F7;
 }
 
 .block-container {
     max-width: 560px;
-    padding: 22px 18px 80px;
+    padding: 24px 18px 90px;
 }
 
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-h1,h2,h3,h4 {
-    color: #F5F5F7 !important;
+h1, h2, h3, h4 {
+    color: #FFFFFF !important;
 }
 
-p,label {
-    color: #9699A5 !important;
+p, label {
+    color: #9296A3 !important;
 }
 
 .stButton > button {
-    background: #15171D !important;
-    color: #F5F5F7 !important;
-    border: 1px solid #292D36 !important;
-    border-radius: 13px !important;
+    width: 100%;
+    background: #15171E !important;
+    color: #FFFFFF !important;
+    border: 1px solid #2B2E38 !important;
+    border-radius: 14px !important;
     min-height: 44px !important;
     font-weight: 700 !important;
 }
 
 .stButton > button:hover {
-    background: #1C1F28 !important;
-    border-color: #777D8C !important;
+    border-color: #9B7BFF !important;
+    background: #1B1D26 !important;
 }
 
 [data-testid="stMetric"] {
-    background: #111318;
-    border: 1px solid #292D36;
-    border-radius: 17px;
-    padding: 14px;
-}
-
-[data-testid="stMetricLabel"] {
-    color: #858995 !important;
+    background: #12141A;
+    border: 1px solid #292C35;
+    border-radius: 18px;
+    padding: 15px;
 }
 
 [data-testid="stMetricValue"] {
@@ -73,218 +66,169 @@ p,label {
     font-weight: 800 !important;
 }
 
+[data-testid="stMetricLabel"] {
+    color: #858995 !important;
+}
+
 .stProgress > div > div > div > div {
     background: #9B7BFF;
-}
-
-.stTextInput input,
-.stNumberInput input {
-    background: #111318 !important;
-    color: #FFFFFF !important;
-}
-
-[data-baseweb="select"] {
-    background: #111318 !important;
 }
 
 hr {
     border-color: #252832 !important;
 }
 
-/* Brand */
+input {
+    color: white !important;
+}
 
 .brand {
-    font-size: 25px;
+    font-size: 26px;
     font-weight: 900;
     letter-spacing: 4px;
-    color: #FFFFFF;
+    color: white;
 }
 
 .tagline {
     color: #777C88;
     font-size: 11px;
-    letter-spacing: 0.6px;
+    letter-spacing: 1px;
 }
-
-/* Greeting */
-
-.greeting {
-    color: #777C88;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-top: 28px;
-}
-
-/* Balance */
 
 .balance-card {
-    background: linear-gradient(145deg,#191C25,#0E1015);
-    border: 1px solid #30343F;
+    background: linear-gradient(145deg, #191C25, #0F1116);
+    border: 1px solid #343844;
     border-radius: 25px;
-    padding: 24px;
-    margin: 12px 0 18px;
-    box-shadow: 0 18px 45px rgba(0,0,0,.25);
+    padding: 25px;
+    margin: 18px 0;
 }
 
 .balance-label {
     color: #858995;
     font-size: 10px;
     letter-spacing: 2px;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .balance {
-    color: #FFFFFF;
+    color: white;
     font-size: 42px;
     font-weight: 900;
     margin-top: 7px;
 }
 
-.balance-sub {
-    color: #696E7A;
+.balance-note {
+    color: #666B77;
     font-size: 10px;
-    margin-top: 7px;
+    margin-top: 8px;
 }
 
-/* Intelligence */
+.section {
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
 
-.intelligence {
-    background: linear-gradient(145deg,#191622,#101117);
-    border: 1px solid #41365A;
-    border-radius: 20px;
-    padding: 19px;
-    margin: 16px 0;
+.intel {
+    background: linear-gradient(145deg, #191522, #101116);
+    border: 1px solid #3B3150;
+    border-radius: 21px;
+    padding: 20px;
+    margin: 15px 0;
 }
 
 .intel-label {
     color: #A88BFF;
     font-size: 10px;
     font-weight: 800;
-    letter-spacing: 1.7px;
+    letter-spacing: 2px;
 }
 
 .intel-title {
-    color: #FFFFFF;
+    color: white;
     font-size: 18px;
     font-weight: 800;
-    margin-top: 7px;
+    margin-top: 8px;
 }
 
 .intel-text {
-    color: #999CA8;
+    color: #999CAA;
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.6;
     margin-top: 5px;
 }
 
-/* Cards */
-
-.panel {
-    background: #111318;
-    border: 1px solid #282C35;
-    border-radius: 19px;
-    padding: 18px;
-    margin: 10px 0;
-}
-
-.section-title {
-    color: #F4F5F7;
-    font-size: 17px;
-    font-weight: 800;
-    margin-top: 24px;
-}
-
-.virtual-card {
-    background: linear-gradient(135deg,#252936,#111319);
-    border: 1px solid #484D59;
+.card {
+    background: linear-gradient(135deg, #242833, #111319);
+    border: 1px solid #4A4E59;
     border-radius: 24px;
     padding: 24px;
-    min-height: 165px;
+    height: 155px;
     margin: 15px 0;
 }
 
-.card-logo {
+.card-brand {
     color: white;
+    font-size: 16px;
     font-weight: 900;
     letter-spacing: 3px;
-}
-
-.card-chip {
-    color: #A6A9B3;
-    font-size: 10px;
-    margin-top: 28px;
 }
 
 .card-number {
     color: white;
     font-size: 17px;
     letter-spacing: 3px;
-    margin-top: 12px;
+    margin-top: 38px;
 }
 
-.card-footer {
-    color: #777C87;
+.card-small {
+    color: #777C88;
     font-size: 9px;
-    margin-top: 15px;
+    margin-top: 10px;
     letter-spacing: 1px;
 }
 
-/* Transactions */
-
-.transaction {
-    background: #101217;
-    border: 1px solid #232731;
+.tx {
+    background: #111318;
+    border: 1px solid #252832;
     border-radius: 15px;
     padding: 14px;
-    margin: 7px 0;
+    margin: 8px 0;
 }
 
 .tx-name {
-    color: #F2F3F5;
+    color: white;
     font-size: 13px;
     font-weight: 700;
 }
 
 .tx-category {
-    color: #737782;
+    color: #707581;
     font-size: 10px;
     margin-top: 3px;
 }
 
-/* Goal */
-
-.goal-card {
+.goal {
     background: #111318;
     border: 1px solid #292D36;
-    border-radius: 20px;
+    border-radius: 19px;
     padding: 18px;
     margin-top: 10px;
 }
 
-.goal-title {
-    color: #FFFFFF;
+.goal-name {
+    color: white;
     font-size: 16px;
     font-weight: 800;
 }
 
-.goal-meta {
-    color: #777C87;
-    font-size: 11px;
-    margin-top: 4px;
-}
-
-/* Navigation */
-
-.nav-caption {
-    text-align: center;
-    color: #707580;
-    font-size: 9px;
-}
-
-.muted {
-    color: #777C87;
-    font-size: 11px;
+.goal-money {
+    color: #A88BFF;
+    font-size: 21px;
+    font-weight: 850;
+    margin-top: 7px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -293,30 +237,35 @@ hr {
 # SESSION STATE
 # =========================================================
 
-defaults = {
-    "page": "Home",
-    "name": "Tejal",
-    "balance": 5000.0,
-    "monthly_limit": 2000.0,
-    "goal_name": "New Headphones",
-    "goal_target": 5000.0,
-    "goal_saved": 3400.0,
-    "card_frozen": False,
-    "notifications": [],
-    "show_add": False,
-    "show_request": False,
-    "transactions": [
-        ["Pocket Money", "Income", 2000.0],
-        ["Food", "Food", -250.0],
-        ["Study", "Education", -500.0],
-        ["Shopping", "Shopping", -350.0],
-        ["Gaming", "Entertainment", -180.0],
-    ],
-}
+if "balance" not in st.session_state:
+    st.session_state.balance = 5000.0
 
-for key, value in defaults.items():
-    if key not in st.session_state:
-        st.session_state[key] = value
+if "limit" not in st.session_state:
+    st.session_state.limit = 2000.0
+
+if "goal_name" not in st.session_state:
+    st.session_state.goal_name = "New Headphones"
+
+if "goal_target" not in st.session_state:
+    st.session_state.goal_target = 5000.0
+
+if "goal_saved" not in st.session_state:
+    st.session_state.goal_saved = 3400.0
+
+if "frozen" not in st.session_state:
+    st.session_state.frozen = False
+
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+if "transactions" not in st.session_state:
+    st.session_state.transactions = [
+        ["Pocket Money", "Income", 2000],
+        ["Food", "Food", -250],
+        ["Study", "Education", -500],
+        ["Shopping", "Shopping", -350],
+        ["Gaming", "Entertainment", -180]
+    ]
 
 # =========================================================
 # FUNCTIONS
@@ -327,6 +276,16 @@ def go(page):
     st.rerun()
 
 
+def spent():
+    total = 0
+
+    for item in st.session_state.transactions:
+        if item[2] < 0:
+            total += abs(item[2])
+
+    return total
+
+
 def add_transaction(name, category, amount):
     st.session_state.transactions.insert(
         0,
@@ -334,45 +293,23 @@ def add_transaction(name, category, amount):
     )
 
 
-def spending_total():
-    return sum(
-        abs(item[2])
-        for item in st.session_state.transactions
-        if item[2] < 0
-    )
+def category_spending(category):
+    total = 0
 
+    for item in st.session_state.transactions:
+        if item[1] == category and item[2] < 0:
+            total += abs(item[2])
 
-def income_total():
-    return sum(
-        item[2]
-        for item in st.session_state.transactions
-        if item[2] > 0
-    )
-
-
-def category_total(category):
-    return sum(
-        abs(item[2])
-        for item in st.session_state.transactions
-        if item[1] == category and item[2] < 0
-    )
-
-
-def goal_progress():
-    return min(
-        st.session_state.goal_saved /
-        max(st.session_state.goal_target, 1),
-        1
-    )
+    return total
 
 
 # =========================================================
-# HEADER
+# BRAND
 # =========================================================
 
 st.markdown(
     '<div class="brand">VELORA</div>'
-    '<div class="tagline">Intelligent money management</div>',
+    '<div class="tagline">INTELLIGENT MONEY MANAGEMENT</div>',
     unsafe_allow_html=True
 )
 
@@ -383,23 +320,23 @@ st.markdown(
 n1, n2, n3, n4, n5 = st.columns(5)
 
 with n1:
-    if st.button("HOME", use_container_width=True):
+    if st.button("HOME"):
         go("Home")
 
 with n2:
-    if st.button("PAY", use_container_width=True):
+    if st.button("PAY"):
         go("Pay")
 
 with n3:
-    if st.button("ACTIVITY", use_container_width=True):
+    if st.button("ACTIVITY"):
         go("Activity")
 
 with n4:
-    if st.button("INTEL", use_container_width=True):
-        go("Intelligence")
+    if st.button("INTEL"):
+        go("Intel")
 
 with n5:
-    if st.button("PROFILE", use_container_width=True):
+    if st.button("PROFILE"):
         go("Profile")
 
 # =========================================================
@@ -408,124 +345,97 @@ with n5:
 
 if st.session_state.page == "Home":
 
-    st.markdown(
-        '<div class="greeting">GOOD EVENING</div>',
-        unsafe_allow_html=True
-    )
-
-    st.subheader(st.session_state.name)
-
-    # BALANCE
+    st.caption("GOOD EVENING")
+    st.subheader("Welcome back")
 
     st.markdown(
         '<div class="balance-card">'
         '<div class="balance-label">AVAILABLE BALANCE</div>'
         '<div class="balance">₹'
-        + "{:,.2f}".format(st.session_state.balance)
+        + format(st.session_state.balance, ",.2f")
         + '</div>'
-        '<div class="balance-sub">'
-        'Demo wallet · No real money connected'
-        '</div>'
+        '<div class="balance-note">DEMO WALLET · NO REAL MONEY</div>'
         '</div>',
         unsafe_allow_html=True
     )
 
-    # ACTIONS
+    # QUICK ACTIONS
+    st.markdown(
+        '<div class="section">Quick actions</div>',
+        unsafe_allow_html=True
+    )
 
     a, b, c = st.columns(3)
 
     with a:
-        if st.button("＋ ADD", use_container_width=True):
-            st.session_state.show_add = True
+        add_clicked = st.button("＋ ADD")
 
     with b:
-        if st.button("↗ SEND", use_container_width=True):
-            go("Pay")
+        send_clicked = st.button("↗ SEND")
 
     with c:
-        if st.button("⌁ REQUEST", use_container_width=True):
-            st.session_state.show_request = True
+        request_clicked = st.button("⇄ REQUEST")
+
+    if add_clicked:
+        st.session_state.show_add = True
+
+    if send_clicked:
+        go("Pay")
+
+    if request_clicked:
+        st.session_state.show_request = True
 
     # ADD MONEY
+    if st.session_state.get("show_add", False):
 
-    if st.session_state.show_add:
-
-        st.markdown(
-            '<div class="panel">'
-            '<b>Add money</b>'
-            '</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown("### Add money")
 
         amount = st.number_input(
             "Amount",
             min_value=1.0,
             value=500.0,
             step=100.0,
-            key="home_add_amount"
+            key="money_amount"
         )
 
         source = st.text_input(
             "Source",
-            placeholder="Allowance, gift, income...",
-            key="home_add_source"
+            placeholder="Pocket money, gift, income...",
+            key="money_source"
         )
 
-        c1, c2 = st.columns(2)
+        if st.button("Confirm add"):
 
-        with c1:
-            if st.button(
-                "Confirm",
-                use_container_width=True,
-                key="confirm_add"
-            ):
+            source = source.strip()
 
-                source_name = source.strip()
+            if source == "":
+                source = "Income"
 
-                if not source_name:
-                    source_name = "Income"
+            st.session_state.balance += amount
 
-                st.session_state.balance += amount
+            add_transaction(
+                source,
+                "Income",
+                amount
+            )
 
-                add_transaction(
-                    source_name,
-                    "Income",
-                    amount
-                )
+            st.session_state.show_add = False
 
-                st.session_state.notifications.insert(
-                    0,
-                    "₹{:,.0f} added to your wallet.".format(amount)
-                )
+            st.success(
+                "₹{:,.0f} added.".format(amount)
+            )
 
-                st.session_state.show_add = False
-                st.success("Balance updated.")
-                st.rerun()
+            st.rerun()
 
-        with c2:
-            if st.button(
-                "Cancel",
-                use_container_width=True,
-                key="cancel_add"
-            ):
-                st.session_state.show_add = False
-                st.rerun()
+    # REQUEST
+    if st.session_state.get("show_request", False):
 
-    # REQUEST MONEY
-
-    if st.session_state.show_request:
-
-        st.markdown(
-            '<div class="panel">'
-            '<b>Request money</b>'
-            '</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown("### Request money")
 
         person = st.text_input(
             "From",
             placeholder="Friend's name",
-            key="request_person"
+            key="request_name"
         )
 
         amount = st.number_input(
@@ -533,90 +443,47 @@ if st.session_state.page == "Home":
             min_value=1.0,
             value=200.0,
             step=50.0,
-            key="request_amount"
+            key="request_money"
         )
 
-        c1, c2 = st.columns(2)
+        if st.button("Create request"):
 
-        with c1:
-            if st.button(
-                "Create request",
-                use_container_width=True,
-                key="create_request"
-            ):
+            if person.strip() == "":
+                st.error("Enter a name.")
 
-                if not person.strip():
-                    st.error("Enter a name.")
-                else:
-                    st.session_state.notifications.insert(
-                        0,
-                        "Request of ₹{:,.0f} created.".format(amount)
-                    )
-
-                    st.session_state.show_request = False
-                    st.success("Request created.")
-                    st.rerun()
-
-        with c2:
-            if st.button(
-                "Cancel",
-                use_container_width=True,
-                key="cancel_request"
-            ):
+            else:
                 st.session_state.show_request = False
+
+                st.success(
+                    "Request of ₹{:,.0f} created.".format(amount)
+                )
+
                 st.rerun()
 
-    # =====================================================
-    # FINANCIAL SNAPSHOT
-    # =====================================================
+    # SNAPSHOT
+    st.markdown(
+        '<div class="section">Financial snapshot</div>',
+        unsafe_allow_html=True
+    )
 
-    spent = spending_total()
+    total_spent = spent()
 
     remaining = max(
-        st.session_state.monthly_limit - spent,
+        st.session_state.limit - total_spent,
         0
-    )
-
-    ratio = (
-        spent /
-        max(st.session_state.monthly_limit, 1)
-    )
-
-    if ratio < 0.60:
-        status = "On track"
-        status_text = (
-            "Your spending is comfortably below "
-            "your monthly limit."
-        )
-    elif ratio < 0.85:
-        status = "Watch your pace"
-        status_text = (
-            "You're approaching your monthly "
-            "spending limit."
-        )
-    else:
-        status = "Budget risk"
-        status_text = (
-            "Your current spending pace may "
-            "push you beyond your limit."
-        )
-
-    st.markdown(
-        '<div class="section-title">Financial snapshot</div>',
-        unsafe_allow_html=True
     )
 
     s1, s2 = st.columns(2)
 
     with s1:
         st.metric(
-            "Spent this month",
-            "₹{:,.0f}".format(spent)
+            "Spent",
+            "₹{:,.0f}".format(total_spent)
         )
 
     with s2:
         st.metric(
-            "Budget remaining",
+            "Budget left",
             "₹{:,.0f}".format(remaining)
         )
 
@@ -624,7 +491,7 @@ if st.session_state.page == "Home":
 
     with s3:
         st.metric(
-            "Savings",
+            "Saved",
             "₹{:,.0f}".format(
                 st.session_state.goal_saved
             )
@@ -633,112 +500,105 @@ if st.session_state.page == "Home":
     with s4:
         score = 84
 
-        if ratio >= 0.85:
-            score = 62
-        elif ratio >= 0.60:
-            score = 74
+        if total_spent > st.session_state.limit:
+            score = 58
+        elif total_spent > st.session_state.limit * 0.8:
+            score = 72
 
         st.metric(
             "VELORA Score",
             str(score) + " / 100"
         )
 
-    # BUDGET STATUS
+    # INTELLIGENCE
+    ratio = total_spent / max(st.session_state.limit, 1)
+
+    if ratio < 0.6:
+        title = "You're on track."
+        message = "Your current spending is comfortably below your monthly limit."
+
+    elif ratio < 0.85:
+        title = "Watch your spending pace."
+        message = "You're getting closer to your monthly limit."
+
+    else:
+        title = "Budget attention required."
+        message = "Your current spending could push you beyond your monthly limit."
 
     st.markdown(
-        '<div class="intelligence">'
-        '<div class="intel-label">BUDGET STATUS</div>'
+        '<div class="intel">'
+        '<div class="intel-label">VELORA INTELLIGENCE</div>'
         '<div class="intel-title">'
-        + status +
+        + title +
         '</div>'
         '<div class="intel-text">'
-        + status_text +
+        + message +
         '</div>'
         '</div>',
         unsafe_allow_html=True
     )
 
-    st.progress(
-        min(ratio, 1.0)
-    )
-
-    st.caption(
-        "₹{:,.0f} of ₹{:,.0f} monthly budget used".format(
-            spent,
-            st.session_state.monthly_limit
-        )
-    )
-
-    # =====================================================
-    # SAVINGS GOAL
-    # =====================================================
-
+    # SPENDING TREND
     st.markdown(
-        '<div class="section-title">Savings goal</div>',
+        '<div class="section">Spending trend</div>',
         unsafe_allow_html=True
     )
 
-    progress = goal_progress()
+    chart = pd.DataFrame(
+        {
+            "Spending": [
+                120,
+                180,
+                90,
+                240,
+                160,
+                280,
+                110
+            ]
+        },
+        index=[
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ]
+    )
+
+    st.line_chart(chart)
+
+    # GOAL
+    st.markdown(
+        '<div class="section">Active goal</div>',
+        unsafe_allow_html=True
+    )
+
+    progress = (
+        st.session_state.goal_saved /
+        max(st.session_state.goal_target, 1)
+    )
 
     st.markdown(
-        '<div class="goal-card">'
-        '<div class="goal-title">'
+        '<div class="goal">'
+        '<div class="goal-name">'
         + st.session_state.goal_name +
         '</div>'
-        '<div class="goal-meta">'
-        '₹{:,.0f} saved of ₹{:,.0f}'
+        '<div class="goal-money">₹'
+        + format(st.session_state.goal_saved, ",.0f") +
+        ' / ₹'
+        + format(st.session_state.goal_target, ",.0f") +
         '</div>'
-        '</div>'.format(
-            st.session_state.goal_saved,
-            st.session_state.goal_target
-        ),
+        '</div>',
         unsafe_allow_html=True
     )
 
-    st.progress(progress)
+    st.progress(min(progress, 1.0))
 
     st.caption(
-        "{:.0f}% complete".format(
-            progress * 100
-        )
+        "{:.0f}% complete".format(progress * 100)
     )
-
-    # =====================================================
-    # RECENT ACTIVITY
-    # =====================================================
-
-    st.markdown(
-        '<div class="section-title">Recent activity</div>',
-        unsafe_allow_html=True
-    )
-
-    for name, category, amount in st.session_state.transactions[:4]:
-
-        sign = "+" if amount >= 0 else "−"
-        value = abs(amount)
-
-        st.markdown(
-            '<div class="transaction">'
-            '<div class="tx-name">'
-            + name +
-            '</div>'
-            '<div class="tx-category">'
-            + category +
-            '</div>'
-            '<div style="text-align:right;margin-top:-30px;">'
-            + sign +
-            '₹{:,.0f}'.format(value) +
-            '</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    if st.button(
-        "View all activity",
-        use_container_width=True
-    ):
-        go("Activity")
-
 
 # =========================================================
 # PAY
@@ -746,25 +606,22 @@ if st.session_state.page == "Home":
 
 elif st.session_state.page == "Pay":
 
-    st.subheader("Payments")
+    st.subheader("Pay")
 
-    st.caption(
-        "Simulated payments for the VELORA prototype."
-    )
+    st.caption("Demo payment flow · No real transaction")
 
     st.markdown(
-        '<div class="panel">'
-        '<b>Send money</b>'
-        '<br><span class="muted">'
-        'Fast, simple and transparent.'
-        '</span>'
+        '<div class="card">'
+        '<div class="card-brand">VELORA</div>'
+        '<div class="card-number">•••• •••• •••• 2840</div>'
+        '<div class="card-small">VIRTUAL DEMO CARD</div>'
         '</div>',
         unsafe_allow_html=True
     )
 
-    person = st.text_input(
+    recipient = st.text_input(
         "Recipient",
-        placeholder="Friend's name"
+        placeholder="Name or UPI ID"
     )
 
     amount = st.number_input(
@@ -786,36 +643,28 @@ elif st.session_state.page == "Pay":
         ]
     )
 
-    if st.button(
-        "Send ₹{:,.0f}".format(amount),
-        use_container_width=True
-    ):
+    if st.button("Send payment"):
 
-        if not person.strip():
-            st.error("Enter a recipient.")
+        if recipient.strip() == "":
+            st.error("Enter recipient.")
 
         elif amount > st.session_state.balance:
             st.error("Insufficient demo balance.")
 
         else:
-
             st.session_state.balance -= amount
 
             add_transaction(
-                "Sent to " + person.strip(),
+                "To " + recipient,
                 category,
                 -amount
             )
 
-            st.session_state.notifications.insert(
-                0,
-                "₹{:,.0f} sent successfully.".format(amount)
-            )
-
             st.success(
-                "Payment simulated successfully."
+                "₹{:,.0f} payment simulated.".format(amount)
             )
 
+            st.rerun()
 
 # =========================================================
 # ACTIVITY
@@ -825,5 +674,183 @@ elif st.session_state.page == "Activity":
 
     st.subheader("Activity")
 
-    st.caption(
-        "Your
+    search = st.text_input(
+        "Search",
+        placeholder="Food, shopping, name..."
+    )
+
+    found = False
+
+    for item in st.session_state.transactions:
+
+        name = item[0]
+        category = item[1]
+        amount = item[2]
+
+        searchable = (
+            name + " " + category
+        ).lower()
+
+        if search.lower() not in searchable:
+            continue
+
+        found = True
+
+        if amount >= 0:
+            value = "+₹{:,.0f}".format(amount)
+        else:
+            value = "-₹{:,.0f}".format(abs(amount))
+
+        st.markdown(
+            '<div class="tx">'
+            '<div class="tx-name">'
+            + name +
+            '</div>'
+            '<div class="tx-category">'
+            + category +
+            '</div>'
+            '</div>',
+            unsafe_allow_html=True
+        )
+
+        st.write(value)
+
+    if not found:
+        st.info("No transactions found.")
+
+# =========================================================
+# INTELLIGENCE
+# =========================================================
+
+elif st.session_state.page == "Intel":
+
+    st.subheader("Velora Intelligence")
+
+    total = spent()
+    ratio = total / max(st.session_state.limit, 1)
+
+    if ratio < 0.6:
+        title = "Healthy spending pattern"
+        text = "Your spending is currently well below your monthly limit."
+
+    elif ratio < 0.85:
+        title = "Moderate spending"
+        text = "You're approaching your planned monthly spending level."
+
+    else:
+        title = "High spending pressure"
+        text = "Consider slowing discretionary spending to stay within your plan."
+
+    st.markdown(
+        '<div class="intel">'
+        '<div class="intel-label">AI MONEY INSIGHT</div>'
+        '<div class="intel-title">'
+        + title +
+        '</div>'
+        '<div class="intel-text">'
+        + text +
+        '</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown("### Category analysis")
+
+    categories = [
+        "Food",
+        "Education",
+        "Shopping",
+        "Entertainment",
+        "Travel"
+    ]
+
+    for category in categories:
+
+        value = category_spending(category)
+
+        if value > 0:
+
+            st.write(
+                category +
+                " — ₹{:,.0f}".format(value)
+            )
+
+            st.progress(
+                min(value / max(total, 1), 1)
+            )
+
+    st.markdown("### Money health")
+
+    st.metric(
+        "VELORA Score",
+        "84 / 100",
+        "Good financial habits"
+    )
+
+# =========================================================
+# PROFILE
+# =========================================================
+
+elif st.session_state.page == "Profile":
+
+    st.subheader("Profile")
+
+    name = st.text_input(
+        "Name",
+        value="Tejal"
+    )
+
+    limit = st.number_input(
+        "Monthly spending limit",
+        min_value=100.0,
+        value=float(st.session_state.limit),
+        step=100.0
+    )
+
+    if st.button("Save settings"):
+
+        st.session_state.limit = limit
+
+        st.success("Settings saved.")
+
+    st.markdown("### Velora Card")
+
+    st.markdown(
+        '<div class="card">'
+        '<div class="card-brand">VELORA</div>'
+        '<div class="card-number">•••• •••• •••• 2840</div>'
+        '<div class="card-small">DEMO VIRTUAL CARD</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.frozen:
+
+        st.warning("Card is frozen.")
+
+        if st.button("Unfreeze card"):
+            st.session_state.frozen = False
+            st.rerun()
+
+    else:
+
+        st.success("Card is active.")
+
+        if st.button("Freeze card"):
+            st.session_state.frozen = True
+            st.rerun()
+
+    st.info(
+        "VELORA is a prototype. No real bank account, "
+        "UPI or payment network is connected."
+    )
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.divider()
+
+st.caption(
+    "VELORA · Intelligent Money Management · Demo Mode"
+)
