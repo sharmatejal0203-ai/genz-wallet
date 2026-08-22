@@ -626,4 +626,357 @@ if st.session_state.page == "Home":
 
     st.markdown(
         '<div class="insight">'
-       
+        '<div class="insight-label">VELORA INTELLIGENCE</div>'
+        '<div class="insight-title">'
+        '{} is your biggest category'
+        '</div>'
+        '<div class="insight-text">'
+        '₹{:,.0f} spent in this category.'
+        '</div>'
+        '</div>'.format(
+            biggest,
+            value
+        ),
+        unsafe_allow_html=True
+    )
+
+    title, text = ai_insight()
+
+    st.markdown(
+        '<div class="insight">'
+        '<div class="insight-label">AI FINANCIAL COACH</div>'
+        '<div class="insight-title">{}</div>'
+        '<div class="insight-text">{}</div>'
+        '</div>'.format(
+            title,
+            text
+        ),
+        unsafe_allow_html=True
+    )
+
+    # -----------------------------------------------------
+    # SPENDING TREND
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Spending trend</div>',
+        unsafe_allow_html=True
+    )
+
+    chart = pd.DataFrame(
+        {
+            "Spending": [
+                120,
+                180,
+                90,
+                240,
+                160,
+                280,
+                110
+            ]
+        },
+        index=[
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ]
+    )
+
+    st.line_chart(chart)
+
+    # -----------------------------------------------------
+    # SAVINGS JAR
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Savings Jar</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="goal">'
+        '<div class="goal-title">Future Fund</div>'
+        '<div class="goal-money">₹{:,.0f}</div>'
+        '<div class="muted">'
+        'Money intentionally set aside'
+        '</div>'
+        '</div>'.format(
+            st.session_state.jar
+        ),
+        unsafe_allow_html=True
+    )
+
+    if st.button(
+        "Manage Savings Jar",
+        use_container_width=True
+    ):
+        go("Jar")
+
+
+# =========================================================
+# ADD MONEY
+# =========================================================
+
+elif st.session_state.page == "Add":
+
+    st.subheader("Add Money")
+
+    st.caption(
+        "Simulated wallet top-up — no real money."
+    )
+
+    amount = st.number_input(
+        "Amount",
+        min_value=1.0,
+        value=500.0,
+        step=100.0,
+        key="add_amount"
+    )
+
+    source = st.text_input(
+        "Source",
+        value="Pocket Money",
+        key="add_source"
+    )
+
+    if st.button(
+        "Add to Wallet",
+        use_container_width=True
+    ):
+
+        st.session_state.balance += amount
+
+        add_transaction(
+            source.strip() or "Income",
+            "Income",
+            amount
+        )
+
+        st.session_state.notifications.insert(
+            0,
+            "₹{:,.0f} added successfully."
+            .format(amount)
+        )
+
+        st.success(
+            "Money added to demo wallet."
+        )
+
+        st.session_state.page = "Home"
+        st.rerun()
+
+    if st.button(
+        "← Back",
+        use_container_width=True
+    ):
+        go("Home")
+
+
+# =========================================================
+# PAY
+# =========================================================
+
+elif st.session_state.page == "Pay":
+
+    st.subheader("Send Money")
+
+    st.caption(
+        "Simulated payment — no real UPI."
+    )
+
+    if st.session_state.card_frozen:
+        st.error(
+            "🔒 VELORA card is frozen."
+        )
+
+    recipient = st.text_input(
+        "Recipient",
+        placeholder="Friend or contact",
+        key="recipient"
+    )
+
+    amount = st.number_input(
+        "Amount",
+        min_value=1.0,
+        value=100.0,
+        step=50.0,
+        key="payment_amount"
+    )
+
+    category = st.selectbox(
+        "Category",
+        [
+            "Food",
+            "Education",
+            "Shopping",
+            "Entertainment",
+            "Travel",
+            "Bills",
+            "Other"
+        ],
+        key="payment_category"
+    )
+
+    if st.button(
+        "Send Payment",
+        use_container_width=True
+    ):
+
+        if not recipient.strip():
+
+            st.error(
+                "Enter recipient."
+            )
+
+        elif amount > st.session_state.balance:
+
+            st.error(
+                "Insufficient demo balance."
+            )
+
+        elif st.session_state.card_frozen:
+
+            st.error(
+                "Card is frozen."
+            )
+
+        else:
+
+            st.session_state.balance -= amount
+
+            add_transaction(
+                "Sent to " + recipient.strip(),
+                category,
+                -amount
+            )
+
+            st.session_state.notifications.insert(
+                0,
+                "₹{:,.0f} sent to {}."
+                .format(
+                    amount,
+                    recipient.strip()
+                )
+            )
+
+            st.success(
+                "Payment simulated successfully."
+            )
+
+    st.markdown(
+        '<div class="section">VELORA Card</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="virtual-card">'
+        '<div class="card-brand">VELORA</div>'
+        '<div class="card-number">'
+        '••••  ••••  ••••  2840'
+        '</div>'
+        '<div class="card-small">'
+        'DEMO VIRTUAL CARD · 09/30'
+        '</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.card_frozen:
+
+        if st.button(
+            "UNFREEZE CARD",
+            use_container_width=True
+        ):
+
+            st.session_state.card_frozen = False
+            st.rerun()
+
+    else:
+
+        if st.button(
+            "FREEZE CARD",
+            use_container_width=True
+        ):
+
+            st.session_state.card_frozen = True
+            st.rerun()
+
+
+# =========================================================
+# SAVINGS JAR
+# =========================================================
+
+elif st.session_state.page == "Jar":
+
+    st.subheader("Savings Jar")
+
+    st.caption(
+        "Move demo money into or out of your savings jar."
+    )
+
+    st.markdown(
+        '<div class="hero">'
+        '<div class="balance-label">CURRENT SAVINGS</div>'
+        '<div class="balance">₹{:,.0f}</div>'
+        '<div class="muted">'
+        'Money intentionally set aside'
+        '</div>'
+        '</div>'.format(
+            st.session_state.jar
+        ),
+        unsafe_allow_html=True
+    )
+
+    action = st.selectbox(
+        "Choose action",
+        [
+            "Add to Jar",
+            "Withdraw from Jar"
+        ],
+        key="jar_action"
+    )
+
+    amount = st.number_input(
+        "Amount",
+        min_value=1.0,
+        value=100.0,
+        step=50.0,
+        key="jar_amount"
+    )
+
+    if st.button(
+        "Confirm",
+        use_container_width=True
+    ):
+
+        if action == "Add to Jar":
+
+            if amount > st.session_state.balance:
+
+                st.error(
+                    "Insufficient demo balance."
+                )
+
+            else:
+
+                st.session_state.balance -= amount
+                st.session_state.jar += amount
+
+                add_transaction(
+                    "Savings Jar",
+                    "Savings",
+                    -amount
+                )
+
+                st.session_state.notifications.insert(
+                    0,
+                    "₹{:,.0f} moved to Savings Jar."
+                    .format(amount)
+                )
+
+                st.success(
+                 
