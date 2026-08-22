@@ -1316,5 +1316,3 @@ if st.session_state.page == "Home":
 
 
                     st.session_state.notifications.insert(
-
-       
