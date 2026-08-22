@@ -22,7 +22,7 @@ st.markdown("""
 
 .stApp {
     background:
-        radial-gradient(circle at 50% -10%, #292C48 0%, #0B0C11 38%, #07080C 100%);
+        radial-gradient(circle at 50% -10%, #252944 0%, #0B0C11 35%, #08090D 100%);
     color: #F5F5F7;
 }
 
@@ -41,7 +41,7 @@ h1, h2, h3, h4, p, label {
 
 .stButton > button {
     background: #151821 !important;
-    color: white !important;
+    color: #FFFFFF !important;
     border: 1px solid #303542 !important;
     border-radius: 14px !important;
     min-height: 44px !important;
@@ -61,7 +61,7 @@ h1, h2, h3, h4, p, label {
 }
 
 [data-testid="stMetricValue"] {
-    color: white !important;
+    color: #FFFFFF !important;
     font-weight: 850 !important;
 }
 
@@ -72,7 +72,7 @@ h1, h2, h3, h4, p, label {
 .stTextInput input,
 .stNumberInput input {
     background: #11141A !important;
-    color: white !important;
+    color: #FFFFFF !important;
 }
 
 .stSelectbox div[data-baseweb="select"] {
@@ -100,7 +100,7 @@ hr {
 }
 
 .card {
-    background: linear-gradient(145deg, #1B1F2A, #101217);
+    background: linear-gradient(145deg,#1B1F2A,#101217);
     border: 1px solid #303542;
     border-radius: 25px;
     padding: 22px;
@@ -115,7 +115,7 @@ hr {
 }
 
 .balance {
-    color: white;
+    color: #FFFFFF;
     font-size: 44px;
     font-weight: 900;
     letter-spacing: -2px;
@@ -136,7 +136,7 @@ hr {
 }
 
 .insight {
-    background: linear-gradient(145deg, #1A1624, #101116);
+    background: linear-gradient(145deg,#1A1624,#101116);
     border: 1px solid #493960;
     border-radius: 22px;
     padding: 20px;
@@ -151,7 +151,7 @@ hr {
 }
 
 .insight-title {
-    color: white;
+    color: #FFFFFF;
     font-size: 18px;
     font-weight: 850;
     margin-top: 7px;
@@ -213,8 +213,8 @@ hr {
 
 .virtual-card {
     background:
-        radial-gradient(circle at 80% 10%, #5A4E82 0%, transparent 35%),
-        linear-gradient(135deg, #292D3C, #101218);
+        radial-gradient(circle at 80% 10%,#5A4E82 0%,transparent 35%),
+        linear-gradient(135deg,#292D3C,#101218);
     border: 1px solid #505566;
     border-radius: 26px;
     padding: 25px;
@@ -242,7 +242,7 @@ hr {
 }
 
 .score {
-    background: linear-gradient(145deg, #211A31, #111219);
+    background: linear-gradient(145deg,#211A31,#111219);
     border: 1px solid #46365B;
     border-radius: 22px;
     padding: 20px;
@@ -261,7 +261,7 @@ hr {
 }
 
 .jar {
-    background: linear-gradient(145deg, #171923, #101116);
+    background: linear-gradient(145deg,#171923,#101116);
     border: 1px solid #303542;
     border-radius: 22px;
     padding: 20px;
@@ -319,6 +319,9 @@ if "show_request" not in st.session_state:
 if "show_jar" not in st.session_state:
     st.session_state.show_jar = False
 
+if "show_goal" not in st.session_state:
+    st.session_state.show_goal = False
+
 if "notifications" not in st.session_state:
     st.session_state.notifications = []
 
@@ -362,48 +365,32 @@ def add_transaction(name, category, amount):
 
 def spending_total():
     return sum(
-        abs(t[2])
-        for t in st.session_state.transactions
-        if t[2] < 0
+        abs(x[2])
+        for x in st.session_state.transactions
+        if x[2] < 0
     )
 
 
 def income_total():
     return sum(
-        t[2]
-        for t in st.session_state.transactions
-        if t[2] > 0
-    )
-
-
-def category_total(category):
-    return sum(
-        abs(t[2])
-        for t in st.session_state.transactions
-        if t[1] == category and t[2] < 0
+        x[2]
+        for x in st.session_state.transactions
+        if x[2] > 0
     )
 
 
 def biggest_category():
-
     data = {}
 
-    for t in st.session_state.transactions:
-
-        if t[2] < 0:
-
-            data[t[1]] = (
-                data.get(t[1], 0)
-                + abs(t[2])
-            )
+    for item in st.session_state.transactions:
+        if item[2] < 0:
+            category = item[1]
+            data[category] = data.get(category, 0) + abs(item[2])
 
     if not data:
         return "None", 0
 
-    category = max(
-        data,
-        key=data.get
-    )
+    category = max(data, key=data.get)
 
     return category, data[category]
 
@@ -436,7 +423,7 @@ def get_score():
     return min(score, 100)
 
 
-def financial_coach():
+def get_insight():
 
     spent = spending_total()
 
@@ -452,15 +439,15 @@ def financial_coach():
     if ratio >= 1:
         return (
             "Budget Alert",
-            "You've crossed your monthly limit. "
+            "You've crossed your monthly spending limit. "
             "Try prioritising essential expenses."
         )
 
     if ratio >= 0.80:
         return (
             "Watch Your Spending",
-            "{} is your biggest category at ₹{:,.0f}. "
-            "You're getting close to your monthly limit."
+            "You're close to your monthly limit. "
+            "{} is your biggest category at ₹{:,.0f}."
             .format(biggest, value)
         )
 
@@ -468,7 +455,7 @@ def financial_coach():
         return (
             "Great Saving Behaviour",
             "Your Savings Jar has ₹{:,.0f}. "
-            "You're building a strong saving habit."
+            "You're building a consistent saving habit."
             .format(st.session_state.jar)
         )
 
@@ -485,10 +472,12 @@ def reset_demo():
     st.session_state.balance = 5000.0
     st.session_state.monthly_limit = 2000.0
     st.session_state.name = "Tejal"
+    st.session_state.page = "Home"
     st.session_state.card_frozen = False
     st.session_state.show_add = False
     st.session_state.show_request = False
     st.session_state.show_jar = False
+    st.session_state.show_goal = False
     st.session_state.notifications = []
     st.session_state.jar = 850.0
 
@@ -556,7 +545,10 @@ with n5:
 if st.session_state.page == "Home":
 
     st.caption("GOOD EVENING")
-    st.subheader(st.session_state.name + " 👋")
+
+    st.subheader(
+        st.session_state.name + " 👋"
+    )
 
     # BALANCE
 
@@ -564,10 +556,10 @@ if st.session_state.page == "Home":
         '<div class="card">'
         '<div class="balance-label">AVAILABLE BALANCE</div>'
         '<div class="balance">₹{:,.0f}</div>'
-        '<div class="muted">'
-        'Demo wallet · No real money connected'
-        '</div>'
-        '</div>'.format(st.session_state.balance),
+        '<div class="muted">Demo wallet · No real money connected</div>'
+        '</div>'.format(
+            st.session_state.balance
+        ),
         unsafe_allow_html=True
     )
 
@@ -610,11 +602,10 @@ if st.session_state.page == "Home":
         x1, x2 = st.columns(2)
 
         with x1:
-
             if st.button(
                 "Confirm",
                 use_container_width=True,
-                key="add_confirm"
+                key="confirm_add"
             ):
 
                 st.session_state.balance += amount
@@ -627,21 +618,18 @@ if st.session_state.page == "Home":
 
                 st.session_state.notifications.insert(
                     0,
-                    "₹{:,.0f} added successfully."
-                    .format(amount)
+                    "₹{:,.0f} added successfully.".format(amount)
                 )
 
                 st.session_state.show_add = False
                 st.rerun()
 
         with x2:
-
             if st.button(
                 "Cancel",
                 use_container_width=True,
-                key="add_cancel"
+                key="cancel_add"
             ):
-
                 st.session_state.show_add = False
                 st.rerun()
 
@@ -668,36 +656,29 @@ if st.session_state.page == "Home":
         x1, x2 = st.columns(2)
 
         with x1:
-
             if st.button(
                 "Create Request",
                 use_container_width=True,
-                key="request_confirm"
+                key="create_request"
             ):
 
                 if not person.strip():
-
                     st.error("Enter a name.")
-
                 else:
-
                     st.session_state.notifications.insert(
                         0,
-                        "Request of ₹{:,.0f} created."
-                        .format(amount)
+                        "Request of ₹{:,.0f} created.".format(amount)
                     )
 
+                    st.success("Request created.")
                     st.session_state.show_request = False
-                    st.rerun()
 
         with x2:
-
             if st.button(
                 "Cancel",
                 use_container_width=True,
-                key="request_cancel"
+                key="cancel_request"
             ):
-
                 st.session_state.show_request = False
                 st.rerun()
 
@@ -750,27 +731,22 @@ if st.session_state.page == "Home":
             "{}/100".format(get_score())
         )
 
-    # SMART ALERT
+    # ALERT
 
     if ratio < 0.60:
-
         st.success(
             "You're on track. Spending is comfortably below your limit."
         )
-
     elif ratio < 0.85:
-
         st.warning(
-            "You're approaching your monthly limit. Watch discretionary spending."
+            "You're approaching your monthly limit."
         )
-
     else:
-
         st.error(
-            "Budget risk detected. You're close to your monthly limit."
+            "Budget risk detected."
         )
 
-    # INTELLIGENCE
+    # BIGGEST CATEGORY
 
     biggest, biggest_value = biggest_category()
 
@@ -783,7 +759,8 @@ if st.session_state.page == "Home":
             '{} is your biggest category'
             '</div>'
             '<div class="insight-text">'
-            '₹{:,.0f} has been spent here.'
+            '₹{:,.0f} has been spent here. '
+            'VELORA is monitoring your spending behaviour.'
             '</div>'
             '</div>'.format(
                 biggest,
@@ -794,7 +771,7 @@ if st.session_state.page == "Home":
 
     # AI COACH
 
-    coach_title, coach_text = financial_coach()
+    title, text = get_insight()
 
     st.markdown(
         '<div class="insight">'
@@ -802,13 +779,13 @@ if st.session_state.page == "Home":
         '<div class="insight-title">{}</div>'
         '<div class="insight-text">{}</div>'
         '</div>'.format(
-            coach_title,
-            coach_text
+            title,
+            text
         ),
         unsafe_allow_html=True
     )
 
-    # CHART
+    # TREND
 
     st.markdown(
         '<div class="section">Spending trend</div>',
@@ -851,9 +828,7 @@ if st.session_state.page == "Home":
         '<div class="jar">'
         '<div class="jar-title">Future Fund</div>'
         '<div class="jar-money">₹{:,.0f}</div>'
-        '<div class="muted">'
-        'Money you intentionally set aside'
-        '</div>'
+        '<div class="muted">Money intentionally set aside</div>'
         '</div>'.format(
             st.session_state.jar
         ),
@@ -868,7 +843,7 @@ if st.session_state.page == "Home":
 
     if st.session_state.show_jar:
 
-        jar_action = st.selectbox(
+        action = st.selectbox(
             "Action",
             [
                 "Add to Jar",
@@ -886,19 +861,15 @@ if st.session_state.page == "Home":
         )
 
         if st.button(
-            "Confirm Jar Action",
+            "Confirm",
             use_container_width=True,
             key="confirm_jar"
         ):
 
-            if jar_action == "Add to Jar":
+            if action == "Add to Jar":
 
                 if jar_amount > st.session_state.balance:
-
-                    st.error(
-                        "Insufficient demo balance."
-                    )
-
+                    st.error("Insufficient demo balance.")
                 else:
 
                     st.session_state.balance -= jar_amount
@@ -910,38 +881,22 @@ if st.session_state.page == "Home":
                         -jar_amount
                     )
 
-                    st.session_state.notifications.insert(
-                        0,
-                        "₹{:,.0f} moved to Savings Jar."
-                        .format(jar_amount)
-                    )
-
                     st.session_state.show_jar = False
                     st.rerun()
 
             else:
 
                 if jar_amount > st.session_state.jar:
-
-                    st.error(
-                        "Not enough money in the jar."
-                    )
-
+                    st.error("Not enough money in jar.")
                 else:
 
                     st.session_state.jar -= jar_amount
                     st.session_state.balance += jar_amount
 
                     add_transaction(
-                        "Savings Jar Withdrawal",
+                        "Jar Withdrawal",
                         "Savings",
                         jar_amount
-                    )
-
-                    st.session_state.notifications.insert(
-                        0,
-                        "₹{:,.0f} withdrawn from Savings Jar."
-                        .format(jar_amount)
                     )
 
                     st.session_state.show_jar = False
@@ -959,4 +914,31 @@ if st.session_state.page == "Home":
         progress = min(
             goal["saved"] / max(goal["target"], 1),
             1
-     
+        )
+
+        st.markdown(
+            '<div class="goal">'
+            '<div class="goal-title">{}</div>'
+            '<div class="goal-money">'
+            '₹{:,.0f} / ₹{:,.0f}'
+            '</div>'
+            '</div>'.format(
+                goal["name"],
+                goal["saved"],
+                goal["target"]
+            ),
+            unsafe_allow_html=True
+        )
+
+        st.progress(progress)
+
+        if st.button(
+            "Add to Goal",
+            use_container_width=True,
+            key="goal_add_" + str(i)
+        ):
+
+            amount = st.number_input(
+                "Amount",
+                min_value=1.0,
+                value=100.0
