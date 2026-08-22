@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-
 # =========================================================
 # VELORA V3
-# PREMIUM INTELLIGENT MONEY MANAGEMENT DEMO
+# Premium Intelligent Money Management Demo
 # DEMO ONLY — NO REAL MONEY / UPI / BANK CONNECTION
 # =========================================================
 
@@ -14,7 +13,6 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
-
 
 # =========================================================
 # PREMIUM CSS
@@ -29,7 +27,7 @@ st.markdown(
             radial-gradient(
                 circle at 50% -10%,
                 #292D46 0%,
-                #0B0C11 35%,
+                #0B0C11 38%,
                 #08090D 100%
             );
         color: #F5F5F7;
@@ -37,7 +35,7 @@ st.markdown(
 
     .block-container {
         max-width: 620px;
-        padding: 24px 16px 90px;
+        padding: 24px 16px 80px;
     }
 
     #MainMenu,
@@ -48,46 +46,6 @@ st.markdown(
 
     h1, h2, h3, h4, p, label {
         color: #F5F5F7 !important;
-    }
-
-    .stButton > button {
-        background: #151821 !important;
-        color: #FFFFFF !important;
-        border: 1px solid #303542 !important;
-        border-radius: 14px !important;
-        min-height: 44px !important;
-        font-weight: 700 !important;
-    }
-
-    .stButton > button:hover {
-        border-color: #9B7BFF !important;
-        background: #1D202B !important;
-    }
-
-    [data-testid="stMetric"] {
-        background: #12151C;
-        border: 1px solid #292E38;
-        border-radius: 18px;
-        padding: 15px;
-    }
-
-    [data-testid="stMetricValue"] {
-        color: #FFFFFF !important;
-        font-weight: 850 !important;
-    }
-
-    [data-testid="stMetricLabel"] {
-        color: #858B98 !important;
-    }
-
-    .stTextInput input,
-    .stNumberInput input {
-        background: #11141A !important;
-        color: #FFFFFF !important;
-    }
-
-    .stSelectbox div[data-baseweb="select"] {
-        background: #11141A !important;
     }
 
     .brand {
@@ -103,7 +61,11 @@ st.markdown(
     }
 
     .hero {
-        background: linear-gradient(145deg, #1B1F2A, #101217);
+        background: linear-gradient(
+            145deg,
+            #1B1F2A,
+            #101217
+        );
         border: 1px solid #303542;
         border-radius: 26px;
         padding: 24px;
@@ -138,7 +100,11 @@ st.markdown(
     }
 
     .insight {
-        background: linear-gradient(145deg, #1A1624, #101116);
+        background: linear-gradient(
+            145deg,
+            #1A1624,
+            #101116
+        );
         border: 1px solid #493960;
         border-radius: 22px;
         padding: 20px;
@@ -183,19 +149,16 @@ st.markdown(
     .tx-cat {
         color: #777D89;
         font-size: 10px;
-        margin-top: 3px;
     }
 
     .tx-income {
         color: #6EE7A0;
         font-weight: 800;
-        margin-top: 5px;
     }
 
     .tx-expense {
         color: #FF7D91;
         font-weight: 800;
-        margin-top: 5px;
     }
 
     .goal {
@@ -216,7 +179,6 @@ st.markdown(
         color: #FFFFFF;
         font-size: 21px;
         font-weight: 850;
-        margin-top: 6px;
     }
 
     .virtual-card {
@@ -226,7 +188,11 @@ st.markdown(
                 #5A4E82 0%,
                 transparent 35%
             ),
-            linear-gradient(135deg, #292D3C, #101218);
+            linear-gradient(
+                135deg,
+                #292D3C,
+                #101218
+            );
         border: 1px solid #505566;
         border-radius: 27px;
         padding: 25px;
@@ -256,12 +222,15 @@ st.markdown(
     }
 
     .score {
-        background: linear-gradient(145deg, #211A31, #111219);
+        background: linear-gradient(
+            145deg,
+            #211A31,
+            #111219
+        );
         border: 1px solid #46365B;
         border-radius: 22px;
         padding: 20px;
         text-align: center;
-        margin: 15px 0;
     }
 
     .score-number {
@@ -284,24 +253,47 @@ st.markdown(
         margin: 8px 0;
     }
 
-    .profile-box {
-        background: linear-gradient(145deg, #171A23, #101116);
-        border: 1px solid #303542;
-        border-radius: 22px;
-        padding: 22px;
-        margin: 14px 0;
+    .stButton > button {
+        background: #151821 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #303542 !important;
+        border-radius: 14px !important;
+        min-height: 44px !important;
+        font-weight: 700 !important;
     }
 
-    .profile-name {
-        font-size: 25px;
-        font-weight: 900;
+    .stButton > button:hover {
+        border-color: #9B7BFF !important;
+        background: #1D202B !important;
     }
 
-    .small-purple {
-        color: #A98CFF;
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 2px;
+    [data-testid="stMetric"] {
+        background: #12151C;
+        border: 1px solid #292E38;
+        border-radius: 18px;
+        padding: 15px;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #FFFFFF !important;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #858B98 !important;
+    }
+
+    .stTextInput input,
+    .stNumberInput input {
+        background: #11141A !important;
+        color: #FFFFFF !important;
+    }
+
+    .stSelectbox div[data-baseweb="select"] {
+        background: #11141A !important;
+    }
+
+    .stProgress > div > div > div > div {
+        background: #9B7BFF;
     }
 
     </style>
@@ -309,39 +301,48 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # =========================================================
 # SESSION STATE
 # =========================================================
 
-defaults = {
-    "balance": 5000.0,
-    "monthly_limit": 2000.0,
-    "name": "Tejal",
-    "page": "Home",
-    "card_frozen": False,
-    "jar": 850.0,
-    "notifications": [],
-    "goals": [
+if "balance" not in st.session_state:
+    st.session_state.balance = 5000.0
+
+if "monthly_limit" not in st.session_state:
+    st.session_state.monthly_limit = 2000.0
+
+if "name" not in st.session_state:
+    st.session_state.name = "Tejal"
+
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+if "card_frozen" not in st.session_state:
+    st.session_state.card_frozen = False
+
+if "jar" not in st.session_state:
+    st.session_state.jar = 850.0
+
+if "notifications" not in st.session_state:
+    st.session_state.notifications = []
+
+if "goals" not in st.session_state:
+    st.session_state.goals = [
         {
             "name": "New Headphones",
             "target": 5000.0,
             "saved": 3400.0
         }
-    ],
-    "transactions": [
+    ]
+
+if "transactions" not in st.session_state:
+    st.session_state.transactions = [
         ["Pocket Money", "Income", 2000.0],
         ["Food", "Food", -250.0],
         ["Study", "Education", -500.0],
         ["Shopping", "Shopping", -350.0],
         ["Gaming", "Entertainment", -180.0]
     ]
-}
-
-for key, value in defaults.items():
-    if key not in st.session_state:
-        st.session_state[key] = value
-
 
 # =========================================================
 # FUNCTIONS
@@ -360,48 +361,61 @@ def add_transaction(name, category, amount):
 
 
 def spending_total():
-    return sum(
-        abs(item[2])
-        for item in st.session_state.transactions
-        if item[2] < 0
-    )
+    total = 0
+
+    for item in st.session_state.transactions:
+        if item[2] < 0:
+            total += abs(item[2])
+
+    return total
 
 
 def income_total():
-    return sum(
-        item[2]
-        for item in st.session_state.transactions
-        if item[2] > 0
-    )
+    total = 0
+
+    for item in st.session_state.transactions:
+        if item[2] > 0:
+            total += item[2]
+
+    return total
 
 
 def category_totals():
     result = {}
 
     for item in st.session_state.transactions:
+
         if item[2] < 0:
+
             category = item[1]
-            result[category] = (
-                result.get(category, 0)
-                + abs(item[2])
-            )
+
+            if category not in result:
+                result[category] = 0
+
+            result[category] += abs(item[2])
 
     return result
 
 
 def biggest_category():
+
     data = category_totals()
 
     if not data:
         return "None", 0
 
-    category = max(data, key=data.get)
+    category = max(
+        data,
+        key=data.get
+    )
 
     return category, data[category]
 
 
 def financial_score():
+
     spent = spending_total()
+
     limit = max(
         float(st.session_state.monthly_limit),
         1
@@ -411,12 +425,16 @@ def financial_score():
 
     if ratio <= 0.50:
         score = 94
+
     elif ratio <= 0.70:
         score = 88
+
     elif ratio <= 0.85:
         score = 80
+
     elif ratio <= 1:
         score = 70
+
     else:
         score = 55
 
@@ -427,6 +445,7 @@ def financial_score():
 
 
 def ai_insight():
+
     spent = spending_total()
 
     limit = max(
@@ -439,6 +458,7 @@ def ai_insight():
     biggest, value = biggest_category()
 
     if ratio > 1:
+
         return (
             "Budget Alert",
             "You've crossed your monthly limit. "
@@ -446,6 +466,7 @@ def ai_insight():
         )
 
     if ratio >= 0.80:
+
         return (
             "Watch Your Spending",
             "{} is your biggest category at ₹{:,.0f}."
@@ -453,14 +474,16 @@ def ai_insight():
         )
 
     if st.session_state.jar >= 1000:
+
         return (
             "Strong Saving Behaviour",
             "Your Savings Jar has ₹{:,.0f}. "
-            "You're building a healthy saving habit."
+            "You're building a consistent saving habit."
             .format(st.session_state.jar)
         )
 
     if biggest != "None":
+
         return (
             "Spending Pattern Detected",
             "{} is currently your biggest category at ₹{:,.0f}."
@@ -468,12 +491,13 @@ def ai_insight():
         )
 
     return (
-        "You're Doing Well",
-        "VELORA is monitoring your spending behaviour."
+        "VELORA is Ready",
+        "Start adding transactions to unlock more insights."
     )
 
 
 def reset_demo():
+
     st.session_state.balance = 5000.0
     st.session_state.monthly_limit = 2000.0
     st.session_state.name = "Tejal"
@@ -498,7 +522,6 @@ def reset_demo():
         ["Gaming", "Entertainment", -180.0]
     ]
 
-
 # =========================================================
 # HEADER
 # =========================================================
@@ -510,7 +533,6 @@ st.markdown(
 )
 
 st.write("")
-
 
 # =========================================================
 # NAVIGATION
@@ -538,7 +560,6 @@ with n5:
     if st.button("PROFILE", use_container_width=True):
         go("Profile")
 
-
 # =========================================================
 # HOME
 # =========================================================
@@ -546,7 +567,9 @@ with n5:
 if st.session_state.page == "Home":
 
     st.caption("GOOD EVENING")
-    st.subheader(st.session_state.name + " 👋")
+    st.subheader(
+        st.session_state.name + " 👋"
+    )
 
     st.markdown(
         '<div class="hero">'
@@ -564,38 +587,56 @@ if st.session_state.page == "Home":
     a, b, c = st.columns(3)
 
     with a:
-        if st.button("＋ ADD", use_container_width=True):
+
+        if st.button(
+            "＋ ADD",
+            use_container_width=True
+        ):
             go("Add")
 
     with b:
-        if st.button("↗ SEND", use_container_width=True):
+
+        if st.button(
+            "↗ SEND",
+            use_container_width=True
+        ):
             go("Pay")
 
     with c:
-        if st.button("🎯 GOALS", use_container_width=True):
+
+        if st.button(
+            "🎯 GOALS",
+            use_container_width=True
+        ):
             go("Goals")
 
+    # -----------------------------------------------------
+    # SNAPSHOT
+    # -----------------------------------------------------
+
     st.markdown(
-        '<div class="section">Financial snapshot</div>',
+        '<div class="section">Financial Snapshot</div>',
         unsafe_allow_html=True
     )
 
     spent = spending_total()
 
     remaining = max(
-        float(st.session_state.monthly_limit) - spent,
+        st.session_state.monthly_limit - spent,
         0
     )
 
     c1, c2 = st.columns(2)
 
     with c1:
+
         st.metric(
             "Spent",
             "₹{:,.0f}".format(spent)
         )
 
     with c2:
+
         st.metric(
             "Budget Left",
             "₹{:,.0f}".format(remaining)
@@ -604,6 +645,7 @@ if st.session_state.page == "Home":
     c3, c4 = st.columns(2)
 
     with c3:
+
         st.metric(
             "Savings Jar",
             "₹{:,.0f}".format(
@@ -612,6 +654,7 @@ if st.session_state.page == "Home":
         )
 
     with c4:
+
         st.metric(
             "VELORA Score",
             "{}/100".format(
@@ -619,29 +662,44 @@ if st.session_state.page == "Home":
             )
         )
 
+    # -----------------------------------------------------
+    # BUDGET STATUS
+    # -----------------------------------------------------
+
     ratio = spent / max(
         float(st.session_state.monthly_limit),
         1
     )
 
     if ratio < 0.60:
+
         st.success(
             "You're on track. Spending is under control."
         )
+
     elif ratio < 0.85:
+
         st.warning(
             "You're getting close to your monthly limit."
         )
+
     else:
+
         st.error(
             "Budget risk detected."
         )
+
+    # -----------------------------------------------------
+    # INTELLIGENCE
+    # -----------------------------------------------------
 
     biggest, value = biggest_category()
 
     st.markdown(
         '<div class="insight">'
-        '<div class="insight-label">VELORA INTELLIGENCE</div>'
+        '<div class="insight-label">'
+        'VELORA INTELLIGENCE'
+        '</div>'
         '<div class="insight-title">'
         '{} is your biggest category'
         '</div>'
@@ -659,9 +717,15 @@ if st.session_state.page == "Home":
 
     st.markdown(
         '<div class="insight">'
-        '<div class="insight-label">AI FINANCIAL COACH</div>'
-        '<div class="insight-title">{}</div>'
-        '<div class="insight-text">{}</div>'
+        '<div class="insight-label">'
+        'AI FINANCIAL COACH'
+        '</div>'
+        '<div class="insight-title">'
+        '{}'
+        '</div>'
+        '<div class="insight-text">'
+        '{}'
+        '</div>'
         '</div>'.format(
             title,
             text
@@ -669,8 +733,12 @@ if st.session_state.page == "Home":
         unsafe_allow_html=True
     )
 
+    # -----------------------------------------------------
+    # CHART
+    # -----------------------------------------------------
+
     st.markdown(
-        '<div class="section">Spending trend</div>',
+        '<div class="section">Spending Trend</div>',
         unsafe_allow_html=True
     )
 
@@ -699,6 +767,10 @@ if st.session_state.page == "Home":
 
     st.line_chart(chart)
 
+    # -----------------------------------------------------
+    # SAVINGS
+    # -----------------------------------------------------
+
     st.markdown(
         '<div class="section">Savings Jar</div>',
         unsafe_allow_html=True
@@ -706,8 +778,12 @@ if st.session_state.page == "Home":
 
     st.markdown(
         '<div class="goal">'
-        '<div class="goal-title">Future Fund</div>'
-        '<div class="goal-money">₹{:,.0f}</div>'
+        '<div class="goal-title">'
+        'Future Fund'
+        '</div>'
+        '<div class="goal-money">'
+        '₹{:,.0f}'
+        '</div>'
         '<div class="muted">'
         'Money intentionally set aside'
         '</div>'
@@ -717,13 +793,6 @@ if st.session_state.page == "Home":
         unsafe_allow_html=True
     )
 
-    if st.button(
-        "Manage Savings Jar",
-        use_container_width=True
-    ):
-        go("Jar")
-
-
 # =========================================================
 # ADD MONEY
 # =========================================================
@@ -732,7 +801,9 @@ elif st.session_state.page == "Add":
 
     st.subheader("Add Money")
 
-    st.caption("Demo transaction only — no real money.")
+    st.caption(
+        "Demo transaction only."
+    )
 
     amount = st.number_input(
         "Amount",
@@ -763,10 +834,13 @@ elif st.session_state.page == "Add":
 
         st.session_state.notifications.insert(
             0,
-            "₹{:,.0f} added successfully.".format(amount)
+            "₹{:,.0f} added successfully."
+            .format(amount)
         )
 
-        st.success("Money added to demo wallet.")
+        st.success(
+            "Money added to demo wallet."
+        )
 
         go("Home")
 
@@ -776,7 +850,6 @@ elif st.session_state.page == "Add":
     ):
         go("Home")
 
-
 # =========================================================
 # PAY
 # =========================================================
@@ -785,10 +858,15 @@ elif st.session_state.page == "Pay":
 
     st.subheader("Send Money")
 
-    st.caption("Simulated payment — no real UPI connection.")
+    st.caption(
+        "Simulated payment — no real UPI."
+    )
 
     if st.session_state.card_frozen:
-        st.error("🔒 VELORA Card is frozen.")
+
+        st.error(
+            "🔒 VELORA Card is Frozen."
+        )
 
     recipient = st.text_input(
         "Recipient",
@@ -801,7 +879,7 @@ elif st.session_state.page == "Pay":
         min_value=1.0,
         value=100.0,
         step=50.0,
-        key="payment_amount"
+        key="pay_amount"
     )
 
     category = st.selectbox(
@@ -815,7 +893,7 @@ elif st.session_state.page == "Pay":
             "Bills",
             "Other"
         ],
-        key="payment_category"
+        key="pay_category"
     )
 
     if st.button(
@@ -824,13 +902,22 @@ elif st.session_state.page == "Pay":
     ):
 
         if not recipient.strip():
-            st.error("Enter recipient.")
+
+            st.error(
+                "Enter recipient."
+            )
 
         elif amount > st.session_state.balance:
-            st.error("Insufficient demo balance.")
+
+            st.error(
+                "Insufficient demo balance."
+            )
 
         elif st.session_state.card_frozen:
-            st.error("Card is frozen.")
+
+            st.error(
+                "Card is frozen."
+            )
 
         else:
 
@@ -855,7 +942,9 @@ elif st.session_state.page == "Pay":
                 "Payment simulated successfully."
             )
 
-            st.rerun()
+    # -----------------------------------------------------
+    # VIRTUAL CARD
+    # -----------------------------------------------------
 
     st.markdown(
         '<div class="section">VELORA Card</div>',
@@ -883,66 +972,9 @@ elif st.session_state.page == "Pay":
         ):
 
             st.session_state.card_frozen = False
-            st.success("Card unfrozen.")
             st.rerun()
 
     else:
 
         if st.button(
-            "FREEZE CARD",
-            use_container_width=True
-        ):
-
-            st.session_state.card_frozen = True
-            st.success("Card frozen.")
-            st.rerun()
-
-    if st.button(
-        "← Back Home",
-        use_container_width=True
-    ):
-        go("Home")
-
-
-# =========================================================
-# GOALS
-# =========================================================
-
-elif st.session_state.page == "Goals":
-
-    st.subheader("Savings Goals")
-
-    st.caption(
-        "Create goals and track your progress."
-    )
-
-    for i, goal in enumerate(
-        st.session_state.goals
-    ):
-
-        progress = min(
-            goal["saved"] / max(
-                goal["target"],
-                1
-            ),
-            1
-        )
-
-        st.markdown(
-            '<div class="goal">'
-            '<div class="goal-title">{}</div>'
-            '<div class="goal-money">'
-            '₹{:,.0f} / ₹{:,.0f}'
-            '</div>'
-            '</div>'.format(
-                goal["name"],
-                goal["saved"],
-                goal["target"]
-            ),
-            unsafe_allow_html=True
-        )
-
-        st.progress(progress)
-
-        amount = st.number_input(
-        
+            "FREEZE C
