@@ -688,4 +688,4 @@ if st.session_state.page == "Home":
         unsafe_allow_html=True
     )
 
-    s1, s2
+    s1, s2 = st.columns(2)
