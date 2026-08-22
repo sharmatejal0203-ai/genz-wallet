@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
-from datetime import date, timedelta
 
 # =========================================================
 # VELORA 2.0
-# Intelligent money management
+# Intelligent Money Management
 # Demo application — no real payments
 # =========================================================
 
@@ -33,21 +32,27 @@ st.markdown("""
     padding: 22px 18px 90px;
 }
 
-/* Hide Streamlit chrome */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
 
 h1, h2, h3, h4 {
     color: #F5F5F7 !important;
-    letter-spacing: -0.4px;
 }
 
-p, label, .stCaption {
+p, label {
     color: #9A9DA8 !important;
 }
 
-/* Buttons */
+/* BUTTONS */
 
 .stButton > button {
     background: #15171D !important;
@@ -56,7 +61,6 @@ p, label, .stCaption {
     border-radius: 13px !important;
     min-height: 44px !important;
     font-weight: 650 !important;
-    transition: 0.2s ease;
 }
 
 .stButton > button:hover {
@@ -64,15 +68,7 @@ p, label, .stCaption {
     background: #1B1E26 !important;
 }
 
-/* Primary button */
-
-.primary-btn .stButton > button {
-    background: #F1F2F4 !important;
-    color: #090A0D !important;
-    border: none !important;
-}
-
-/* Metrics */
+/* METRICS */
 
 [data-testid="stMetric"] {
     background: #121419;
@@ -90,13 +86,13 @@ p, label, .stCaption {
     font-weight: 800 !important;
 }
 
-/* Progress */
+/* PROGRESS */
 
 .stProgress > div > div > div > div {
     background: #9B7BFF;
 }
 
-/* Inputs */
+/* INPUTS */
 
 .stTextInput input,
 .stNumberInput input,
@@ -106,7 +102,7 @@ p, label, .stCaption {
     border-color: #292D36 !important;
 }
 
-/* Divider */
+/* DIVIDER */
 
 hr {
     border-color: #242730 !important;
@@ -175,7 +171,7 @@ hr {
     border: 1px solid #393149;
     border-radius: 20px;
     padding: 19px;
-    margin: 14px 0;
+    margin: 18px 0;
 }
 
 .intel-label {
@@ -199,87 +195,12 @@ hr {
     margin-top: 6px;
 }
 
-.stat-card {
-    background: #111318;
-    border: 1px solid #262A33;
-    border-radius: 17px;
-    padding: 16px;
-}
-
-.stat-label {
-    color: #777C87;
-    font-size: 10px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.stat-value {
-    color: #F5F5F7;
-    font-size: 20px;
-    font-weight: 800;
-    margin-top: 5px;
-}
-
-.stat-note {
-    color: #737782;
-    font-size: 10px;
-    margin-top: 4px;
-}
-
-.goal-card {
-    background: #111318;
-    border: 1px solid #282C35;
-    border-radius: 19px;
-    padding: 18px;
-    margin-top: 10px;
-}
-
-.goal-title {
-    color: #F5F5F7;
-    font-weight: 750;
-    font-size: 15px;
-}
-
-.goal-meta {
-    color: #7E828D;
-    font-size: 11px;
-    margin-top: 4px;
-}
-
-.goal-amount {
-    color: #FFFFFF;
-    font-size: 22px;
-    font-weight: 800;
-}
-
-.transaction {
-    background: #101217;
-    border: 1px solid #22262F;
-    border-radius: 15px;
-    padding: 14px;
-    margin: 7px 0;
-}
-
-.tx-name {
-    color: #F2F3F5;
-    font-size: 13px;
-    font-weight: 650;
-}
-
-.tx-category {
-    color: #707580;
-    font-size: 10px;
-    margin-top: 3px;
-}
-
-.tx-positive {
-    color: #91D7B4;
-    font-weight: 750;
-}
-
-.tx-negative {
-    color: #F0F1F4;
-    font-weight: 700;
+.section-title {
+    color: #F1F2F4;
+    font-size: 17px;
+    font-weight: 780;
+    margin-top: 24px;
+    margin-bottom: 10px;
 }
 
 .pay-card {
@@ -295,6 +216,14 @@ hr {
     color: #FFFFFF;
     font-size: 19px;
     font-weight: 800;
+}
+
+.goal-card {
+    background: #111318;
+    border: 1px solid #282C35;
+    border-radius: 19px;
+    padding: 18px;
+    margin-top: 10px;
 }
 
 .virtual-card {
@@ -313,17 +242,11 @@ hr {
     letter-spacing: 3px;
 }
 
-.card-chip {
-    color: #A5A8B2;
-    font-size: 10px;
-    margin-top: 26px;
-}
-
 .card-number {
     color: #FFFFFF;
     font-size: 17px;
     letter-spacing: 3px;
-    margin-top: 13px;
+    margin-top: 45px;
 }
 
 .card-footer {
@@ -333,45 +256,12 @@ hr {
     letter-spacing: 1px;
 }
 
-.premium {
-    background:
-        linear-gradient(145deg, #17131F, #0F1015);
-    border: 1px solid #4A3C61;
-    border-radius: 22px;
-    padding: 22px;
-    margin-top: 15px;
-}
-
-.premium-title {
-    color: #FFFFFF;
-    font-size: 22px;
-    font-weight: 850;
-}
-
-.premium-sub {
-    color: #979AA6;
-    font-size: 12px;
-    line-height: 1.5;
-    margin-top: 5px;
-}
-
-.nav-label {
-    text-align: center;
-    color: #777C87;
-    font-size: 9px;
-    margin-top: -6px;
-}
-
-.section-title {
-    color: #F1F2F4;
-    font-size: 17px;
-    font-weight: 780;
-    margin-top: 24px;
-}
-
-.muted {
-    color: #777C87;
-    font-size: 11px;
+.transaction {
+    background: #101217;
+    border: 1px solid #22262F;
+    border-radius: 15px;
+    padding: 14px;
+    margin: 7px 0;
 }
 
 </style>
@@ -392,6 +282,8 @@ defaults = {
     "name": "Tejal",
     "page": "Home",
     "notifications": [],
+    "show_add": False,
+    "show_request": False,
     "transactions": [
         ["Pocket Money", "Income", 2000.0],
         ["Food", "Food", -250.0],
@@ -402,6 +294,7 @@ defaults = {
 }
 
 for key, value in defaults.items():
+
     if key not in st.session_state:
         st.session_state[key] = value
 
@@ -416,6 +309,7 @@ def go(page):
 
 
 def add_transaction(name, category, amount):
+
     st.session_state.transactions.insert(
         0,
         [name, category, amount]
@@ -423,6 +317,7 @@ def add_transaction(name, category, amount):
 
 
 def spending_total():
+
     return sum(
         abs(x[2])
         for x in st.session_state.transactions
@@ -431,6 +326,7 @@ def spending_total():
 
 
 def income_total():
+
     return sum(
         x[2]
         for x in st.session_state.transactions
@@ -439,6 +335,7 @@ def income_total():
 
 
 def category_total(category):
+
     return sum(
         abs(x[2])
         for x in st.session_state.transactions
@@ -446,31 +343,8 @@ def category_total(category):
     )
 
 
-def projected_balance():
-    spent = spending_total()
-
-    if spent <= 0:
-        return st.session_state.balance
-
-    daily_rate = spent / 30
-    projected_spend = daily_rate * 30
-
-    return max(
-        st.session_state.balance - projected_spend + spent,
-        0
-    )
-
-
-def goal_progress():
-    return min(
-        st.session_state.goal_saved /
-        max(st.session_state.goal_target, 1),
-        1
-    )
-
-
 # =========================================================
-# TOP BRAND
+# BRAND
 # =========================================================
 
 st.markdown(
@@ -487,22 +361,27 @@ st.markdown(
 n1, n2, n3, n4, n5 = st.columns(5)
 
 with n1:
+
     if st.button("HOME", use_container_width=True):
         go("Home")
 
 with n2:
+
     if st.button("PAY", use_container_width=True):
         go("Pay")
 
 with n3:
+
     if st.button("ACTIVITY", use_container_width=True):
         go("Activity")
 
 with n4:
+
     if st.button("INTEL", use_container_width=True):
         go("Intelligence")
 
 with n5:
+
     if st.button("PROFILE", use_container_width=True):
         go("Profile")
 
@@ -522,7 +401,9 @@ if st.session_state.page == "Home":
         st.session_state.name
     )
 
-    # Balance
+    # -----------------------------------------------------
+    # BALANCE
+    # -----------------------------------------------------
 
     st.markdown(
         '<div class="balance-card">'
@@ -537,25 +418,45 @@ if st.session_state.page == "Home":
         unsafe_allow_html=True
     )
 
-    # Primary actions
+    # -----------------------------------------------------
+    # QUICK ACTIONS
+    # -----------------------------------------------------
 
     a, b, c = st.columns(3)
 
     with a:
-        if st.button("＋  ADD", use_container_width=True):
+
+        if st.button(
+            "＋ ADD",
+            use_container_width=True
+        ):
+
             st.session_state.show_add = True
 
     with b:
-        if st.button("↗  SEND", use_container_width=True):
+
+        if st.button(
+            "↗ SEND",
+            use_container_width=True
+        ):
+
             go("Pay")
 
     with c:
-        if st.button("⌁  REQUEST", use_container_width=True):
+
+        if st.button(
+            "⌁ REQUEST",
+            use_container_width=True
+        ):
+
             st.session_state.show_request = True
 
-    # Add money
 
-    if st.session_state.get("show_add", False):
+    # -----------------------------------------------------
+    # ADD MONEY
+    # -----------------------------------------------------
+
+    if st.session_state.show_add:
 
         st.markdown(
             '<div class="pay-card">'
@@ -596,121 +497,22 @@ if st.session_state.page == "Home":
 
             st.session_state.notifications.insert(
                 0,
-                "₹{:,.0f} added successfully.".format(amount)
+                "₹{:,.0f} added successfully.".format(
+                    amount
+                )
             )
 
             st.session_state.show_add = False
+
             st.success("Balance updated.")
+
             st.rerun()
 
-    # Request
 
-    if st.session_state.get("show_request", False):
+    # -----------------------------------------------------
+    # REQUEST MONEY
+    # -----------------------------------------------------
 
-        st.markdown(
-            '<div class="pay-card">'
-            '<div class="pay-title">Request money</div>'
-            '</div>',
-            unsafe_allow_html=True
-        )
+    if st.session_state.show_request:
 
-        person = st.text_input(
-            "From",
-            placeholder="Name",
-            key="request_person"
-        )
-
-        amount = st.number_input(
-            "Amount",
-            min_value=1.0,
-            value=200.0,
-            step=50.0,
-            key="request_amount"
-        )
-
-        if st.button(
-            "Create request",
-            use_container_width=True,
-            key="confirm_request"
-        ):
-
-            if not person.strip():
-                st.error("Enter a name.")
-
-            else:
-
-                st.session_state.notifications.insert(
-                    0,
-                    "Request of ₹{:,.0f} created.".format(amount)
-                )
-
-                st.session_state.show_request = False
-                st.success("Request created.")
-                st.rerun()
-
-    # =====================================================
-    # FINANCIAL SNAPSHOT
-    # =====================================================
-
-    spent = spending_total()
-
-    remaining = max(
-        st.session_state.monthly_limit - spent,
-        0
-    )
-
-    spending_ratio = (
-        spent /
-        max(st.session_state.monthly_limit, 1)
-    )
-
-    if spending_ratio < 0.6:
-        status = "On track"
-        status_text = (
-            "Your spending is comfortably below "
-            "your monthly limit."
-        )
-    elif spending_ratio < 0.85:
-        status = "Watch your pace"
-        status_text = (
-            "You're approaching your monthly "
-            "spending limit."
-        )
-    else:
-        status = "Budget risk"
-        status_text = (
-            "Your current spending pace may "
-            "push you beyond your limit."
-        )
-
-    st.markdown(
-        '<div class="section-title">Financial snapshot</div>',
-        unsafe_allow_html=True
-    )
-
-    s1, s2 = st.columns(2)
-with s1:
-    st.metric(
-        "Spent this month",
-        "₹{:,.0f}".format(spent)
-    )
-
-with s2:
-    st.metric(
-        "Budget remaining",
-        "₹{:,.0f}".format(remaining)
-    )
-
-s3, s4 = st.columns(2)
-
-with s3:
-    st.metric(
-        "Savings",
-        "₹{:,.0f}".format(st.session_state.goal_saved)
-    )
-
-with s4:
-    st.metric(
-        "VELORA Score",
-        "84 / 100"
-    )
+        st
