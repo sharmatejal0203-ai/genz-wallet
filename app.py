@@ -1024,8 +1024,8 @@ if st.button(
 
     else:  
 
-         st.session_state.notifications.insert(
-    0,
-    "VELORA is ready to help you manage your money."
-)
-           
+             st.caption(
+        "VELORA is a demonstration product. "
+        "It does not connect to banks, UPI, cards, "
+        "payment networks or real money."
+    )
