@@ -1069,4 +1069,40 @@ elif st.session_state.page == "Pay":
         'DEMO VIRTUAL CARD · 09/30'
         '</div>'
         '</div>',
-        unsaf
+                unsafe_allow_html=True
+    )
+
+    if st.session_state.card_frozen:
+        st.warning("🔒 VELORA Card is currently frozen.")
+    else:
+        st.success("🟢 VELORA Card is active.")
+
+    if st.button(
+        "UNFREEZE CARD"
+        if st.session_state.card_frozen
+        else "FREEZE CARD",
+        use_container_width=True
+    ):
+
+        st.session_state.card_frozen = (
+            not st.session_state.card_frozen
+        )
+
+        if st.session_state.card_frozen:
+            st.session_state.notifications.insert(
+                0,
+                "VELORA Card frozen."
+            )
+        else:
+            st.session_state.notifications.insert(
+                0,
+                "VELORA Card unfrozen."
+            )
+
+        st.rerun()
+
+    if st.button(
+        "← Back to Home",
+        use_container_width=True
+    ):
+        go("Home")
