@@ -1064,3 +1064,43 @@ elif st.session_state.page == "Pay":
     )
 
     if st.session_state.card_frozen:
+elif st.session_state.page == "Pay":
+
+    st.subheader("Send Money")
+
+    # payment code...
+
+
+    # VELORA CARD
+
+    st.markdown(
+        '<div class="section">'
+        'VELORA Card'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    # ...card HTML...
+
+
+    if st.session_state.card_frozen:
+
+        st.error("🔒 CARD FROZEN")
+
+        if st.button(
+            "UNFREEZE CARD",
+            use_container_width=True
+        ):
+            st.session_state.card_frozen = False
+            st.rerun()
+
+    else:
+
+        st.success("✓ CARD ACTIVE")
+
+        if st.button(
+            "FREEZE CARD",
+            use_container_width=True
+        ):
+            st.session_state.card_frozen = True
+            st.rerun()
