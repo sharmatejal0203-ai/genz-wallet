@@ -2330,3 +2330,319 @@ elif st.session_state.page == "Insight":
             ),
             unsafe_allow_html=True
         )
+# =====================================================
+    # GOALS PAGE
+    # =====================================================
+
+elif st.session_state.page == "Goals":
+
+    st.markdown(
+        '<div class="section">Savings Goals</div>',
+        unsafe_allow_html=True
+    )
+
+    st.caption(
+        "Turn your spending into something you actually want."
+    )
+
+    for goal in st.session_state.goals:
+
+        target = max(float(goal["target"]), 1)
+        saved = float(goal["saved"])
+
+        progress = min(
+            saved / target,
+            1
+        )
+
+        remaining_goal = max(
+            target - saved,
+            0
+        )
+
+        st.markdown(
+            '<div class="goal">'
+            '<div class="goal-title">🎯 {}</div>'
+            '<div class="goal-money">'
+            'Rs. {:,.0f} / Rs. {:,.0f}'
+            '</div>'
+            '<div class="budget-small">'
+            'Rs. {:,.0f} remaining'
+            '</div>'
+            '</div>'.format(
+                goal["name"],
+                saved,
+                target,
+                remaining_goal
+            ),
+            unsafe_allow_html=True
+        )
+
+        st.progress(progress)
+
+        st.caption(
+            "{:.0f}% completed".format(
+                progress * 100
+            )
+        )
+
+    # -----------------------------------------------------
+    # CREATE NEW GOAL
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Create New Goal</div>',
+        unsafe_allow_html=True
+    )
+
+    goal_name = st.text_input(
+        "Goal name",
+        placeholder="e.g. New Laptop"
+    )
+
+    goal_target = st.number_input(
+        "Target amount",
+        min_value=100.0,
+        step=100.0
+    )
+
+    if st.button(
+        "＋ CREATE GOAL",
+        use_container_width=True
+    ):
+
+        if goal_name.strip():
+
+            st.session_state.goals.append(
+                {
+                    "name": goal_name.strip(),
+                    "target": float(goal_target),
+                    "saved": 0.0
+                }
+            )
+
+            st.success(
+                "Goal created successfully."
+            )
+
+            st.rerun()
+
+        else:
+
+            st.warning(
+                "Please enter a goal name."
+            )
+
+
+# =========================================================
+# PROFILE PAGE
+# =========================================================
+
+elif st.session_state.page == "Profile":
+
+    st.markdown(
+        '<div class="profile-box">'
+        '<div class="avatar">👤</div>'
+        '<div class="profile-name">{}</div>'
+        '<div class="small-label">'
+        'VELORA MEMBER'
+        '</div>'
+        '</div>'.format(
+            st.session_state.name
+        ),
+        unsafe_allow_html=True
+    )
+
+    # -----------------------------------------------------
+    # PERSONAL SETTINGS
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Personal Settings</div>',
+        unsafe_allow_html=True
+    )
+
+    new_name = st.text_input(
+        "Name",
+        value=st.session_state.name
+    )
+
+    new_limit = st.number_input(
+        "Monthly spending limit",
+        min_value=100.0,
+        value=float(
+            st.session_state.monthly_limit
+        ),
+        step=100.0
+    )
+
+    new_coach_mode = st.selectbox(
+        "AI Coach Mode",
+        [
+            "Smart",
+            "Conservative",
+            "Relaxed"
+        ],
+        index=[
+            "Smart",
+            "Conservative",
+            "Relaxed"
+        ].index(
+            st.session_state.coach_mode
+        )
+    )
+
+    if st.button(
+        "SAVE SETTINGS",
+        use_container_width=True
+    ):
+
+        st.session_state.name = (
+            new_name.strip()
+            if new_name.strip()
+            else "Tejal"
+        )
+
+        st.session_state.monthly_limit = (
+            float(new_limit)
+        )
+
+        st.session_state.coach_mode = (
+            new_coach_mode
+        )
+
+        st.success(
+            "Settings saved."
+        )
+
+        st.rerun()
+
+    # -----------------------------------------------------
+    # VELORA CARD
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Velora Card</div>',
+        unsafe_allow_html=True
+    )
+
+    card_status = (
+        "FROZEN"
+        if st.session_state.card_frozen
+        else "ACTIVE"
+    )
+
+    st.markdown(
+        '<div class="virtual-card">'
+        '<div class="card-brand">VELORA</div>'
+        '<div class="card-number">'
+        '••••  ••••  ••••  2048'
+        '</div>'
+        '<div class="card-small">'
+        'DEMO CARD · {}'
+        '</div>'
+        '</div>'.format(
+            card_status
+        ),
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.card_frozen:
+
+        if st.button(
+            "🔓 UNFREEZE CARD",
+            use_container_width=True
+        ):
+
+            st.session_state.card_frozen = False
+            st.rerun()
+
+    else:
+
+        if st.button(
+            "❄️ FREEZE CARD",
+            use_container_width=True
+        ):
+
+            st.session_state.card_frozen = True
+
+            st.session_state.notifications.insert(
+                0,
+                "Your Velora demo card has been frozen."
+            )
+
+            st.rerun()
+
+    # -----------------------------------------------------
+    # NOTIFICATIONS
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Notifications</div>',
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.notifications:
+
+        for notification in (
+            st.session_state.notifications[:5]
+        ):
+
+            st.markdown(
+                '<div class="notice">'
+                '🔔 {}'
+                '</div>'.format(
+                    notification
+                ),
+                unsafe_allow_html=True
+            )
+
+    else:
+
+        st.caption(
+            "No new notifications."
+        )
+
+    # -----------------------------------------------------
+    # DEMO CONTROLS
+    # -----------------------------------------------------
+
+    st.markdown(
+        '<div class="section">Demo Controls</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="notice">'
+        'VELORA is a prototype. No real money, '
+        'UPI or bank connection is used.'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    if st.button(
+        "🔄 RESET DEMO",
+        use_container_width=True
+    ):
+
+        reset_demo()
+        st.rerun()
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.write("")
+
+st.markdown(
+    '<div style="text-align:center;'
+    'color:#555B68;font-size:9px;'
+    'letter-spacing:1.5px;'
+    'padding:30px 0 10px;">'
+    'VELORA · SMART MONEY, MADE SIMPLE'
+    '<br>'
+    'DEMO PROTOTYPE · NO REAL MONEY CONNECTION'
+    '</div>',
+    unsafe_allow_html=True
+)
