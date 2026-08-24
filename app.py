@@ -1887,3 +1887,278 @@ elif st.session_state.page == "Profile":
         "VELORA is a prototype. No real money, "
     
 
+        "UPI or bank connection is used."
+    )
+
+    st.divider()
+
+    if st.button(
+        "🔄 Reset Demo",
+        use_container_width=True
+    ):
+        reset_demo()
+        st.rerun()
+
+
+# =========================================================
+# ADD MONEY / TRANSACTION
+# =========================================================
+
+elif st.session_state.page == "Add":
+
+    st.markdown(
+        '<div class="section">Add Transaction</div>',
+        unsafe_allow_html=True
+    )
+
+    st.caption(
+        "Record income or spending in your VELORA demo wallet."
+    )
+
+    transaction_type = st.selectbox(
+        "Transaction type",
+        ["Expense", "Income"]
+    )
+
+    name = st.text_input(
+        "Transaction name",
+        placeholder="e.g. Netflix, Pocket Money, Food"
+    )
+
+    category_options = [
+        "Food",
+        "Shopping",
+        "Education",
+        "Transportation",
+        "Entertainment",
+        "Bills",
+        "Health",
+        "Other"
+    ]
+
+    category = st.selectbox(
+        "Category",
+        category_options
+    )
+
+    amount = st.number_input(
+        "Amount (Rs.)",
+        min_value=1.0,
+        step=50.0
+    )
+
+    if st.button(
+        "＋ Add Transaction",
+        use_container_width=True
+    ):
+
+        if not name.strip():
+
+            st.warning(
+                "Please enter a transaction name."
+            )
+
+        else:
+
+            if transaction_type == "Expense":
+
+                add_transaction(
+                    name.strip(),
+                    category,
+                    -amount
+                )
+
+                st.session_state.balance -= amount
+
+                st.success(
+                    "Expense added successfully."
+                )
+
+            else:
+
+                add_transaction(
+                    name.strip(),
+                    "Income",
+                    amount
+                )
+
+                st.session_state.balance += amount
+
+                st.success(
+                    "Income added successfully."
+                )
+
+            st.rerun()
+
+    st.write("")
+
+    if st.button(
+        "← Back Home",
+        use_container_width=True
+    ):
+        go("Home")
+
+
+# =========================================================
+# PAY
+# =========================================================
+
+elif st.session_state.page == "Pay":
+
+    st.markdown(
+        '<div class="section">Send Money</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="notice">'
+        '⚠️ Demo only — this does NOT send real money.'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    receiver = st.text_input(
+        "Send to",
+        placeholder="Friend / Contact"
+    )
+
+    amount = st.number_input(
+        "Amount (Rs.)",
+        min_value=1.0,
+        step=50.0
+    )
+
+    category = st.selectbox(
+        "Purpose",
+        [
+            "Food",
+            "Shopping",
+            "Transportation",
+            "Entertainment",
+            "Other"
+        ]
+    )
+
+    if st.button(
+        "↗ Send Demo Payment",
+        use_container_width=True
+    ):
+
+        if not receiver.strip():
+
+            st.warning(
+                "Enter a recipient name."
+            )
+
+        elif amount > st.session_state.balance:
+
+            st.error(
+                "Insufficient demo balance."
+            )
+
+        else:
+
+            add_transaction(
+                "To " + receiver.strip(),
+                category,
+                -amount
+            )
+
+            st.session_state.balance -= amount
+
+            st.session_state.notifications.insert(
+                0,
+                "Rs. {:,.0f} demo payment recorded to {}."
+                .format(
+                    amount,
+                    receiver.strip()
+                )
+            )
+
+            st.success(
+                "Demo payment recorded."
+            )
+
+            st.rerun()
+
+
+# =========================================================
+# ACTIVITY
+# =========================================================
+
+elif st.session_state.page == "Activity":
+
+    st.markdown(
+        '<div class="section">Recent Activity</div>',
+        unsafe_allow_html=True
+    )
+
+    transactions = (
+        st.session_state.transactions
+    )
+
+    if not transactions:
+
+        st.caption(
+            "No transactions yet."
+        )
+
+    else:
+
+        for tx in transactions:
+
+            name, category, amount = tx
+
+            if amount >= 0:
+
+                amount_text = (
+                    "+ Rs. {:,.0f}"
+                    .format(amount)
+                )
+
+                amount_class = "tx-income"
+
+            else:
+
+                amount_text = (
+                    "- Rs. {:,.0f}"
+                    .format(abs(amount))
+                )
+
+                amount_class = "tx-expense"
+
+            st.markdown(
+                '<div class="transaction">'
+                '<div class="tx-title">{}</div>'
+                '<div class="tx-cat">{}</div>'
+                '<div class="{}">{}</div>'
+                '</div>'.format(
+                    name,
+                    category,
+                    amount_class,
+                    amount_text
+                ),
+                unsafe_allow_html=True
+            )
+
+
+# =========================================================
+# INSIGHT
+# =========================================================
+
+elif st.session_state.page == "Insight":
+
+    st.markdown(
+        '<div class="section">VELORA Intelligence</div>',
+        unsafe_allow_html=True
+    )
+
+    # -----------------------------------------------------
+    # AI COACH
+    # -----------------------------------------------------
+
+    coach_title, coach_text = ai_coach()
+
+    st.markdown(
+        '<div class="ai-card">'
+        '<div class="ai-badge">VELORA AI COACH
