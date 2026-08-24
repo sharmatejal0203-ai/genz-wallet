@@ -2162,3 +2162,171 @@ elif st.session_state.page == "Insight":
     st.markdown(
         '<div class="ai-card">'
         '<div class="ai-badge">VELORA AI COACH
+        '<div class="ai-title">{}</div>'
+        '<div class="ai-text">{}</div>'
+        '</div>'.format(
+            coach_title,
+            coach_text
+        ),
+        unsafe_allow_html=True
+    )
+
+    # =====================================================
+    # AI SPENDING PREDICTOR
+    # =====================================================
+
+    predicted = predicted_monthly_spending()
+    next_7_days = predicted_7_day_spending()
+    velocity = spending_velocity()
+
+    st.markdown(
+        '<div class="prediction">'
+        '<div class="prediction-title">'
+        '🔮 AI Spending Forecast'
+        '</div>'
+        '<div class="prediction-number">'
+        'Rs. {:,.0f}'
+        '</div>'
+        '<div class="prediction-small">'
+        'Predicted monthly spending'
+        '</div>'
+        '<br>'
+        '<div class="prediction-small">'
+        '7-day forecast: Rs. {:,.0f}'
+        ' · Trend: {}'
+        '</div>'
+        '</div>'.format(
+            predicted,
+            next_7_days,
+            velocity
+        ),
+        unsafe_allow_html=True
+    )
+
+    # =====================================================
+    # PREDICTION INSIGHT
+    # =====================================================
+
+    prediction_title, prediction_text = (
+        prediction_message()
+    )
+
+    st.markdown(
+        '<div class="insight">'
+        '<div class="insight-label">'
+        'PREDICTIVE INSIGHT'
+        '</div>'
+        '<div class="insight-title">'
+        '{}'
+        '</div>'
+        '<div class="insight-text">'
+        '{}'
+        '</div>'
+        '</div>'.format(
+            prediction_title,
+            prediction_text
+        ),
+        unsafe_allow_html=True
+    )
+
+    # =====================================================
+    # SPENDING BREAKDOWN
+    # =====================================================
+
+    st.markdown(
+        '<div class="section">'
+        'Spending Breakdown'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    categories = category_totals()
+
+    if categories:
+
+        chart_df = pd.DataFrame(
+            list(categories.items()),
+            columns=["Category", "Amount"]
+        )
+
+        chart_df = chart_df.sort_values(
+            "Amount",
+            ascending=False
+        )
+
+        st.bar_chart(
+            chart_df.set_index("Category")
+        )
+
+        biggest, biggest_value = (
+            biggest_category()
+        )
+
+        st.info(
+            "Your highest spending category is "
+            "{} at Rs. {:,.0f}."
+            .format(
+                biggest,
+                biggest_value
+            )
+        )
+
+    else:
+
+        st.caption(
+            "Add more transactions to unlock "
+            "spending analysis."
+        )
+
+    # =====================================================
+    # VELORA FINANCIAL SCORE
+    # =====================================================
+
+    st.markdown(
+        '<div class="section">'
+        'Financial Health'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    score = financial_score()
+
+    st.markdown(
+        '<div class="score">'
+        '<div class="score-number">{}</div>'
+        '<div class="score-label">'
+        'VELORA FINANCIAL SCORE'
+        '</div>'
+        '<div class="score-sub">'
+        '{}'
+        '</div>'
+        '</div>'.format(
+            score,
+            score_label(score)
+        ),
+        unsafe_allow_html=True
+    )
+
+    breakdown = score_breakdown()
+
+    for key in [
+        "Budget Discipline",
+        "Saving Habit",
+        "Balance Safety",
+        "Spending Trend"
+    ]:
+
+        st.markdown(
+            '<div class="score-row">'
+            '<div class="score-name">'
+            '{}'
+            '</div>'
+            '<div class="score-value">'
+            '{}'
+            '</div>'
+            '</div>'.format(
+                key,
+                breakdown[key]
+            ),
+            unsafe_allow_html=True
+        )
